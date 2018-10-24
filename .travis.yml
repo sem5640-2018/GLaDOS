@@ -1,5 +1,7 @@
 language: java
 sudo: false
+# Skip maven full install
+install: /bin/true
 
 # Build dependencies first
 install: 
