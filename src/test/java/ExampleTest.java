@@ -4,8 +4,8 @@ import org.junit.Test;
 public class ExampleTest {
 
     @Test
-    public void testCiFailsCorrectly() {
-        Assert.fail();
+    public void testCiPasses() {
+        Assert.assertTrue(true);
     }
 
 }
