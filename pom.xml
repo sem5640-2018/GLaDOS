@@ -34,6 +34,12 @@
             <type>maven-plugin</type>
         </dependency>
 
+        <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>7.5.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -42,13 +48,6 @@
                 <!-- Checkstyle -->
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.0.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>7.5.1</version>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
                         <id>validate</id>

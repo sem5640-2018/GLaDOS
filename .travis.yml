@@ -3,6 +3,11 @@ sudo: false
 # Skip maven full install travis tries to do as it triggers checkstyle early
 install: /bin/true
 
+cache:
+  directories:
+    - $HOME/.m2
+
+
 install: 
 # Build dependencies first so it goes away
 - mvn dependency:resolve
