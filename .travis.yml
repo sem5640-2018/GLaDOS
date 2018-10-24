@@ -1,10 +1,10 @@
 language: java
 sudo: false
-# Skip maven full install
+# Skip maven full install travis tries to do as it triggers checkstyle early
 install: /bin/true
 
-# Build dependencies first
 install: 
-- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+# Build dependencies first so it goes away
 - mvn dependency:resolve
-script: mvn test -B
+script: 
+- mvn test -B
