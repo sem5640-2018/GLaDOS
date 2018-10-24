@@ -1,7 +1,8 @@
 language: java
 sudo: false
-# Skip maven full install travis tries to do as it triggers checkstyle early
-install: /bin/true
+notifications:
+  slack: sem5640-2018:lBYoMLDBbIP1GGlCH2tQcjho
+
 
 cache:
   directories:
