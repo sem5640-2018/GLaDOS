@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
+import static org.mockito.Mockito.when;
+
 public class LogApiTest {
     @Mock
     private DatabaseConnection dbMock;
@@ -36,6 +38,8 @@ public class LogApiTest {
         LogData entryTwo = new LogData(Instant.now(), LoggingLevel.WARNING, "testContent2", "xyz987");
 
         List<LogData> mockedData = List.of(entryOne, entryTwo);
+
+        when(dbMock.getAllLogEntries()).thenReturn(mockedData);
 
         JsonArray returnedData = apiInstance.getAllEntries();
 
