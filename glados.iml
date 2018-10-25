@@ -3,9 +3,7 @@
   <component name="FacetManager">
     <facet type="ejb" name="EJB">
       <configuration>
-        <ejbRoots>
-          <root url="file://$MODULE_DIR$/src" />
-        </ejbRoots>
+        <ejbRoots />
       </configuration>
     </facet>
     <facet type="web" name="Web">
@@ -22,7 +20,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -38,6 +36,12 @@
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - EJB" level="application_server_libraries" />
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - JSF" level="application_server_libraries" />
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - CDI: Contexts and Dependency Injection" level="application_server_libraries" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax:javaee-api:8.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.mail:javax.mail:1.6.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.activation:activation:1.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.json:javax.json-api:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish:javax.json:1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.3.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.1.1" level="project" />
@@ -52,5 +56,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.9.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.9.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations:16.0.3" level="project" />
   </component>
 </module>
