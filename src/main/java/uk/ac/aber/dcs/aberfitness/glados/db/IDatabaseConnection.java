@@ -54,6 +54,15 @@ public interface IDatabaseConnection {
     List<LogData> findLogEntry(LogData searchCriteria) throws IOException;
 
     /**
+     * Returns all log entries within the DB as a list.
+     * If the request fails an IOException is thrown
+     * @return A list containing all log entries from the database
+     * @throws IOException If the request could not be completed
+     */
+    // TODO add limits
+    List<LogData> getAllLogEntries() throws IOException;
+
+    /**
      * Attempts to remove the given logId. The entry is allowed to not exist too.
      * If the request fails an IOException is thrown
      * @param logId The unique ID of the log entry to remove

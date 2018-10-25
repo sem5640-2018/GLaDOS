@@ -1,6 +1,13 @@
 package uk.ac.aber.dcs.aberfitness.glados.db;
 
-import java.util.Date;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import uk.ac.aber.dcs.aberfitness.glados.api.GsonTimeDeserialiser;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -15,7 +22,7 @@ public class LogData {
      * @param content The message content of this log entry
      * @param userId The user associated with this log entry
      */
-    public LogData(final Date timestamp, final LoggingLevel logLevel,
+    public LogData(final Instant timestamp, final LoggingLevel logLevel,
                    final String content, final String userId) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
@@ -28,7 +35,7 @@ public class LogData {
      * Returns the timestamp of the specified log message
      * @return Date object with the log's timestamp
      */
-    public Date getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
@@ -65,8 +72,48 @@ public class LogData {
         return logId;
     }
 
+    /**
+     * Serialises the current object into a new JSON object
+     * @return A json object for the current record
+     */
+    public JsonObject toJson(){
+        JsonObjectBuilder newJson = Json.createObjectBuilder();
+        newJson.add("logId", this.logId)
+               .add("timestamp", this.timestamp.toString())
+               .add("userId", this.userId)
+               .add("logLevel", this.logLevel.toString())
+               .add("content", this.content);
+        return newJson.build();
+    }
+
+    public static LogData fromJson(JsonObject jsonObject){
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        // Register a custom adaptor to convert to instant from strings
+        gsonBuilder.registerTypeAdapter(Instant.class, GsonTimeDeserialiser.INSTANT_DESERIALISER);
+
+        Gson gson = gsonBuilder.create();
+        return gson.fromJson(jsonObject.toString(), LogData.class);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null){
+            return false;
+        }
+
+        if (!LogData.class.isAssignableFrom(obj.getClass())){
+            return false;
+        }
+
+        final LogData other = (LogData) obj;
+        return this.logId.equals(other.logId) && this.timestamp.equals(other.timestamp)
+                && this.logLevel == other.logLevel && this.content.equals(other.content) &&
+                this.userId.equals(other.userId);
+
+    }
+
     private String logId;
-    private Date timestamp;
+    private Instant timestamp;
     private LoggingLevel logLevel;
     private String content;
     private String userId;
