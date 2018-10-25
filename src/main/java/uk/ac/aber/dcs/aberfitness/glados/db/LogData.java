@@ -5,9 +5,12 @@ import com.google.gson.GsonBuilder;
 import uk.ac.aber.dcs.aberfitness.glados.api.GsonTimeDeserialiser;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -93,6 +96,16 @@ public class LogData {
 
         Gson gson = gsonBuilder.create();
         return gson.fromJson(jsonObject.toString(), LogData.class);
+    }
+
+    public static List<LogData> fromJson(JsonArray jsonArray){
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        // Register a custom adaptor to convert to instant from strings
+        gsonBuilder.registerTypeAdapter(Instant.class, GsonTimeDeserialiser.INSTANT_DESERIALISER);
+
+        Gson gson = gsonBuilder.create();
+        LogData[] converted = gson.fromJson(jsonArray.toString(), LogData[].class);
+        return Arrays.asList(converted);
     }
 
     @Override

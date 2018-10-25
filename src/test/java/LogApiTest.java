@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -10,9 +11,9 @@ import uk.ac.aber.dcs.aberfitness.glados.db.LoggingLevel;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 public class LogApiTest {
@@ -29,8 +30,6 @@ public class LogApiTest {
         MockitoAnnotations.initMocks(this);
     }
 
-
-
     @Test
     public void findAllCallReturnsAll() throws IOException {
         LogData entryOne = new LogData(Instant.now(), LoggingLevel.DEBUG, "testContent", "abc123");
@@ -40,8 +39,7 @@ public class LogApiTest {
 
         JsonArray returnedData = apiInstance.getAllEntries();
 
-
-
+        Assert.assertEquals(mockedData, LogData.fromJson(returnedData));
     }
 
 }
