@@ -14,6 +14,7 @@ import javax.json.JsonObject;
 import javax.json.JsonValue;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -37,7 +38,7 @@ public class LogApiTest {
         LogData entryOne = new LogData(Instant.now(), LoggingLevel.DEBUG, "testContent", "abc123");
         LogData entryTwo = new LogData(Instant.now(), LoggingLevel.WARNING, "testContent2", "xyz987");
 
-        List<LogData> mockedData = List.of(entryOne, entryTwo);
+        List<LogData> mockedData = Arrays.asList(entryOne, entryTwo);
 
         when(dbMock.getAllLogEntries()).thenReturn(mockedData);
 
