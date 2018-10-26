@@ -1,6 +1,11 @@
 # GLaDOS
 AberFitness Logging & System Status Microservice (aka GLaDOS)
 
+| Branch | Status |
+|-|-|
+| Development | [![Development Build Status](https://travis-ci.org/sem5640-2018/glados.svg?branch=development)](https://travis-ci.org/sem5640-2018/glados) |
+| Release | [![Release Build Status](https://travis-ci.org/sem5640-2018/glados.svg?branch=master)](https://travis-ci.org/sem5640-2018/glados) |
+
 # Maintained by
 * David
 * Dan
