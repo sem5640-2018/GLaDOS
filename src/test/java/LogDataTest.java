@@ -1,7 +1,8 @@
 import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.aber.dcs.aberfitness.glados.db.LogData;
-import uk.ac.aber.dcs.aberfitness.glados.db.LoggingLevel;
+import uk.ac.aber.dcs.aberfitness.glados.db.LoggingLevels;
+import uk.ac.aber.dcs.aberfitness.glados.db.ServiceNames;
 
 import javax.json.*;
 import java.time.Instant;
@@ -12,15 +13,17 @@ public class LogDataTest {
     public void LogDataGetters() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevel logLevel = LoggingLevel.DEBUG;
+        LoggingLevels logLevel = LoggingLevels.DEBUG;
         String userId = "test123";
+        ServiceNames testName = ServiceNames.GLADOS;
 
-        final LogData testInstance = new LogData(now, logLevel, sampleMsg, userId);
+        final LogData testInstance = new LogData(now, logLevel, sampleMsg, userId, testName);
 
         Assert.assertEquals(testInstance.getTimestamp(), now);
         Assert.assertEquals(testInstance.getContent(), sampleMsg);
         Assert.assertEquals(testInstance.getLogLevel(), logLevel);
         Assert.assertEquals(testInstance.getUserId(), userId);
+        Assert.assertEquals(testInstance.getServiceName(), testName);
     }
 
     @Test
@@ -28,8 +31,10 @@ public class LogDataTest {
         Instant now = Instant.now();
 
         // Regardless of other fields the log id should always be unique
-        final LogData testInstanceOne = new LogData(now, LoggingLevel.DEBUG, "test", "id1");
-        final LogData testInstanceTwo = new LogData(now, LoggingLevel.DEBUG, "test", "id1");
+        final LogData testInstanceOne = new LogData(now, LoggingLevels.DEBUG,
+                "test", "id1", ServiceNames.GLADOS);
+        final LogData testInstanceTwo = new LogData(now, LoggingLevels.DEBUG,
+                "test", "id1", ServiceNames.GLADOS);
 
         Assert.assertNotEquals(testInstanceOne.getLogId(), testInstanceTwo.getLogId());
     }
@@ -38,10 +43,11 @@ public class LogDataTest {
     public void SerialisesToJsonCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevel logLevel = LoggingLevel.DEBUG;
+        LoggingLevels logLevel = LoggingLevels.DEBUG;
         String userId = "test123";
+        ServiceNames serviceName = ServiceNames.GLADOS;
 
-        final LogData testInstance = new LogData(now, logLevel, sampleMsg, userId);
+        final LogData testInstance = new LogData(now, logLevel, sampleMsg, userId, serviceName);
         JsonObject returnedJson = testInstance.toJson();
 
         Assert.assertNotEquals(returnedJson.getString("logId"), "");
@@ -49,10 +55,11 @@ public class LogDataTest {
         Assert.assertEquals(returnedJson.getString("userId"), userId);
         Assert.assertEquals(returnedJson.getString("logLevel"), logLevel.toString());
         Assert.assertEquals(returnedJson.getString("content"), sampleMsg);
+        Assert.assertEquals(returnedJson.getString("serviceName"), serviceName.toString());
     }
 
     private JsonObject createFakeJson(Instant time, String msg, String userId,
-                                      String logId, LoggingLevel logLevel){
+                                      String logId, LoggingLevels logLevel, ServiceNames serviceName) {
 
         JsonObjectBuilder newJsonObject = Json.createObjectBuilder();
 
@@ -61,7 +68,8 @@ public class LogDataTest {
                 .add("timestamp", time.toString())
                 .add("userId", userId)
                 .add("logLevel", logLevel.toString())
-                .add("content", msg);
+                .add("content", msg)
+                .add("serviceName", serviceName.toString());
         return newJsonObject.build();
     }
 
@@ -69,11 +77,12 @@ public class LogDataTest {
     public void SerialisesFromJsonCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevel logLevel = LoggingLevel.DEBUG;
+        LoggingLevels logLevel = LoggingLevels.DEBUG;
         String userId = "test123";
         String fakeId = "12345";
+        ServiceNames serviceName = ServiceNames.GLADOS;
 
-        JsonObject testJson = createFakeJson(now, sampleMsg, userId, fakeId, logLevel);
+        JsonObject testJson = createFakeJson(now, sampleMsg, userId, fakeId, logLevel, serviceName);
 
         LogData returnedClass = LogData.fromJson(testJson);
         Assert.assertEquals(returnedClass.getLogId(), fakeId);
@@ -84,15 +93,16 @@ public class LogDataTest {
     }
 
     @Test
-    public void SerialisesFromListCorrectly(){
+    public void SerialisesFromListCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevel logLevel = LoggingLevel.DEBUG;
+        LoggingLevels logLevel = LoggingLevels.DEBUG;
         String userId = "test123";
+        ServiceNames serviceName = ServiceNames.GLADOS;
 
-        JsonObject testJson = createFakeJson(now, sampleMsg, userId, "101", logLevel);
-        JsonObject testJson2 = createFakeJson(now, sampleMsg, userId, "102", logLevel);
-        JsonObject testJson3 = createFakeJson(now, sampleMsg, userId, "103", logLevel);
+        JsonObject testJson = createFakeJson(now, sampleMsg, userId, "101", logLevel, serviceName);
+        JsonObject testJson2 = createFakeJson(now, sampleMsg, userId, "102", logLevel, serviceName);
+        JsonObject testJson3 = createFakeJson(now, sampleMsg, userId, "103", logLevel, serviceName);
 
 
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
@@ -111,10 +121,11 @@ public class LogDataTest {
     public void SerialisesSelfCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevel logLevel = LoggingLevel.DEBUG;
+        LoggingLevels logLevel = LoggingLevels.DEBUG;
         String userId = "test123";
+        ServiceNames serviceName = ServiceNames.GLADOS;
 
-        final LogData testInstance = new LogData(now, logLevel, sampleMsg, userId);
+        final LogData testInstance = new LogData(now, logLevel, sampleMsg, userId, serviceName);
 
         JsonObject returnedJson = testInstance.toJson();
         LogData returnedObject = LogData.fromJson(returnedJson);
