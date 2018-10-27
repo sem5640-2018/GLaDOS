@@ -61,6 +61,7 @@ public class LogDataJson extends LogData {
 
         Gson gson = gsonBuilder.create();
         LogDataJson returnedObj = gson.fromJson(jsonObject.toString(), LogDataJson.class);
+        returnedObj.generateLogId();
 
         if (!returnedObj.isValid()){
             throw new JsonParseException("Partial or empty JSON was received");
@@ -76,6 +77,7 @@ public class LogDataJson extends LogData {
 
         Gson gson = gsonBuilder.create();
         LogDataJson[] converted = gson.fromJson(jsonArray.toString(), LogDataJson[].class);
+        Stream.of(converted).forEach(LogData::generateLogId);
 
         boolean allValid = Stream.of(converted).allMatch(LogData::isValid);
 

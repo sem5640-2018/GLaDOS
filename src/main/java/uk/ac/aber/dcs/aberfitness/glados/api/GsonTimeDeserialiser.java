@@ -4,7 +4,6 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 
 public class GsonTimeDeserialiser {
     public static final JsonDeserializer<Instant> INSTANT_DESERIALISER = new JsonDeserializer<Instant>() {

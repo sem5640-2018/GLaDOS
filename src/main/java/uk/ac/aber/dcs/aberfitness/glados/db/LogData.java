@@ -2,8 +2,6 @@ package uk.ac.aber.dcs.aberfitness.glados.db;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -114,6 +112,17 @@ public abstract class LogData {
                 this.userId.equals(other.userId) && this.serviceName == other.serviceName;
 
     }
+
+    /**
+     * A protected setter for serialisers which use reflection to set fields
+     * such as GSON. This allows the caller to ask the underlying struct
+     * to set a new UUID which would normally be done in the constructor.
+     * This call is package-private.
+     */
+    void generateLogId(){
+        this.logId = UUID.randomUUID().toString();
+    }
+
 
     public final boolean isValid() {
         // GSON can return a log with all fields set to null

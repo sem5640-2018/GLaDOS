@@ -1,9 +1,5 @@
 package uk.ac.aber.dcs.aberfitness.glados.db;
 
-import uk.ac.aber.dcs.aberfitness.glados.db.LogData;
-import uk.ac.aber.dcs.aberfitness.glados.db.LoggingLevels;
-import uk.ac.aber.dcs.aberfitness.glados.db.ServiceNames;
-
 import java.time.Instant;
 
 /**
