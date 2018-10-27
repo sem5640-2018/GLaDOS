@@ -5,10 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.ac.aber.dcs.aberfitness.glados.api.LogApi;
-import uk.ac.aber.dcs.aberfitness.glados.db.DatabaseConnection;
-import uk.ac.aber.dcs.aberfitness.glados.db.LogData;
-import uk.ac.aber.dcs.aberfitness.glados.db.LoggingLevels;
-import uk.ac.aber.dcs.aberfitness.glados.db.ServiceNames;
+import uk.ac.aber.dcs.aberfitness.glados.db.*;
 
 import javax.json.JsonArray;
 import java.io.IOException;
@@ -34,7 +31,7 @@ public class LogApiTest {
     }
 
     private LogData createExampleLogData(){
-        return new LogData(Instant.now(), LoggingLevels.DEBUG, "TestContent",
+        return new LogDataNoSerial(Instant.now(), LoggingLevels.DEBUG, "TestContent",
                 "abc123", ServiceNames.GLADOS);
     }
 
@@ -43,11 +40,12 @@ public class LogApiTest {
         LogData dummyLogOne = createExampleLogData();
         LogData dummyLogTwo = createExampleLogData();
 
-        List<LogData> mockedData = Arrays.asList(dummyLogOne, dummyLogOne);
+        List<LogData> mockedData = Arrays.asList(dummyLogOne, dummyLogTwo);
         when(dbMock.getAllLogEntries()).thenReturn(mockedData);
 
+        // This should return JSON
         JsonArray returnedData = apiInstance.getAllEntries();
-        Assert.assertEquals(mockedData, LogData.fromJson(returnedData));
+        Assert.assertEquals(mockedData, LogDataJson.fromJson(returnedData));
     }
 
 

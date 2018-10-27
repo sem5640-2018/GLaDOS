@@ -1,7 +1,9 @@
 package uk.ac.aber.dcs.aberfitness.glados.api;
 
 import uk.ac.aber.dcs.aberfitness.glados.db.DatabaseConnection;
+
 import uk.ac.aber.dcs.aberfitness.glados.db.LogData;
+import uk.ac.aber.dcs.aberfitness.glados.db.LogDataJson;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -29,7 +31,9 @@ public class LogApi {
         // TODO add limits / ranges
         final JsonArrayBuilder jsonArray = Json.createArrayBuilder();
         List<LogData> foundEntries = dbConnection.getAllLogEntries();
-        foundEntries.forEach(e->jsonArray.add(e.toJson()));
+
+        // Ensure we have JSON serialisable elements
+        foundEntries.forEach(e->jsonArray.add(new LogDataJson(e).toJson()));
         return jsonArray.build();
     }
 

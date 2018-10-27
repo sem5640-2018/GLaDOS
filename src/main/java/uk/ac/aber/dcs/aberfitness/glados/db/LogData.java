@@ -1,23 +1,14 @@
 package uk.ac.aber.dcs.aberfitness.glados.db;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import uk.ac.aber.dcs.aberfitness.glados.api.GsonTimeDeserialiser;
-
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 /**
- * A class representing a log or audit entry.
- *
+ * A class representing a log or audit entry. This class is marked abstract
+ * to force extending classes to implement to X serialisation. For example
+ * toJson in the LogDataJson class
  */
-public class LogData {
+public abstract class LogData {
     private ServiceNames serviceName;
     private String logId;
     private Instant timestamp;
@@ -32,14 +23,28 @@ public class LogData {
      * @param content The message content of this log entry
      * @param userId The user associated with this log entry
      */
-    public LogData(final Instant timestamp, final LoggingLevels logLevel,
-                   final String content, final String userId, final ServiceNames serviceName) {
+    protected LogData(final Instant timestamp, final LoggingLevels logLevel,
+                      final String content, final String userId, final ServiceNames serviceName) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
         this.logLevel = logLevel;
         this.content = content;
         this.userId = userId;
         this.serviceName = serviceName;
+    }
+
+    /**
+     * Implements a copy constructor which is invoked when switching
+     * the outer serialisation methods by the extending class
+     * @param other The existing LogData to copy
+     */
+    protected LogData(LogData other){
+        this.logId = other.logId;
+        this.timestamp = other.timestamp;
+        this.logLevel = other.logLevel;
+        this.content = other.content;
+        this.userId = other.userId;
+        this.serviceName = other.serviceName;
     }
 
     /**
@@ -89,42 +94,8 @@ public class LogData {
      */
     public ServiceNames getServiceName() { return serviceName; }
 
-    /**
-     * Serialises the current object into a new JSON object
-     * @return A json object for the current record
-     */
-    public JsonObject toJson(){
-        JsonObjectBuilder newJson = Json.createObjectBuilder();
-        newJson.add("logId", this.logId)
-               .add("timestamp", this.timestamp.toString())
-               .add("userId", this.userId)
-               .add("logLevel", this.logLevel.toString())
-               .add("content", this.content)
-               .add("serviceName", this.serviceName.toString());
-        return newJson.build();
-    }
-
-    public static LogData fromJson(JsonObject jsonObject){
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        // Register a custom adaptor to convert to instant from strings
-        gsonBuilder.registerTypeAdapter(Instant.class, GsonTimeDeserialiser.INSTANT_DESERIALISER);
-
-        Gson gson = gsonBuilder.create();
-        return gson.fromJson(jsonObject.toString(), LogData.class);
-    }
-
-    public static List<LogData> fromJson(JsonArray jsonArray){
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        // Register a custom adaptor to convert to instant from strings
-        gsonBuilder.registerTypeAdapter(Instant.class, GsonTimeDeserialiser.INSTANT_DESERIALISER);
-
-        Gson gson = gsonBuilder.create();
-        LogData[] converted = gson.fromJson(jsonArray.toString(), LogData[].class);
-        return Arrays.asList(converted);
-    }
-
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (obj == null){
             return false;
         }
@@ -136,7 +107,7 @@ public class LogData {
         final LogData other = (LogData) obj;
         return this.logId.equals(other.logId) && this.timestamp.equals(other.timestamp)
                 && this.logLevel == other.logLevel && this.content.equals(other.content) &&
-                this.userId.equals(other.userId);
+                this.userId.equals(other.userId) && this.serviceName == other.serviceName;
 
     }
 
