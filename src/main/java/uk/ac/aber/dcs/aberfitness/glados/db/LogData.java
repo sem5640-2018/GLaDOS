@@ -18,6 +18,13 @@ import java.util.UUID;
  *
  */
 public class LogData {
+    private ServiceNames serviceName;
+    private String logId;
+    private Instant timestamp;
+    private LoggingLevels logLevel;
+    private String content;
+    private String userId;
+
     /**
      * Constructs a new LogData instance which represents a log or audit message
      * @param timestamp The time of the log message
@@ -25,13 +32,14 @@ public class LogData {
      * @param content The message content of this log entry
      * @param userId The user associated with this log entry
      */
-    public LogData(final Instant timestamp, final LoggingLevel logLevel,
-                   final String content, final String userId) {
+    public LogData(final Instant timestamp, final LoggingLevels logLevel,
+                   final String content, final String userId, final ServiceNames serviceName) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
         this.logLevel = logLevel;
         this.content = content;
         this.userId = userId;
+        this.serviceName = serviceName;
     }
 
     /**
@@ -44,9 +52,9 @@ public class LogData {
 
     /**
      * Returns the logging level of the underlying log message
-     * @return LoggingLevel enum with the current level
+     * @return LoggingLevels enum with the current level
      */
-    public LoggingLevel getLogLevel() {
+    public LoggingLevels getLogLevel() {
         return logLevel;
     }
 
@@ -76,6 +84,12 @@ public class LogData {
     }
 
     /**
+     * Returns the service which created this log
+     * @return ServiceName enum with the micro-service name
+     */
+    public ServiceNames getServiceName() { return serviceName; }
+
+    /**
      * Serialises the current object into a new JSON object
      * @return A json object for the current record
      */
@@ -85,7 +99,8 @@ public class LogData {
                .add("timestamp", this.timestamp.toString())
                .add("userId", this.userId)
                .add("logLevel", this.logLevel.toString())
-               .add("content", this.content);
+               .add("content", this.content)
+               .add("serviceName", this.serviceName.toString());
         return newJson.build();
     }
 
@@ -125,9 +140,5 @@ public class LogData {
 
     }
 
-    private String logId;
-    private Instant timestamp;
-    private LoggingLevel logLevel;
-    private String content;
-    private String userId;
+
 }

@@ -5,7 +5,7 @@ package uk.ac.aber.dcs.aberfitness.glados.db;
  * mechanisms. The order of precedence is:
  * Critical -> Error -> Warning -> Audit -> Info -> Debug
  */
-public enum LoggingLevel {
+public enum LoggingLevels {
 
     CRITICAL,
     ERROR,
