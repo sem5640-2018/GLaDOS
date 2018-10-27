@@ -38,6 +38,16 @@ public class LogDataTest {
         Assert.assertNotEquals(testInstanceOne.getLogId(), testInstanceTwo.getLogId());
     }
 
+    @Test
+    public void LogDataCopyConstructor(){
+        final LogData testInstanceOne = new LogDataNoSerial(Instant.now(), LoggingLevels.DEBUG,
+                "test", "id1", ServiceNames.GLADOS);
+
+        final LogData testInstanceTwo = new LogDataNoSerial(testInstanceOne);
+
+        Assert.assertEquals(testInstanceOne, testInstanceTwo);
+    }
+
 
 
 }

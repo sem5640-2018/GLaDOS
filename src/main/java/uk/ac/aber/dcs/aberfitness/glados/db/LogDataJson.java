@@ -2,6 +2,7 @@ package uk.ac.aber.dcs.aberfitness.glados.db;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import uk.ac.aber.dcs.aberfitness.glados.api.GsonTimeDeserialiser;
 
 import javax.json.Json;
@@ -11,6 +12,7 @@ import javax.json.JsonObjectBuilder;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class LogDataJson extends LogData {
 
@@ -52,22 +54,36 @@ public class LogDataJson extends LogData {
         return newJson.build();
     }
 
-    public static LogDataJson fromJson(JsonObject jsonObject){
+    public static LogDataJson fromJson(JsonObject jsonObject) throws JsonParseException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         // Register a custom adaptor to convert to instant from strings
         gsonBuilder.registerTypeAdapter(Instant.class, GsonTimeDeserialiser.INSTANT_DESERIALISER);
 
         Gson gson = gsonBuilder.create();
-        return gson.fromJson(jsonObject.toString(), LogDataJson.class);
+        LogDataJson returnedObj = gson.fromJson(jsonObject.toString(), LogDataJson.class);
+
+        if (!returnedObj.isValid()){
+            throw new JsonParseException("Partial or empty JSON was received");
+        }
+
+        return returnedObj;
     }
 
-    public static List<LogDataJson> fromJson(JsonArray jsonArray){
+    public static List<LogDataJson> fromJson(JsonArray jsonArray) throws JsonParseException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         // Register a custom adaptor to convert to instant from strings
         gsonBuilder.registerTypeAdapter(Instant.class, GsonTimeDeserialiser.INSTANT_DESERIALISER);
 
         Gson gson = gsonBuilder.create();
         LogDataJson[] converted = gson.fromJson(jsonArray.toString(), LogDataJson[].class);
+
+        boolean allValid = Stream.of(converted).allMatch(LogData::isValid);
+
+        if (converted.length == 0 || !allValid){
+            throw new JsonParseException("Partial or empty JSON was received");
+        }
+
         return Arrays.asList(converted);
+
     }
 }

@@ -1,7 +1,11 @@
 package uk.ac.aber.dcs.aberfitness.glados.db;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * A class representing a log or audit entry. This class is marked abstract
@@ -109,6 +113,22 @@ public abstract class LogData {
                 && this.logLevel == other.logLevel && this.content.equals(other.content) &&
                 this.userId.equals(other.userId) && this.serviceName == other.serviceName;
 
+    }
+
+    public final boolean isValid() {
+        // GSON can return a log with all fields set to null
+        Field[] logDataFields = LogData.class.getDeclaredFields();
+
+        // We use reflection to check all fields of this class are not null
+        return Stream.of(logDataFields).allMatch(it -> {
+            try {
+                return it.get(this)!=null;
+            } catch (IllegalAccessException e) {
+                // Safety net in case reflection fails
+                e.printStackTrace();
+                return false;
+            }
+        });
     }
 
 

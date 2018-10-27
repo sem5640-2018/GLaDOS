@@ -1,3 +1,4 @@
+import com.google.gson.JsonParseException;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.aber.dcs.aberfitness.glados.db.LogDataNoSerial;
@@ -8,6 +9,8 @@ import uk.ac.aber.dcs.aberfitness.glados.db.ServiceNames;
 import javax.json.*;
 import java.time.Instant;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LogDataJsonTest {
     private JsonObject createFakeJson(Instant time, String msg, String userId,
@@ -115,6 +118,28 @@ public class LogDataJsonTest {
 
         Assert.assertEquals(returnedObject, testInstance);
     }
-    
+
+
+    @Test
+    public void JsonParseExceptionIsThrownForBlank() {
+        JsonObject blankObj = Json.createObjectBuilder().build();
+        JsonArray blankArray = Json.createArrayBuilder().build();
+
+        assertThrows(JsonParseException.class, ()-> { LogDataJson.fromJson(blankObj); });
+        assertThrows(JsonParseException.class, ()-> { LogDataJson.fromJson(blankArray); });
+
+    }
+
+    @Test
+    public void JsonParseExceptionIsThrownForPartial(){
+        JsonObjectBuilder partialObj = Json.createObjectBuilder();
+        partialObj.add("logId", "123");
+        partialObj.add("timestamp", Instant.now().toString());
+
+        JsonObject partialJson = partialObj.build();
+
+        assertThrows(JsonParseException.class, () -> {LogDataJson.fromJson(partialJson);});
+    }
+
     
 }
