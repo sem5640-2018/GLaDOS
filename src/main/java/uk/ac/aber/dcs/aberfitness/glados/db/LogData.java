@@ -24,6 +24,7 @@ public abstract class LogData {
      * @param logLevel The level associated with this log message
      * @param content The message content of this log entry
      * @param userId The user associated with this log entry
+     * @param serviceName The service associated with this log entry
      */
     protected LogData(final Instant timestamp, final LoggingLevels logLevel,
                       final String content, final String userId, final ServiceNames serviceName) {
@@ -96,6 +97,13 @@ public abstract class LogData {
      */
     public ServiceNames getServiceName() { return serviceName; }
 
+    /**
+     * Overrides and implements the equality operator for LogData objects.
+     * This is marked final as deriving classes should only serialise
+     * not implement operators and is agnostic of the serialising method.
+     * @param obj The object to compare to
+     * @return If all fields are equal, else false
+     */
     @Override
     public final boolean equals(Object obj) {
         if (obj == null){
@@ -124,6 +132,11 @@ public abstract class LogData {
     }
 
 
+    /**
+     * Returns if all the data fields within LogData are populated
+     * and not null. If any fields are null a false is returned
+     * @return True if all fields are populated, else false
+     */
     public final boolean isValid() {
         // GSON can return a log with all fields set to null
         Field[] logDataFields = LogData.class.getDeclaredFields();

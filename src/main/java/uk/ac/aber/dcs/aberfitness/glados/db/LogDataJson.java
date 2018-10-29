@@ -23,6 +23,7 @@ public class LogDataJson extends LogData {
      * @param logLevel The level associated with this log message
      * @param content The message content of this log entry
      * @param userId The user associated with this log entry
+     * @param serviceName The micro-service associated with this log entry
      */
     public LogDataJson(final Instant timestamp, final LoggingLevels logLevel,
                           final String content, final String userId, final ServiceNames serviceName){
@@ -54,6 +55,13 @@ public class LogDataJson extends LogData {
         return newJson.build();
     }
 
+    /**
+     * Serialises from a single JSON object into a LogDataJson
+     * object, which implements LogData
+     * @param jsonObject The JSON representing the LogDataObject
+     * @return LogDataJson object for the log entry
+     * @throws JsonParseException If all fields are not present and valid
+     */
     public static LogDataJson fromJson(JsonObject jsonObject) throws JsonParseException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         // Register a custom adaptor to convert to instant from strings
@@ -70,6 +78,13 @@ public class LogDataJson extends LogData {
         return returnedObj;
     }
 
+    /**
+     * Serialises from multiple JSON Objects into a list of LogDataJson
+     * objects, all of which implement LogData
+     * @param jsonArray The array containing JSON arrays
+     * @return List of LogData objects
+     * @throws JsonParseException If any LogData objects are invalid or there are none present
+     */
     public static List<LogDataJson> fromJson(JsonArray jsonArray) throws JsonParseException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         // Register a custom adaptor to convert to instant from strings
@@ -82,7 +97,7 @@ public class LogDataJson extends LogData {
         boolean allValid = Stream.of(converted).allMatch(LogData::isValid);
 
         if (converted.length == 0 || !allValid){
-            throw new JsonParseException("Partial or empty JSON was received");
+            throw new JsonParseException("Partial, invalid or empty JSON array was received");
         }
 
         return Arrays.asList(converted);

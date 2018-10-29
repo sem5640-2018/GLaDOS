@@ -30,6 +30,10 @@ public class LogApiTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Returns a sample LogData entry for unit testing
+     * @return A sample LogData object
+     */
     private LogData createExampleLogData() {
         return new LogDataNoSerial(Instant.now(), LoggingLevels.DEBUG, "TestContent",
                 "abc123", ServiceNames.GLADOS);
