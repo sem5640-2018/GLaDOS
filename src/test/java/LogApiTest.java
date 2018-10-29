@@ -1,3 +1,4 @@
+import helpers.LogDataHelpers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -5,10 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.ac.aber.dcs.aberfitness.glados.api.LogApi;
-import uk.ac.aber.dcs.aberfitness.glados.db.DatabaseConnection;
-import uk.ac.aber.dcs.aberfitness.glados.db.LogData;
-import uk.ac.aber.dcs.aberfitness.glados.db.LoggingLevels;
-import uk.ac.aber.dcs.aberfitness.glados.db.ServiceNames;
+import uk.ac.aber.dcs.aberfitness.glados.db.*;
 
 import javax.json.JsonArray;
 import java.io.IOException;
@@ -16,16 +14,15 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.notNull;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class LogApiTest {
-    @Mock private DatabaseConnection dbMock;
+    @Mock
+    private DatabaseConnection dbMock;
 
     // Ensure we replace the injected concrete type with the mock db connection
-    @InjectMocks private LogApi apiInstance;
+    @InjectMocks
+    private LogApi apiInstance;
 
     @Before
     public void setUp() {
@@ -33,8 +30,12 @@ public class LogApiTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    private LogData createExampleLogData(){
-        return new LogData(Instant.now(), LoggingLevels.DEBUG, "TestContent",
+    /**
+     * Returns a sample LogData entry for unit testing
+     * @return A sample LogData object
+     */
+    private LogData createExampleLogData() {
+        return new LogDataNoSerial(Instant.now(), LoggingLevels.DEBUG, "TestContent",
                 "abc123", ServiceNames.GLADOS);
     }
 
@@ -43,12 +44,20 @@ public class LogApiTest {
         LogData dummyLogOne = createExampleLogData();
         LogData dummyLogTwo = createExampleLogData();
 
-        List<LogData> mockedData = Arrays.asList(dummyLogOne, dummyLogOne);
+        List<LogData> mockedData = Arrays.asList(dummyLogOne, dummyLogTwo);
         when(dbMock.getAllLogEntries()).thenReturn(mockedData);
 
-        JsonArray returnedData = apiInstance.getAllEntries();
-        Assert.assertEquals(mockedData, LogData.fromJson(returnedData));
+        // This should return JSON
+        JsonArray returnedJson = apiInstance.getAllEntries();
+        List<LogDataJson> returnedEntries = LogDataJson.fromJson(returnedJson);
+
+        Assert.assertEquals(returnedEntries.size(), mockedData.size());
+
+        for (int i = 0; i < returnedEntries.size(); i++) {
+            LogDataHelpers.isAlmostEqual(returnedEntries.get(i), mockedData.get(i));
+        }
     }
+
 
 
 
