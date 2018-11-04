@@ -1,3 +1,5 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.aber.dcs.aberfitness.glados.db.LogDataNoSerial;
@@ -8,6 +10,7 @@ import uk.ac.aber.dcs.aberfitness.glados.db.ServiceNames;
 import java.time.Instant;
 
 public class LogDataTest {
+
     @Test
     public void LogDataGetters() {
         Instant now = Instant.now();
