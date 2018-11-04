@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info:
+  description: "GLADoS Auditing API."
+  version: "1.0.0"
+  title: "GLADoS API"
+  
+tags:
+- name: "audit"
+  description: "Provides the ability to store and request audit logs"
+    
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme : bearer
+
+  schemas:
+    new_audit_entry:
+      properties:
+        content:
+          type: string
+          description: "Audit entry message"
+      
+        serviceName:
+          type: string
+          description: "The name of the service"
+    
+        timestamp:
+          type: string
+          description: "ISO8601 without local timestamp"
+          
+        userId:
+          type: string
+          description: "The user's unique ID"
+      required:
+        - content
+        - serviceName
+        - timestamp
+        - userId
+        
+    audit_entry:
+      allOf:
+        - $ref: '#/components/schemas/new_audit_entry'
+      properties:
+        logId:
+          type: string
+          description: "The log's UUID"
+      required:
+        - logId
+
+# Apply security globally  
+security:
+  - bearerAuth: []
+      
+    
+paths: 
+  /audit/{logId} :
+    get:
+      tags: [audit]
+      summary: Gets all log entries matching the given log ID
+      parameters:
+      - in: path
+        name: logId
+        required: true
+        schema:
+          type: string
+        description: The UUID representing a log entry
+        
+      responses:
+        200:
+          description: OK
+          content:
+            content/json:
+              schema:
+                $ref : '#/components/schemas/audit_entry'
+        401:
+          description: "Unauthorised"
+        404:
+          description: "Log Entry not found"
+        500:
+          description: "Server Error"
+  
+  /audit/find/{userId} :
+    get:
+      tags: [audit]
+      parameters: 
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          description: "The user ID associated with the logs to find"
+        - in: query
+          name: fromTime
+          schema:
+            type: string
+          description: "(Optional) The timestamp (ISO8061) to search from"
+        - in: query
+          name: toTime
+          schema:
+            type: string
+          description: "(Optional) The timestamp (ISO8061) to search up to"
+      
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/audit_entry'
+        401:
+          description: "Unauthorised"
+        404:
+          description: "No items based on the requested criteria were found"
+        500:
+          description: "Server Error"
+        
+          
+  /audit/new :
+    post:
+      tags: [audit]
+      summary: Creates a new audit entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/new_audit_entry'
+      responses:
+        201: 
+          description: Created
+        401: 
+          description: "Unauthorised"
+        500: 
+          description: "Server Error"
+        
+  /audit/delete/{logId} :
+    delete:
+      tags: [audit] 
+      summary: Deletes the requested log entry
+      parameters:
+        - in: path
+          name: logId
+          required: true
+          schema:
+            type: string
+          description: The UUID representing a log entry
+      
+      responses:
+        204:
+          description: "Deleted"
+        401:
+          description: "Unauthorised"
+        404:
+          description: "Record not found"
+        500:
+          description: "Server Error"
