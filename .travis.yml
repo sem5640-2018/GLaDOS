@@ -8,7 +8,7 @@ cache:
     - $HOME/.m2
 
 stages:
-  - name: deploy
+  - name: deployment
     # Only deploy on master or dev builds
     if: branch IN (master, development)
 
@@ -18,7 +18,7 @@ install:
 script: 
 - mvn test -B
 
-deploy:
+deployment:
   - export RELEASE_TYPE=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "PROD"; else echo "STAGING"`
   - docker build -f Dockerfile -t GLaDOS-$RELEASE_TYPE:$TRAVIS_COMMIT
   # TODO push to docker hub and call web hook
