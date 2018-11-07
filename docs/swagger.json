@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "GLADoS Auditing API.",
+    "description": "GLaDOS Auditing API.",
     "version": "1.0.0",
-    "title": "GLADoS API"
+    "title": "GLaDOS API"
   },
   "tags": [
     {
