@@ -17,6 +17,7 @@ install:
 - mvn dependency:resolve
 script: 
 - mvn test -B
+- mvn war:exploded
 
 after_success:
   # Conditional stages do not work so this is the current "solution"
