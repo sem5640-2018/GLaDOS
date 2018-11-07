@@ -26,7 +26,7 @@ after_success:
     docker build -f Dockerfile -t GLaDOS-PROD:$TRAVIS_COMMIT
 
   # Staging
-  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && 
+  - test $TRAVIS_BRANCH = "development" && test $TRAVIS_PULL_REQUEST = "false" && 
     echo "Creating STAGING docker image" &&
     docker build -f Dockerfile -t GLaDOS-STAGING:$TRAVIS_COMMIT
 
