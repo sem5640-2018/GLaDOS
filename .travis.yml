@@ -18,7 +18,16 @@ install:
 script: 
 - mvn test -B
 
-deployment:
-  - export RELEASE_TYPE=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "PROD"; else echo "STAGING"`
-  - docker build -f Dockerfile -t GLaDOS-$RELEASE_TYPE:$TRAVIS_COMMIT
+after_success:
+  # Conditional stages do not work so this is the current "solution"
+  # Production
+  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && 
+    echo "Creating PROD docker image" &&
+    docker build -f Dockerfile -t GLaDOS-PROD:$TRAVIS_COMMIT
+
+  # Staging
+  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && 
+    echo "Creating STAGING docker image" &&
+    docker build -f Dockerfile -t GLaDOS-STAGING:$TRAVIS_COMMIT
+
   # TODO push to docker hub and call web hook
