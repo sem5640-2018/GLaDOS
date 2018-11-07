@@ -74,7 +74,7 @@
         "tags": [
           "audit"
         ],
-        "summary": "Gets all log entries matching the given log ID",
+        "summary": "Gets the log entry matching the given log ID",
         "parameters": [
           {
             "in": "path",
