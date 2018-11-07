@@ -24,6 +24,7 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- JSON Parsing -->
         <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
@@ -35,7 +36,6 @@
             <artifactId>javax.json</artifactId>
             <version>1.1</version>
         </dependency>
-
 
         <!-- GSON -->
         <dependency>
@@ -93,25 +93,34 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Maven WAR plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
         <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <configuration>
-                <failOnViolation>true</failOnViolation>
-                <printFailingErrors>true</printFailingErrors>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <failOnViolation>true</failOnViolation>
+                    <printFailingErrors>true</printFailingErrors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -120,6 +129,18 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <outputFileNameMapping>@{artifactId}@.@{extension}@</outputFileNameMapping>
+                    <webappDirectory>${project.build.directory}/${project.name}-exploded</webappDirectory>
+                </configuration>
+                <version>3.2.2</version>
+            </plugin>
+
         </plugins>
 
         <resources>
