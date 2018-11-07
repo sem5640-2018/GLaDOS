@@ -23,11 +23,11 @@ after_success:
   # Production
   - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && 
     echo "Creating PROD docker image" &&
-    docker build -f Dockerfile -t GLaDOS-PROD:$TRAVIS_COMMIT
+    docker build -f Dockerfile -t glados:$TRAVIS_COMMIT .
 
   # Staging
   - test $TRAVIS_BRANCH = "development" && test $TRAVIS_PULL_REQUEST = "false" && 
     echo "Creating STAGING docker image" &&
-    docker build -f Dockerfile -t GLaDOS-STAGING:$TRAVIS_COMMIT
+    docker build -f Dockerfile -t glados-staging:$TRAVIS_COMMIT .
 
   # TODO push to docker hub and call web hook
