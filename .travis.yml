@@ -3,19 +3,22 @@ sudo: false
 notifications:
   slack: sem5640-2018:lBYoMLDBbIP1GGlCH2tQcjho
 
-# Specify which branches can be built on PR merge
-branches:
-  only:
-    - master
-    - development
-
 cache:
   directories:
     - $HOME/.m2
 
+stages:
+  - name: deploy
+    # Only deploy on master or dev builds
+    if: branch IN (master, development)
 
 install: 
 # Build dependencies first so it goes away
 - mvn dependency:resolve
 script: 
 - mvn test -B
+
+deploy:
+  - export RELEASE_TYPE=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "PROD"; else echo "STAGING"`
+  - docker build -f Dockerfile -t GLaDOS-$RELEASE_TYPE:$TRAVIS_COMMIT
+  # TODO push to docker hub and call web hook

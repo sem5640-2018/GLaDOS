@@ -127,6 +127,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <outputFileNameMapping>@{artifactId}@.@{extension}@</outputFileNameMapping>
+                    <webappDirectory>${project.build.directory}/${project.name}-exploded</webappDirectory>
+                </configuration>
                 <version>3.2.2</version>
             </plugin>
 
