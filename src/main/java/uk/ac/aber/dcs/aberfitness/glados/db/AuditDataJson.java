@@ -14,10 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class LogDataJson extends LogData {
+public class AuditDataJson extends AuditData {
 
     /**
-     * Constructs a new LogDataJson instance which implements a
+     * Constructs a new AuditDataJson instance which implements a
      * JSON serialiser for the underlying class
      * @param timestamp The time of the log message
      * @param logLevel The level associated with this log message
@@ -25,18 +25,18 @@ public class LogDataJson extends LogData {
      * @param userId The user associated with this log entry
      * @param serviceName The micro-service associated with this log entry
      */
-    public LogDataJson(final Instant timestamp, final LoggingLevels logLevel,
-                          final String content, final String userId, final ServiceNames serviceName){
+    public AuditDataJson(final Instant timestamp, final LoggingLevels logLevel,
+                         final String content, final String userId, final ServiceNames serviceName){
         super(timestamp, logLevel, content, userId, serviceName);
     }
 
     /**
-     * Constructs a new LogDataJson from a differing serialising implementation
+     * Constructs a new AuditDataJson from a differing serialising implementation
      * to a JSON serialiser
-     * @param existingLogData An existing differing type of serialising JSON
+     * @param existingAuditData An existing differing type of serialising JSON
      */
-    public LogDataJson(LogData existingLogData){
-        super(existingLogData);
+    public AuditDataJson(AuditData existingAuditData){
+        super(existingAuditData);
     }
 
 
@@ -56,19 +56,19 @@ public class LogDataJson extends LogData {
     }
 
     /**
-     * Serialises from a single JSON object into a LogDataJson
-     * object, which implements LogData
+     * Serialises from a single JSON object into a AuditDataJson
+     * object, which implements AuditData
      * @param jsonObject The JSON representing the LogDataObject
-     * @return LogDataJson object for the log entry
+     * @return AuditDataJson object for the log entry
      * @throws JsonParseException If all fields are not present and valid
      */
-    public static LogDataJson fromJson(JsonObject jsonObject) throws JsonParseException {
+    public static AuditDataJson fromJson(JsonObject jsonObject) throws JsonParseException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         // Register a custom adaptor to convert to instant from strings
         gsonBuilder.registerTypeAdapter(Instant.class, GsonTimeDeserialiser.INSTANT_DESERIALISER);
 
         Gson gson = gsonBuilder.create();
-        LogDataJson returnedObj = gson.fromJson(jsonObject.toString(), LogDataJson.class);
+        AuditDataJson returnedObj = gson.fromJson(jsonObject.toString(), AuditDataJson.class);
         returnedObj.generateLogId();
 
         if (!returnedObj.isValid()){
@@ -79,22 +79,22 @@ public class LogDataJson extends LogData {
     }
 
     /**
-     * Serialises from multiple JSON Objects into a list of LogDataJson
-     * objects, all of which implement LogData
+     * Serialises from multiple JSON Objects into a list of AuditDataJson
+     * objects, all of which implement AuditData
      * @param jsonArray The array containing JSON arrays
-     * @return List of LogData objects
-     * @throws JsonParseException If any LogData objects are invalid or there are none present
+     * @return List of AuditData objects
+     * @throws JsonParseException If any AuditData objects are invalid or there are none present
      */
-    public static List<LogDataJson> fromJson(JsonArray jsonArray) throws JsonParseException{
+    public static List<AuditDataJson> fromJson(JsonArray jsonArray) throws JsonParseException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         // Register a custom adaptor to convert to instant from strings
         gsonBuilder.registerTypeAdapter(Instant.class, GsonTimeDeserialiser.INSTANT_DESERIALISER);
 
         Gson gson = gsonBuilder.create();
-        LogDataJson[] converted = gson.fromJson(jsonArray.toString(), LogDataJson[].class);
-        Stream.of(converted).forEach(LogData::generateLogId);
+        AuditDataJson[] converted = gson.fromJson(jsonArray.toString(), AuditDataJson[].class);
+        Stream.of(converted).forEach(AuditData::generateLogId);
 
-        boolean allValid = Stream.of(converted).allMatch(LogData::isValid);
+        boolean allValid = Stream.of(converted).allMatch(AuditData::isValid);
 
         if (converted.length == 0 || !allValid){
             throw new JsonParseException("Partial, invalid or empty JSON array was received");

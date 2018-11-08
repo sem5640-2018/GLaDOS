@@ -1,9 +1,8 @@
 package uk.ac.aber.dcs.aberfitness.glados.api;
 
+import uk.ac.aber.dcs.aberfitness.glados.db.AuditData;
+import uk.ac.aber.dcs.aberfitness.glados.db.AuditDataJson;
 import uk.ac.aber.dcs.aberfitness.glados.db.DatabaseConnection;
-
-import uk.ac.aber.dcs.aberfitness.glados.db.LogData;
-import uk.ac.aber.dcs.aberfitness.glados.db.LogDataJson;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -22,7 +21,7 @@ import java.util.List;
 @Path("log")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class LogApi {
+public class AuditApi {
     @Inject
     DatabaseConnection dbConnection;
 
@@ -30,10 +29,10 @@ public class LogApi {
     public JsonArray getAllEntries() throws IOException {
         // TODO add limits / ranges
         final JsonArrayBuilder jsonArray = Json.createArrayBuilder();
-        List<LogData> foundEntries = dbConnection.getAllLogEntries();
+        List<AuditData> foundEntries = dbConnection.getAllLogEntries();
 
         // Ensure we have JSON serialisable elements
-        foundEntries.forEach(e->jsonArray.add(new LogDataJson(e).toJson()));
+        foundEntries.forEach(e->jsonArray.add(new AuditDataJson(e).toJson()));
         return jsonArray.build();
     }
 

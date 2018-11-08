@@ -8,9 +8,9 @@ import java.util.stream.Stream;
 /**
  * A class representing a log or audit entry. This class is marked abstract
  * to force extending classes to implement to X serialisation. For example
- * toJson in the LogDataJson class
+ * toJson in the AuditDataJson class
  */
-public abstract class LogData {
+public abstract class AuditData {
     private ServiceNames serviceName;
     private String logId;
     private Instant timestamp;
@@ -19,15 +19,15 @@ public abstract class LogData {
     private String userId;
 
     /**
-     * Constructs a new LogData instance which represents a log or audit message
+     * Constructs a new AuditData instance which represents a log or audit message
      * @param timestamp The time of the log message
      * @param logLevel The level associated with this log message
      * @param content The message content of this log entry
      * @param userId The user associated with this log entry
      * @param serviceName The service associated with this log entry
      */
-    protected LogData(final Instant timestamp, final LoggingLevels logLevel,
-                      final String content, final String userId, final ServiceNames serviceName) {
+    protected AuditData(final Instant timestamp, final LoggingLevels logLevel,
+                        final String content, final String userId, final ServiceNames serviceName) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
         this.logLevel = logLevel;
@@ -39,9 +39,9 @@ public abstract class LogData {
     /**
      * Implements a copy constructor which is invoked when switching
      * the outer serialisation methods by the extending class
-     * @param other The existing LogData to copy
+     * @param other The existing AuditData to copy
      */
-    protected LogData(LogData other){
+    protected AuditData(AuditData other){
         this.logId = other.logId;
         this.timestamp = other.timestamp;
         this.logLevel = other.logLevel;
@@ -98,7 +98,7 @@ public abstract class LogData {
     public ServiceNames getServiceName() { return serviceName; }
 
     /**
-     * Overrides and implements the equality operator for LogData objects.
+     * Overrides and implements the equality operator for AuditData objects.
      * This is marked final as deriving classes should only serialise
      * not implement operators and is agnostic of the serialising method.
      * @param obj The object to compare to
@@ -110,11 +110,11 @@ public abstract class LogData {
             return false;
         }
 
-        if (!LogData.class.isAssignableFrom(obj.getClass())){
+        if (!AuditData.class.isAssignableFrom(obj.getClass())){
             return false;
         }
 
-        final LogData other = (LogData) obj;
+        final AuditData other = (AuditData) obj;
         return this.logId.equals(other.logId) && this.timestamp.equals(other.timestamp)
                 && this.logLevel == other.logLevel && this.content.equals(other.content) &&
                 this.userId.equals(other.userId) && this.serviceName == other.serviceName;
@@ -133,13 +133,13 @@ public abstract class LogData {
 
 
     /**
-     * Returns if all the data fields within LogData are populated
+     * Returns if all the data fields within AuditData are populated
      * and not null. If any fields are null a false is returned
      * @return True if all fields are populated, else false
      */
     public final boolean isValid() {
         // GSON can return a log with all fields set to null
-        Field[] logDataFields = LogData.class.getDeclaredFields();
+        Field[] logDataFields = AuditData.class.getDeclaredFields();
 
         // We use reflection to check all fields of this class are not null
         return Stream.of(logDataFields).allMatch(it -> {
