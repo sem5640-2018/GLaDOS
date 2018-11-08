@@ -3,14 +3,27 @@ sudo: false
 notifications:
   slack: sem5640-2018:lBYoMLDBbIP1GGlCH2tQcjho
 
-
 cache:
   directories:
     - $HOME/.m2
-
 
 install: 
 # Build dependencies first so it goes away
 - mvn dependency:resolve
 script: 
 - mvn test -B
+- mvn war:exploded
+
+after_success:
+  # Conditional stages do not work so this is the current "solution"
+  # Production
+  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && 
+    echo "Creating PROD docker image" &&
+    docker build -f Dockerfile -t glados:$TRAVIS_COMMIT .
+
+  # Staging
+  - test $TRAVIS_BRANCH = "development" && test $TRAVIS_PULL_REQUEST = "false" && 
+    echo "Creating STAGING docker image" &&
+    docker build -f Dockerfile -t glados-staging:$TRAVIS_COMMIT .
+
+  # TODO push to docker hub and call web hook
