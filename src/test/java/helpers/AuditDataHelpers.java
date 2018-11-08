@@ -1,13 +1,13 @@
 package helpers;
 
 import org.junit.Assert;
-import uk.ac.aber.dcs.aberfitness.glados.db.LogData;
+import uk.ac.aber.dcs.aberfitness.glados.db.AuditData;
 
-public class LogDataHelpers {
+public class AuditDataHelpers {
     /**
      * Compares all fields except UUID which cannot be set through JSON
      */
-    static public void isAlmostEqual(LogData one, LogData two){
+    static public void isAlmostEqual(AuditData one, AuditData two){
         Assert.assertEquals(one.getUserId(), two.getUserId());
         Assert.assertEquals(one.getLogLevel(), two.getLogLevel());
         Assert.assertEquals(one.getContent(), two.getContent());

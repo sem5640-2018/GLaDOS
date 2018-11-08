@@ -21,22 +21,22 @@ public class DatabaseConnection implements IDatabaseConnection{
     }
 
     @Override
-    public void addLogData(LogData newLogEntry) throws IOException {
+    public void addLogData(AuditData newLogEntry) throws IOException {
 
     }
 
     @Override
-    public LogData getLogEntry(String logId) throws IOException, NoSuchElementException {
+    public AuditData getLogEntry(String logId) throws IOException, NoSuchElementException {
         return null;
     }
 
     @Override
-    public List<LogData> findLogEntry(LogData searchCriteria) throws IOException {
+    public List<AuditData> findLogEntry(AuditData searchCriteria) throws IOException {
         return null;
     }
 
     @Override
-    public List<LogData> getAllLogEntries() throws IOException {
+    public List<AuditData> getAllLogEntries() throws IOException {
         return null;
     }
 

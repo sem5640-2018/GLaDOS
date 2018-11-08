@@ -1,15 +1,14 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+package UnitTest;
+
 import org.junit.Assert;
 import org.junit.Test;
-import uk.ac.aber.dcs.aberfitness.glados.db.LogDataNoSerial;
-import uk.ac.aber.dcs.aberfitness.glados.db.LogData;
-import uk.ac.aber.dcs.aberfitness.glados.db.LoggingLevels;
-import uk.ac.aber.dcs.aberfitness.glados.db.ServiceNames;
+import uk.ac.aber.dcs.aberfitness.glados.db.*;
+import uk.ac.aber.dcs.aberfitness.glados.db.AuditDataNoSerial;
+import uk.ac.aber.dcs.aberfitness.glados.db.AuditData;
 
 import java.time.Instant;
 
-public class LogDataTest {
+public class AuditDataTest {
 
     @Test
     public void LogDataGetters() {
@@ -19,7 +18,7 @@ public class LogDataTest {
         String userId = "test123";
         ServiceNames testName = ServiceNames.GLADOS;
 
-        final LogData testInstance = new LogDataNoSerial(now, logLevel, sampleMsg, userId, testName);
+        final AuditData testInstance = new AuditDataNoSerial(now, logLevel, sampleMsg, userId, testName);
 
         Assert.assertEquals(testInstance.getTimestamp(), now);
         Assert.assertEquals(testInstance.getContent(), sampleMsg);
@@ -33,9 +32,9 @@ public class LogDataTest {
         Instant now = Instant.now();
 
         // Regardless of other fields the log id should always be unique
-        final LogData testInstanceOne = new LogDataNoSerial(now, LoggingLevels.DEBUG,
+        final AuditData testInstanceOne = new AuditDataNoSerial(now, LoggingLevels.DEBUG,
                 "test", "id1", ServiceNames.GLADOS);
-        final LogData testInstanceTwo = new LogDataNoSerial(now, LoggingLevels.DEBUG,
+        final AuditData testInstanceTwo = new AuditDataNoSerial(now, LoggingLevels.DEBUG,
                 "test", "id1", ServiceNames.GLADOS);
 
         Assert.assertNotEquals(testInstanceOne.getLogId(), testInstanceTwo.getLogId());
@@ -43,10 +42,10 @@ public class LogDataTest {
 
     @Test
     public void LogDataCopyConstructor(){
-        final LogData testInstanceOne = new LogDataNoSerial(Instant.now(), LoggingLevels.DEBUG,
+        final AuditData testInstanceOne = new AuditDataNoSerial(Instant.now(), LoggingLevels.DEBUG,
                 "test", "id1", ServiceNames.GLADOS);
 
-        final LogData testInstanceTwo = new LogDataNoSerial(testInstanceOne);
+        final AuditData testInstanceTwo = new AuditDataNoSerial(testInstanceOne);
 
         Assert.assertEquals(testInstanceOne, testInstanceTwo);
     }

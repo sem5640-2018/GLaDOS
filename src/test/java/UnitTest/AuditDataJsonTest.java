@@ -1,5 +1,7 @@
+package UnitTest;
+
 import com.google.gson.JsonParseException;
-import helpers.LogDataHelpers;
+import helpers.AuditDataHelpers;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.aber.dcs.aberfitness.glados.db.*;
@@ -12,26 +14,26 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LogDataJsonTest {
-    private JsonObject createFakeJson(LogData logData) {
+public class AuditDataJsonTest {
+    private JsonObject createFakeJson(AuditData auditData) {
 
         JsonObjectBuilder newJsonObject = Json.createObjectBuilder();
 
 
-        newJsonObject.add("timestamp", logData.getTimestamp().toString())
-                .add("userId", logData.getUserId())
-                .add("logLevel", logData.getLogLevel().toString())
-                .add("content", logData.getContent())
-                .add("serviceName", logData.getServiceName().toString());
+        newJsonObject.add("timestamp", auditData.getTimestamp().toString())
+                .add("userId", auditData.getUserId())
+                .add("logLevel", auditData.getLogLevel().toString())
+                .add("content", auditData.getContent())
+                .add("serviceName", auditData.getServiceName().toString());
         return newJsonObject.build();
     }
 
     @Test
     public void ConvertsFromOtherSerialisingTypeCorrectly() {
-        LogDataNoSerial noSerial = new LogDataNoSerial(Instant.now(), LoggingLevels.DEBUG,
+        AuditDataNoSerial noSerial = new AuditDataNoSerial(Instant.now(), LoggingLevels.DEBUG,
                 "test", "abc123", ServiceNames.GLADOS);
 
-        LogDataJson convertedInstance = new LogDataJson(noSerial);
+        AuditDataJson convertedInstance = new AuditDataJson(noSerial);
         Assert.assertNotNull(convertedInstance);
 
         // These are equiv if converted correctly
@@ -46,7 +48,7 @@ public class LogDataJsonTest {
         String userId = "test123";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        final LogDataJson testInstance = new LogDataJson(now, logLevel, sampleMsg, userId, serviceName);
+        final AuditDataJson testInstance = new AuditDataJson(now, logLevel, sampleMsg, userId, serviceName);
         JsonObject returnedJson = testInstance.toJson();
 
         Assert.assertEquals(returnedJson.getString("timestamp"), now.toString());
@@ -65,12 +67,12 @@ public class LogDataJsonTest {
         String fakeId = "12345";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        LogData referenceInstance = new LogDataNoSerial(now, logLevel, sampleMsg, userId, serviceName);
+        AuditData referenceInstance = new AuditDataNoSerial(now, logLevel, sampleMsg, userId, serviceName);
 
         JsonObject testJson = createFakeJson(referenceInstance);
 
-        LogDataJson returnedClass = LogDataJson.fromJson(testJson);
-        LogDataHelpers.isAlmostEqual(referenceInstance, returnedClass);
+        AuditDataJson returnedClass = AuditDataJson.fromJson(testJson);
+        AuditDataHelpers.isAlmostEqual(referenceInstance, returnedClass);
     }
 
     @Test
@@ -81,9 +83,9 @@ public class LogDataJsonTest {
         String userId = "test123";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        final LogDataJson testObjOne = new LogDataJson(now, logLevel, sampleMsg, "101", serviceName);
-        final LogDataJson testObjTwo = new LogDataJson(now, logLevel, sampleMsg, "102", serviceName);
-        final LogDataJson testObjThree = new LogDataJson(now, logLevel, sampleMsg, "103", serviceName);
+        final AuditDataJson testObjOne = new AuditDataJson(now, logLevel, sampleMsg, "101", serviceName);
+        final AuditDataJson testObjTwo = new AuditDataJson(now, logLevel, sampleMsg, "102", serviceName);
+        final AuditDataJson testObjThree = new AuditDataJson(now, logLevel, sampleMsg, "103", serviceName);
 
         JsonObject testJson = createFakeJson(testObjOne);
         JsonObject testJson2 = createFakeJson(testObjTwo);
@@ -94,12 +96,12 @@ public class LogDataJsonTest {
         jsonArrayBuilder.add(testJson).add(testJson2).add(testJson3);
         JsonArray returnedArray = jsonArrayBuilder.build();
 
-        List<LogDataJson> processedArray = LogDataJson.fromJson(returnedArray);
+        List<AuditDataJson> processedArray = AuditDataJson.fromJson(returnedArray);
 
         Assert.assertEquals(processedArray.size(), 3);
-        LogDataHelpers.isAlmostEqual(testObjOne, processedArray.get(0));
-        LogDataHelpers.isAlmostEqual(testObjTwo, processedArray.get(1));
-        LogDataHelpers.isAlmostEqual(testObjThree, processedArray.get(2));
+        AuditDataHelpers.isAlmostEqual(testObjOne, processedArray.get(0));
+        AuditDataHelpers.isAlmostEqual(testObjTwo, processedArray.get(1));
+        AuditDataHelpers.isAlmostEqual(testObjThree, processedArray.get(2));
     }
 
     @Test
@@ -110,13 +112,13 @@ public class LogDataJsonTest {
         String userId = "test123";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        final LogDataJson testInstance = new LogDataJson(now, logLevel, sampleMsg, userId, serviceName);
+        final AuditDataJson testInstance = new AuditDataJson(now, logLevel, sampleMsg, userId, serviceName);
 
         JsonObject returnedJson = testInstance.toJson();
-        LogDataJson returnedObject = LogDataJson.fromJson(returnedJson);
+        AuditDataJson returnedObject = AuditDataJson.fromJson(returnedJson);
 
         Assert.assertTrue(returnedObject.isValid());
-        LogDataHelpers.isAlmostEqual(testInstance, returnedObject);
+        AuditDataHelpers.isAlmostEqual(testInstance, returnedObject);
     }
 
 
@@ -126,10 +128,10 @@ public class LogDataJsonTest {
         JsonArray blankArray = Json.createArrayBuilder().build();
 
         assertThrows(JsonParseException.class, () -> {
-            LogDataJson.fromJson(blankObj);
+            AuditDataJson.fromJson(blankObj);
         });
         assertThrows(JsonParseException.class, () -> {
-            LogDataJson.fromJson(blankArray);
+            AuditDataJson.fromJson(blankArray);
         });
 
     }
@@ -143,13 +145,13 @@ public class LogDataJsonTest {
         JsonObject partialJson = partialObj.build();
 
         assertThrows(JsonParseException.class, () -> {
-            LogDataJson.fromJson(partialJson);
+            AuditDataJson.fromJson(partialJson);
         });
     }
 
     @Test
     public void JsonParseExceptionIsThrownForBadFieldName() {
-        final LogDataJson testInstance = new LogDataJson(Instant.now(), LoggingLevels.DEBUG,
+        final AuditDataJson testInstance = new AuditDataJson(Instant.now(), LoggingLevels.DEBUG,
                 "test", "abc123", ServiceNames.GLADOS);
 
         JsonObject fakeJson = createFakeJson(testInstance);
@@ -163,7 +165,7 @@ public class LogDataJsonTest {
         JsonObject replacedJson = parser.getObject();
 
         assertThrows(JsonParseException.class, () -> {
-            LogDataJson.fromJson(replacedJson);
+            AuditDataJson.fromJson(replacedJson);
         });
     }
 }

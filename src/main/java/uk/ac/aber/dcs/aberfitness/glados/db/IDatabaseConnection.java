@@ -30,7 +30,7 @@ public interface IDatabaseConnection {
      * @param newLogEntry The log entry to add
      * @throws IOException If the entry could not be added
      */
-    void addLogData(LogData newLogEntry) throws IOException;
+    void addLogData(AuditData newLogEntry) throws IOException;
 
     /**
      * Returns the specified log entry from the db if it exists.
@@ -41,7 +41,7 @@ public interface IDatabaseConnection {
      * @throws NoSuchElementException If the requested ID does not exist
      * @throws IOException If the request could not be completed
      */
-    LogData getLogEntry(String logId) throws IOException, NoSuchElementException;
+    AuditData getLogEntry(String logId) throws IOException, NoSuchElementException;
 
     /**
      * Returns all matching log entries based on the search criteria passed
@@ -51,7 +51,7 @@ public interface IDatabaseConnection {
      * @return All matching entries in a list. An empty list if none are found
      * @throws IOException If the request could not be completed
      */
-    List<LogData> findLogEntry(LogData searchCriteria) throws IOException;
+    List<AuditData> findLogEntry(AuditData searchCriteria) throws IOException;
 
     /**
      * Returns all log entries within the DB as a list.
@@ -60,7 +60,7 @@ public interface IDatabaseConnection {
      * @throws IOException If the request could not be completed
      */
     // TODO add limits
-    List<LogData> getAllLogEntries() throws IOException;
+    List<AuditData> getAllLogEntries() throws IOException;
 
     /**
      * Attempts to remove the given logId. The entry is allowed to not exist too.
