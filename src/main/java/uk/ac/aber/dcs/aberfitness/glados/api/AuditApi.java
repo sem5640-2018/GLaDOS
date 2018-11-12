@@ -73,7 +73,7 @@ public class AuditApi {
             toTime = Instant.now().toString();
             log.debug("findLogEntry: Using current time {}", toTime);
         }
-        
+
         List<AuditData> foundEntries = dbConnection.findLogEntry(userId, fromTime, toTime);
 
         if (foundEntries.isEmpty()){

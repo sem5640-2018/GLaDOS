@@ -1,5 +1,5 @@
 language: java
-sudo: false
+sudo: true
 notifications:
   slack: sem5640-2018:lBYoMLDBbIP1GGlCH2tQcjho
 
@@ -7,12 +7,18 @@ cache:
   directories:
     - $HOME/.m2
 
+before_install:
+  - git clone https://github.com/sem5640-2018/deployment.git --depth=1
+  # Ensure that syslog is running etc
+  - sudo docker-compose up -d
+
 install: 
-# Build dependencies first so it goes away
-- mvn dependency:resolve
+  # Build dependencies first so it goes away
+  - mvn dependency:resolve
 script: 
-- mvn test -B
-- mvn war:exploded
+  - mvn test -B
+  # Package into WAR
+  - mvn war:exploded
 
 after_success:
   # Conditional stages do not work so this is the current "solution"
