@@ -1,5 +1,5 @@
 language: java
-sudo: false
+sudo: required
 notifications:
   slack: sem5640-2018:lBYoMLDBbIP1GGlCH2tQcjho
 
@@ -7,23 +7,35 @@ cache:
   directories:
     - $HOME/.m2
 
-install: 
-# Build dependencies first so it goes away
-- mvn dependency:resolve
-script: 
-- mvn test -B
-- mvn war:exploded
+services:
+  - docker
 
-after_success:
-  # Conditional stages do not work so this is the current "solution"
-  # Production
-  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && 
-    echo "Creating PROD docker image" &&
-    docker build -f Dockerfile -t glados:$TRAVIS_COMMIT .
+stages:
+  - test
+  - name: build_staging
+    if: branch = development AND type = push
+  - name: build_release
+    if: branch = master AND type = push
 
-  # Staging
-  - test $TRAVIS_BRANCH = "development" && test $TRAVIS_PULL_REQUEST = "false" && 
-    echo "Creating STAGING docker image" &&
-    docker build -f Dockerfile -t glados-staging:$TRAVIS_COMMIT .
-
-  # TODO push to docker hub and call web hook
+jobs:
+  include:
+    - stage: test
+      name: "Tests"
+      install: 
+      # Build dependencies first so it goes away
+      - mvn dependency:resolve
+      script: 
+      - mvn test -B
+      - mvn war:exploded
+    - stage: build_staging
+      name: "Build docker staging image"
+      script:
+       # TODO log in to docker
+       - docker build -t glados:$TRAVIS_COMMIT .
+       # TODO push to docker hub
+    - stage: build_release
+      name: "Build docker release image"
+      script:
+        # TODO log in to docker
+       - docker build -t glados:latest .
+       # TODO push to docker hub
