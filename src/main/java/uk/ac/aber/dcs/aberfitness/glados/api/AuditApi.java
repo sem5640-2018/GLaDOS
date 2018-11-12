@@ -1,8 +1,10 @@
 package uk.ac.aber.dcs.aberfitness.glados.api;
 
+import com.google.gson.JsonParseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.ac.aber.dcs.aberfitness.glados.db.AuditData;
 import uk.ac.aber.dcs.aberfitness.glados.db.AuditDataJson;
-import uk.ac.aber.dcs.aberfitness.glados.db.AuditDataNoSerial;
 import uk.ac.aber.dcs.aberfitness.glados.db.DatabaseConnection;
 
 import javax.ejb.Stateless;
@@ -25,6 +27,7 @@ import java.util.List;
 public class AuditApi {
     // Instant MIN
     private static final String DEFAULT_EMPTY_TIME = "-1000000000-01-01T00:00:00Z";
+    static final Logger log = LogManager.getLogger(AuditApi.class.getName());
 
     @Inject
     DatabaseConnection dbConnection;
@@ -75,7 +78,26 @@ public class AuditApi {
         return CreateJsonResponseFromList(foundEntries);
     }
 
+    @POST
+    @Path("/new")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response postNewEntry(JsonObject httpBody) throws IOException {
+        boolean failedToParse = false;
+        AuditData newEntity = null;
+        try {
+            newEntity = AuditDataJson.fromJson(httpBody);
+        } catch (JsonParseException e) {
+            failedToParse = true;
+            log.info("Failed to parse POSTED JSON:\n{}", e.toString());
+        }
 
+        if (failedToParse || !newEntity.isValid()){
+            return Response.status(400).build();
+        }
+
+        dbConnection.addLogData(newEntity);
+        return Response.noContent().build();
+    }
 
     private Response CreateJsonResponseFromList(List<AuditData> foundEntries) {
         JsonArrayBuilder jsonArray = Json.createArrayBuilder();

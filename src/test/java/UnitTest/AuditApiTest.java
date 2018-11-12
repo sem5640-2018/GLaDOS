@@ -2,6 +2,7 @@ package UnitTest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import com.sun.enterprise.security.ee.Audit;
 import helpers.AuditDataHelpers;
 import org.apache.logging.log4j.core.Core;
 import org.hamcrest.CoreMatchers;
@@ -15,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import uk.ac.aber.dcs.aberfitness.glados.api.AuditApi;
 import uk.ac.aber.dcs.aberfitness.glados.db.*;
 
+import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -26,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AuditApiTest {
     @Mock
@@ -150,6 +152,28 @@ public class AuditApiTest {
         Assert.assertEquals(fromTime.getValue(), EMPTY_TIME);
         Assert.assertNotEquals(toTime.getValue(), EMPTY_TIME);
 
+    }
+
+    @Test
+    public void postNewEntry() throws IOException {
+        String userId = "newId1";
+        AuditData logData = createExampleLogData(userId);
+        AuditDataJson serialiser = new AuditDataJson(logData);
+
+        Response response = apiInstance.postNewEntry(serialiser.toJson());
+        verify(dbMock, times(1)).addLogData(notNull());
+
+        Assert.assertEquals(204, response.getStatus());
+    }
+
+    @Test
+    public void postNewEntryWithBadInput() throws IOException {
+        JsonObject badHtml = Json.createObjectBuilder().add("foo", 10).build();
+
+        Response response = apiInstance.postNewEntry(badHtml);
+        verify(dbMock, times(0)).addLogData(any());
+
+        Assert.assertEquals(400, response.getStatus());
     }
 
 
