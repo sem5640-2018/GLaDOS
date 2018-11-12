@@ -21,11 +21,11 @@ import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 public class AuditApiTest {
@@ -35,6 +35,8 @@ public class AuditApiTest {
     // Ensure we replace the injected concrete type with the mock db connection
     @InjectMocks
     private AuditApi apiInstance;
+
+    private final String EMPTY_TIME = Instant.MIN.toString();
 
     @Before
     public void setUp() {
@@ -91,14 +93,63 @@ public class AuditApiTest {
     public void getLogByIdDoesNotExist() throws IOException {
         String doesNotExist = "bar";
 
-        ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
-        when(dbMock.getLogEntry(arg.capture())).thenReturn(null);
+
+        when(dbMock.getLogEntry(any())).thenReturn(null);
 
         Response returned = apiInstance.getAuditById(doesNotExist);
-        String returnedJson = (String)returned.getEntity();
 
         // Check result
         Assert.assertEquals(404, returned.getStatus());
+    }
+
+    @Test
+    public void findLogByUserName() throws IOException{
+        String userId = "test2";
+        AuditData logData = createExampleLogData(userId);
+        List<AuditData> logDataList = new ArrayList<>();
+        logDataList.add(logData);
+
+        ArgumentCaptor<String> userArg = ArgumentCaptor.forClass(String.class);
+
+
+        when(dbMock.findLogEntry(userArg.capture(), any(), any())).thenReturn(logDataList);
+
+        Response returned = apiInstance.findLogEntry(userId, EMPTY_TIME, EMPTY_TIME);
+        String json = (String) returned.getEntity();
+
+        Assert.assertEquals(userId, userArg.getValue());
+        Assert.assertEquals(200, returned.getStatus());
+        Assert.assertThat(json, CoreMatchers.containsString(userId));
+    }
+
+    @Test
+    public void findLogHasNothing() throws IOException{
+        List<AuditData> logDataList = new ArrayList<>();
+
+        when(dbMock.findLogEntry(any(), any(), any())).thenReturn(logDataList);
+
+        Response returned = apiInstance.findLogEntry("notThere", EMPTY_TIME, EMPTY_TIME);
+
+        Assert.assertEquals(404, returned.getStatus());
+    }
+
+    @Test
+    public void findLogOptionalToTime() throws IOException {
+        // Checks the optional to time is updated to the current time
+        String userId = "abc123";
+        AuditData logData = createExampleLogData(userId);
+        List<AuditData> logDataList = new ArrayList<>();
+        logDataList.add(logData);
+
+        ArgumentCaptor<String> fromTime = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> toTime = ArgumentCaptor.forClass(String.class);
+
+        when(dbMock.findLogEntry(any(), fromTime.capture(), toTime.capture())).thenReturn(logDataList);
+
+        apiInstance.findLogEntry(userId, EMPTY_TIME, EMPTY_TIME);
+        Assert.assertEquals(fromTime.getValue(), EMPTY_TIME);
+        Assert.assertNotEquals(toTime.getValue(), EMPTY_TIME);
+
     }
 
 
