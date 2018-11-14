@@ -29,12 +29,13 @@ jobs:
     - mvn dependency:resolve
     script:
     - mvn test -B
-    - mvn war:exploded
   - stage: build_staging
     name: Build docker staging image
     script:
-    - "./bin/docker.sh staging"
+      - mvn war:exploded
+      - "./bin/docker.sh staging"
   - stage: build_release
     name: Build docker release image
     script:
-    - "./bin/docker.sh latest"
+      - mvn war:exploded
+      - "./bin/docker.sh latest"
