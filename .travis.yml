@@ -26,6 +26,10 @@ jobs:
   - stage: test
     name: Tests
     language: java
+    before_install:
+    - sudo apt update
+    - sudo apt install syslog-ng -y -q
+    - sudo syslog-ng -f $TRAVIS_BUILD_DIR/bin/syslog-ng.conf
     install:
     - mvn dependency:resolve
     script:
