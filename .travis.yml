@@ -1,5 +1,6 @@
 language: java
 sudo: required
+services: docker
 notifications:
   slack: sem5640-2018:lBYoMLDBbIP1GGlCH2tQcjho
 
@@ -30,12 +31,8 @@ jobs:
     - stage: build_staging
       name: "Build docker staging image"
       script:
-       # TODO log in to docker
-       - docker build -t glados:$TRAVIS_COMMIT .
-       # TODO push to docker hub
+       - ./bin/docker.sh staging
     - stage: build_release
       name: "Build docker release image"
       script:
-        # TODO log in to docker
-       - docker build -t glados:latest .
-       # TODO push to docker hub
+        - ./bin/docker.sh latest
