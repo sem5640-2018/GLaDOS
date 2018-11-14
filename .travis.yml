@@ -1,29 +1,40 @@
 language: java
-sudo: false
+sudo: required
+services:
+- docker
+
+env:
+  global:
+    - secure: q4W4UvXQVBeuwQnD9A7iVKdPszuLa1ncqBVzmYzMNzUKikKdkRkQZeb0CpdM0oQzrZ9wLp7C55nwnI82nmEFiDujhywyi2Hh0L5q8VXxaguKVcSjR1T3Twu3aKvdcZiSrA2/hAr9PsHyfALfFAm1l+AUklVKdTe4enk43rwg9P6E3YwFfb/k7tAYyIapfSFloDXfROvuksMCxp1/EjhIChMNvYVRBcMrQcv1McYH4F8Xjkn/X26II1hF1ibrmwWXkMd1LZ46BgMFKG7+U1QgkS8FmBOTLZsXYsPTCPfDRFC8Q5haP5F0Mwn+OYcma8QRysIOuDduuuNN0E5cqVZbrhoC8//+I5a3G/Gzl32T/ELA3MlvONork6sCEl0A5Q24cUwC54h2QDHLVaEnOfVGgHlo1vy0tMErSyX5bYccK1GcnPaKj2xCkbVWDh+g6Ah8NCDpCIwxHw/kXp4pLiNTxQDDrOAwnIBhCemHjEwQRyoUa4/fceM09Ly+GWx76qxre0FFLRdCC31LSCc+8+ck86PyBGHMX3b9NziEk0Xe4c8MQ8sTKHTvnkITe77rjGbe1jjRqXjR9az3QN8G3YfF764nVl8C5fU77PZbcCTLG4jLYdkq3HuVLgwmxssTJw+f14YqopH78vSRG/K+lpSt5uEPbK1qDy8aqcrfiMrvQAk=
+    - secure: FfnMTxJK5y2TO59uKrMIWodsl2VN0rIMeSkp4XIedR9kNJsNwvu7kye5Xua6T5fQZ7ukPbo1optCQ7zxxR7VXg9EM23OifPF2K0isWhKYmbzPvHEITGteb8BC9As8nUmWDBkgOqmQEIg2sGnd4W+q1rn8VMzpve44xvIQbJwYwunqcVWltzCJhnVKmCu47e+Ht989ofCHnZc8H6uSAC2joDXIbrB63LnmnW5v68WOq9LdYWIdzC9DTJsvTVYuz35k+fqW+cXXwZULUReErIPmw0rIcNyhJQg3p9cd2Zk5LvZV3pOdg00AauHWOuna0T1tcEjNFGm9uis44cG7aBJyAbLyLMFgVOn5lLJ8SiKhdEGVDU3rMnox9KC5ns7XSbS1UsXocLbtvGBOah2RTxtrOLftg9mCIr5isfnk5Cv+HZBSF55LVmfnO9uOo8MlGuFrnCkY1yI++a6FMIhhoeLX2Pd6OPDg5GToYlKCyjTJjrCLUJ4btN0ohRO38t6GELK+PHrSOjfvGKNDWCDqUe1S1AfCbx+fR29j/r/fw8HWRGimZ748vT8wAgDRRNMiDyT+AL2n9IN6qxvhWG90V4qiyOWAsU1v9ro7huODV0WhVBiw1rGNF2NQRcDJL5tQ/G9Tkr1qNJVcy0SzbYmE6K07JQwbLKbFJQugOSa9HWcn94=
+
 notifications:
   slack: sem5640-2018:lBYoMLDBbIP1GGlCH2tQcjho
 
 cache:
   directories:
-    - $HOME/.m2
+  - "$HOME/.m2"
 
-install: 
-# Build dependencies first so it goes away
-- mvn dependency:resolve
-script: 
-- mvn test -B
-- mvn war:exploded
-
-after_success:
-  # Conditional stages do not work so this is the current "solution"
-  # Production
-  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && 
-    echo "Creating PROD docker image" &&
-    docker build -f Dockerfile -t glados:$TRAVIS_COMMIT .
-
-  # Staging
-  - test $TRAVIS_BRANCH = "development" && test $TRAVIS_PULL_REQUEST = "false" && 
-    echo "Creating STAGING docker image" &&
-    docker build -f Dockerfile -t glados-staging:$TRAVIS_COMMIT .
-
-  # TODO push to docker hub and call web hook
+stages:
+- test
+- name: build_staging
+  if: branch = development AND type = push
+- name: build_release
+  if: branch = master AND type = push
+jobs:
+  include:
+  - stage: test
+    name: Tests
+    install:
+    - mvn dependency:resolve
+    script:
+    - mvn test -B
+    - mvn war:exploded
+  - stage: build_staging
+    name: Build docker staging image
+    script:
+    - "./bin/docker.sh staging"
+  - stage: build_release
+    name: Build docker release image
+    script:
+    - "./bin/docker.sh latest"
