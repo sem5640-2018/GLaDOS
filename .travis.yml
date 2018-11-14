@@ -1,7 +1,6 @@
-language: java
 sudo: required
 services:
-- docker
+  - docker
 
 env:
   global:
@@ -25,6 +24,7 @@ jobs:
   include:
   - stage: test
     name: Tests
+    language: java
     install:
     - mvn dependency:resolve
     script:
