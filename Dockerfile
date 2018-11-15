@@ -10,13 +10,13 @@ RUN apk add maven openjdk8 syslog-ng
 # Copy build files
 RUN mkdir /app
 WORKDIR /app
-COPY src .
+RUN mkdir src
+COPY src src
 COPY pom.xml .
 
 # Maven Stages
-RUN mvn dependency:resolve
-
-RUN ${RUN_TESTS} && echo "Running tests...." && mvn test
+RUN mvn dependency:go-offline
+RUN ${RUN_TESTS} && echo "Running tests...." && mvn test -B
 
 # Prepare exploded war for packaging step
 RUN echo "Exporting project..." && mvn war:exploded
