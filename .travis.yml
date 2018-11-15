@@ -23,21 +23,13 @@ jobs:
   - stage: test
     name: Tests
     language: java
-    before_install:
-    - sudo apt update
-    - sudo apt install syslog-ng -y -q
-    - sudo syslog-ng -f $TRAVIS_BUILD_DIR/bin/syslog-ng.conf
-    install:
-    - mvn dependency:resolve
     script:
-    - mvn test -B
+    - docker build -t sem56402018/glados:$TRAVIS_COMMIT .
   - stage: build_staging
     name: Build docker staging image
     script:
-    - mvn war:exploded
     - "./bin/docker.sh staging"
   - stage: build_release
     name: Build docker release image
     script:
-    - mvn war:exploded
     - "./bin/docker.sh latest"
