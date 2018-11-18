@@ -31,11 +31,13 @@ public interface IDatabaseConnection {
      * Returns all matching log entries based on the search criteria passed
      * in. If no elements were found an empty list is instead returned.
      * If the request fails an IOException is thrown
-     * @param searchCriteria A list of criteria to search for. Empty fields are ignored
+     * @param userId The user ID to search for
+     * @param fromTime The earliest time to find a log from
+     * @param toTime The latest time to find a log from
      * @return All matching entries in a list. An empty list if none are found
      * @throws IOException If the request could not be completed
      */
-    List<AuditData> findLogEntry(AuditData searchCriteria) throws IOException;
+    List<AuditData> findLogEntry(String userId, String fromTime, String toTime) throws IOException;
 
     /**
      * Returns all log entries within the DB as a list.

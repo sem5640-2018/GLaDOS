@@ -40,7 +40,7 @@ public class DatabaseConnection implements IDatabaseConnection{
     }
 
     @Override
-    public List<AuditData> findLogEntry(AuditData searchCriteria) throws IOException {
+    public List<AuditData> findLogEntry(String userId, String fromTime, String toTime) throws IOException {
         return null;
     }
 
