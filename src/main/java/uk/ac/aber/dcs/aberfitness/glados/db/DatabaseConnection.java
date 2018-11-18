@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import javax.persistence.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class DatabaseConnection {
     @PersistenceContext
