@@ -1,35 +1,33 @@
-language: java
-sudo: true
+sudo: required
+services:
+- docker
+env:
+  global:
+    - secure: drne39L9+FdSe/2qo9Oz0r88jQ6cS0AYVJC6hru2LR+8+XwmrKrV72Zn8F3f9xlhBy/blQKMCfkeB2dwvozBsLosTw5wfuzq04F+xlXvQ57MgLeNvtk+oacv5fTjGcXilVykzwc6vcNOGlFZq2EqgpDQUXnkn/LQtW1Dj1Aivyw9/tsH/MWsALSG3vMcNYVrXwErT9H/4Kv63XPDQBR6JwB9QQ2801DWL8hIJr2Fs6ziiNTPqjF2XDB5hPbM2VboQZ9Wr9Sr/qArBPzijrWBgiOgGCV/IAf0AxJ4ZgWn5JaGH31Zbd1wjrxH0enEwJrYBwtF8znUYU2SQrM+CExsUuq/B1bN6i8R81wyz6QULC3ee9lysrN0SvgTZdhiFvCuZhqP1OAGiktFmqeCCWebBgI9lHzAOEvC090269JjQbCGo8fBMlVyDD7QSgQFgb/zsDhaVQaWb8NhhZITq+pvCVbBT/aE04S32N1HDuxNec7FstG2hBU6bfq5HCJXr/3i5ae7t7Dskb+hhxgSw7A7qnB/dnZOgYCZLje33SIuYI3himh/DSURaSlMyJoUycNYQzPrQTXmEM0pasgtnAqJ5Pjp+PwS/CvhWV03ZzuhmrT8ReyMm+NPGznp25vSoX2kDKC9ejRcxmkppvAnfTx7Q8oAqDpXuZoY5hSYUTYLTSY=
+    - secure: FfnMTxJK5y2TO59uKrMIWodsl2VN0rIMeSkp4XIedR9kNJsNwvu7kye5Xua6T5fQZ7ukPbo1optCQ7zxxR7VXg9EM23OifPF2K0isWhKYmbzPvHEITGteb8BC9As8nUmWDBkgOqmQEIg2sGnd4W+q1rn8VMzpve44xvIQbJwYwunqcVWltzCJhnVKmCu47e+Ht989ofCHnZc8H6uSAC2joDXIbrB63LnmnW5v68WOq9LdYWIdzC9DTJsvTVYuz35k+fqW+cXXwZULUReErIPmw0rIcNyhJQg3p9cd2Zk5LvZV3pOdg00AauHWOuna0T1tcEjNFGm9uis44cG7aBJyAbLyLMFgVOn5lLJ8SiKhdEGVDU3rMnox9KC5ns7XSbS1UsXocLbtvGBOah2RTxtrOLftg9mCIr5isfnk5Cv+HZBSF55LVmfnO9uOo8MlGuFrnCkY1yI++a6FMIhhoeLX2Pd6OPDg5GToYlKCyjTJjrCLUJ4btN0ohRO38t6GELK+PHrSOjfvGKNDWCDqUe1S1AfCbx+fR29j/r/fw8HWRGimZ748vT8wAgDRRNMiDyT+AL2n9IN6qxvhWG90V4qiyOWAsU1v9ro7huODV0WhVBiw1rGNF2NQRcDJL5tQ/G9Tkr1qNJVcy0SzbYmE6K07JQwbLKbFJQugOSa9HWcn94=
+    - SYSLOG_HOST=127.0.0.1
+
 notifications:
   slack: sem5640-2018:lBYoMLDBbIP1GGlCH2tQcjho
 
-cache:
-  directories:
-    - $HOME/.m2
-
-before_install:
-  - git clone https://github.com/sem5640-2018/deployment.git --depth=1
-  # Ensure that syslog is running etc
-  - sudo docker-compose up -d
-
-install: 
-  # Build dependencies first so it goes away
-  - mvn dependency:resolve
-script: 
-  - mvn test -B
-  # Package into WAR
-  - mvn war:exploded
-
-after_success:
-  # Conditional stages do not work so this is the current "solution"
-  # Production
-  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && 
-    echo "Creating PROD docker image" &&
-    docker build -f Dockerfile -t glados:$TRAVIS_COMMIT .
-
-  # Staging
-  - test $TRAVIS_BRANCH = "development" && test $TRAVIS_PULL_REQUEST = "false" && 
-    echo "Creating STAGING docker image" &&
-    docker build -f Dockerfile -t glados-staging:$TRAVIS_COMMIT .
-
-  # TODO push to docker hub and call web hook
+stages:
+- test
+- name: build_staging
+  if: branch = development AND type = push
+- name: build_release
+  if: branch = master AND type = push
+jobs:
+  include:
+  - stage: test
+    name: Tests
+    language: java
+    script:
+    - docker build -t sem56402018/glados:$TRAVIS_COMMIT .
+  - stage: build_staging
+    name: Build docker staging image
+    script:
+    - "./bin/docker.sh staging"
+  - stage: build_release
+    name: Build docker release image
+    script:
+    - "./bin/docker.sh latest"

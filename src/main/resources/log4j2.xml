@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" name="MyApp" packages="">
     <Appenders>
-        <Syslog name="RFC5424" format="RFC5424" host="127.0.0.1" port="514"
+        <Syslog name="RFC5424" format="RFC5424" host="${SYSLOG_HOST}" port="514"
                 protocol="tcp" appName="Glados" includeMDC="true"
                 mdcId="mdc" connectTimeoutMillis="2000" reconnectionDelayMillis="2000"
                 immediateFail="false" ignoreExceptions="false"

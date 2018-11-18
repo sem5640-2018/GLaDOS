@@ -2,6 +2,7 @@ package uk.ac.aber.dcs.aberfitness.glados.db;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -119,6 +120,11 @@ public abstract class AuditData {
                 && this.logLevel == other.logLevel && this.content.equals(other.content) &&
                 this.userId.equals(other.userId) && this.serviceName == other.serviceName;
 
+    }
+
+    @Override
+    public final int hashCode(){
+        return Objects.hash(logId, logLevel, timestamp, content, userId, serviceName);
     }
 
     /**

@@ -4,7 +4,6 @@ import com.google.gson.JsonParseException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
 
 
 /**
