@@ -1,7 +1,6 @@
 package uk.ac.aber.dcs.aberfitness.glados.db;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -9,21 +8,6 @@ import java.util.NoSuchElementException;
  * Specifies an interface which handles connections to a NoSql db
  */
 public interface IDatabaseConnection {
-    /**
-     * Attempts to connect to a db. If the connection
-     * fails an exception is thrown
-     * @throws ConnectException If connection could not be made
-     */
-    void connectToDatabase() throws ConnectException;
-
-    /**
-     * Attempts to disconnect from a db. If the connection
-     * does not gracefully close an exception is thrown.
-     * If the connection did not already exist an exception is thrown
-     * @throws ConnectException If the connection was not closed gracefully
-     */
-    void disconnectFromDb() throws ConnectException;
-
     /**
      * Adds a log entry to the db containing the given values
      * If the request fails an exception is thrown

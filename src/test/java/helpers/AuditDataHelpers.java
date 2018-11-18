@@ -9,10 +9,7 @@ public class AuditDataHelpers {
      */
     static public void isAlmostEqual(AuditData one, AuditData two){
         Assert.assertEquals(one.getUserId(), two.getUserId());
-        Assert.assertEquals(one.getLogLevel(), two.getLogLevel());
         Assert.assertEquals(one.getContent(), two.getContent());
         Assert.assertEquals(one.getTimestamp(), two.getTimestamp());
-
-        Assert.assertNotEquals(one.getLogId(), two.getLogLevel());
     }
 }

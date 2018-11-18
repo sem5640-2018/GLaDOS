@@ -34,10 +34,11 @@ public class AuditApiTest {
 
     /**
      * Returns a sample AuditData entry for unit testing
+     *
      * @return A sample AuditData object
      */
     private AuditData createExampleLogData() {
-        return new AuditDataNoSerial(Instant.now(), LoggingLevels.DEBUG, "TestContent",
+        return new AuditData(Instant.now(), "TestContent",
                 "abc123", ServiceNames.GLADOS);
     }
 
@@ -59,8 +60,6 @@ public class AuditApiTest {
             AuditDataHelpers.isAlmostEqual(returnedEntries.get(i), mockedData.get(i));
         }
     }
-
-
 
 
 }

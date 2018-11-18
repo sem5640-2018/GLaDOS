@@ -1,5 +1,7 @@
 package uk.ac.aber.dcs.aberfitness.glados.db;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.Objects;
@@ -7,31 +9,39 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
- * A class representing a log or audit entry. This class is marked abstract
- * to force extending classes to implement to X serialisation. For example
- * toJson in the AuditDataJson class
+ * A class representing a log or audit entry.
  */
-public abstract class AuditData {
-    private ServiceNames serviceName;
+@Entity(name = "AuditData")
+public class AuditData implements Serializable {
+    @Id
+    @Column(name = "logId", unique = true, nullable = false)
     private String logId;
+
+    @Column(name = "serviceName", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ServiceNames serviceName;
+
+    @Column(name = "timestamp", nullable = false)
     private Instant timestamp;
-    private LoggingLevels logLevel;
+
+    @Column(name = "content")
     private String content;
+
+    @Column(name = "userId", nullable = false)
     private String userId;
 
     /**
      * Constructs a new AuditData instance which represents a log or audit message
-     * @param timestamp The time of the log message
-     * @param logLevel The level associated with this log message
-     * @param content The message content of this log entry
-     * @param userId The user associated with this log entry
+     *
+     * @param timestamp   The time of the log message
+     * @param content     The message content of this log entry
+     * @param userId      The user associated with this log entry
      * @param serviceName The service associated with this log entry
      */
-    protected AuditData(final Instant timestamp, final LoggingLevels logLevel,
-                        final String content, final String userId, final ServiceNames serviceName) {
+    public AuditData(final Instant timestamp,
+                     final String content, final String userId, final ServiceNames serviceName) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
-        this.logLevel = logLevel;
         this.content = content;
         this.userId = userId;
         this.serviceName = serviceName;
@@ -40,12 +50,12 @@ public abstract class AuditData {
     /**
      * Implements a copy constructor which is invoked when switching
      * the outer serialisation methods by the extending class
+     *
      * @param other The existing AuditData to copy
      */
-    protected AuditData(AuditData other){
+    public AuditData(AuditData other) {
         this.logId = other.logId;
         this.timestamp = other.timestamp;
-        this.logLevel = other.logLevel;
         this.content = other.content;
         this.userId = other.userId;
         this.serviceName = other.serviceName;
@@ -53,23 +63,17 @@ public abstract class AuditData {
 
     /**
      * Returns the timestamp of the specified log message
+     *
      * @return Date object with the log's timestamp
      */
     public Instant getTimestamp() {
         return timestamp;
     }
 
-    /**
-     * Returns the logging level of the underlying log message
-     * @return LoggingLevels enum with the current level
-     */
-    public LoggingLevels getLogLevel() {
-        return logLevel;
-    }
-
 
     /**
      * Returns the message associated with the log message
+     *
      * @return A string containing the message
      */
     public String getContent() {
@@ -78,6 +82,7 @@ public abstract class AuditData {
 
     /**
      * Returns the unique message ID associated to the log message
+     *
      * @return A string containing the user ID
      */
     public String getUserId() {
@@ -86,6 +91,7 @@ public abstract class AuditData {
 
     /**
      * Returns this log entries unique ID
+     *
      * @return A string containing the unique log ID
      */
     public String getLogId() {
@@ -94,37 +100,41 @@ public abstract class AuditData {
 
     /**
      * Returns the service which created this log
+     *
      * @return ServiceName enum with the micro-service name
      */
-    public ServiceNames getServiceName() { return serviceName; }
+    public ServiceNames getServiceName() {
+        return serviceName;
+    }
 
     /**
      * Overrides and implements the equality operator for AuditData objects.
      * This is marked final as deriving classes should only serialise
      * not implement operators and is agnostic of the serialising method.
+     *
      * @param obj The object to compare to
      * @return If all fields are equal, else false
      */
     @Override
     public final boolean equals(Object obj) {
-        if (obj == null){
+        if (obj == null) {
             return false;
         }
 
-        if (!AuditData.class.isAssignableFrom(obj.getClass())){
+        if (!AuditData.class.isAssignableFrom(obj.getClass())) {
             return false;
         }
 
         final AuditData other = (AuditData) obj;
         return this.logId.equals(other.logId) && this.timestamp.equals(other.timestamp)
-                && this.logLevel == other.logLevel && this.content.equals(other.content) &&
+                && this.content.equals(other.content) &&
                 this.userId.equals(other.userId) && this.serviceName == other.serviceName;
 
     }
 
     @Override
-    public final int hashCode(){
-        return Objects.hash(logId, logLevel, timestamp, content, userId, serviceName);
+    public final int hashCode() {
+        return Objects.hash(logId, timestamp, content, userId, serviceName);
     }
 
     /**
@@ -133,7 +143,7 @@ public abstract class AuditData {
      * to set a new UUID which would normally be done in the constructor.
      * This call is package-private.
      */
-    void generateLogId(){
+    void generateLogId() {
         this.logId = UUID.randomUUID().toString();
     }
 
@@ -141,6 +151,7 @@ public abstract class AuditData {
     /**
      * Returns if all the data fields within AuditData are populated
      * and not null. If any fields are null a false is returned
+     *
      * @return True if all fields are populated, else false
      */
     public final boolean isValid() {
@@ -150,7 +161,7 @@ public abstract class AuditData {
         // We use reflection to check all fields of this class are not null
         return Stream.of(logDataFields).allMatch(it -> {
             try {
-                return it.get(this)!=null;
+                return it.get(this) != null;
             } catch (IllegalAccessException e) {
                 // Safety net in case reflection fails
                 e.printStackTrace();

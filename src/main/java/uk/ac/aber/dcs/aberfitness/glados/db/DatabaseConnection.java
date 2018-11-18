@@ -1,27 +1,36 @@
 package uk.ac.aber.dcs.aberfitness.glados.db;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class DatabaseConnection implements IDatabaseConnection{
-    // TODO
-    public DatabaseConnection(){
+    @PersistenceContext
+    private EntityManager em;
+
+    private static Logger log = LogManager.getLogger(DatabaseConnection.class.getName());
+
+    public DatabaseConnection(EntityManager em){
+        this.em = em;
     }
 
-    @Override
-    public void connectToDatabase() throws ConnectException {
-
-    }
-
-    @Override
-    public void disconnectFromDb() throws ConnectException {
-
-    }
 
     @Override
     public void addLogData(AuditData newLogEntry) throws IOException {
+        try {
+            em.getTransaction().begin();
+            em.persist(newLogEntry);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            log.catching(e);
+            e.printStackTrace();
+            throw new IOException(e.getMessage());
+        }
 
     }
 
