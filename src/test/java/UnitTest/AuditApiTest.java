@@ -1,10 +1,5 @@
 package UnitTest;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-import com.sun.enterprise.security.ee.Audit;
-import helpers.AuditDataHelpers;
-import org.apache.logging.log4j.core.Core;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,8 +12,6 @@ import uk.ac.aber.dcs.aberfitness.glados.api.AuditApi;
 import uk.ac.aber.dcs.aberfitness.glados.db.*;
 
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
