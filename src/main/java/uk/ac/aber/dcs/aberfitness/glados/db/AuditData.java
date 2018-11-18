@@ -30,6 +30,8 @@ public class AuditData implements Serializable {
     @Column(name = "userId", nullable = false)
     private String userId;
 
+    public AuditData(){}
+
     /**
      * Constructs a new AuditData instance which represents a log or audit message
      *
