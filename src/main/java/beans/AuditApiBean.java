@@ -3,8 +3,7 @@ package beans;
 import com.google.gson.JsonParseException;
 import entities.AuditData;
 import entities.AuditDataJson;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import persistence.DatabaseConnection;
 
 import javax.ejb.Stateless;
@@ -29,7 +28,6 @@ import java.util.List;
 public class AuditApiBean {
     // Instant MIN
     private static final String DEFAULT_EMPTY_TIME = "-1000000000-01-01T00:00:00Z";
-    private static final Logger log = LogManager.getLogger(AuditApiBean.class.getName());
 
     @Inject
     DatabaseConnection dbConnection;
@@ -40,7 +38,7 @@ public class AuditApiBean {
         AuditData foundEntry = dbConnection.getLogEntry(logId);
 
         if (foundEntry == null){
-            log.debug("Could not find logId {}", logId);
+
             return Response.status(404, "Not Found").build();
         }
 
@@ -55,7 +53,6 @@ public class AuditApiBean {
                                   @QueryParam("to") int to,
                                   @QueryParam("orderBy") String orderBy) throws IOException {
         // TODO limit returned entries
-        log.trace("getAllEntries:\n from:{}\n to:{}\n orderBy:{}\n", from, to, orderBy);
 
         List<AuditData> foundEntries = dbConnection.getAllLogEntries();
 
@@ -71,12 +68,10 @@ public class AuditApiBean {
             @DefaultValue(DEFAULT_EMPTY_TIME) @QueryParam("fromTime") String fromTime,
             @DefaultValue(DEFAULT_EMPTY_TIME) @QueryParam("toTime") String toTime) throws IOException {
 
-        log.trace("findLogEntry:\n fromTime:{}\n toTime:{}", fromTime, toTime);
 
         // We need to take the current time for searching if not provided
         if (toTime.equals(DEFAULT_EMPTY_TIME)){
             toTime = Instant.now().toString();
-            log.debug("findLogEntry: Using current time {}", toTime);
         }
 
         List<AuditData> foundEntries = dbConnection.findLogEntry(userId, fromTime, toTime);
@@ -98,7 +93,6 @@ public class AuditApiBean {
             newEntity = AuditDataJson.fromJson(httpBody);
         } catch (JsonParseException e) {
             failedToParse = true;
-            log.info("Failed to parse POSTED JSON:\n{}", e.toString());
         }
 
         if (failedToParse || !newEntity.isValid()){
