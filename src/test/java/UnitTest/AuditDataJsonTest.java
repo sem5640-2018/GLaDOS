@@ -1,12 +1,12 @@
 package UnitTest;
 
-import beans.AuditDataBean;
-import beans.helpers.AuditDataJson;
+import entities.AuditData;
+import entities.AuditDataJson;
 import com.google.gson.JsonParseException;
 import helpers.AuditDataHelpers;
 import org.junit.Assert;
 import org.junit.Test;
-import entities.ServiceNames;
+import beans.helpers.ServiceNames;
 
 import javax.json.*;
 import javax.json.stream.JsonParser;
@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AuditDataJsonTest {
-    private JsonObject createFakeJson(AuditDataBean auditData) {
+    private JsonObject createFakeJson(AuditData auditData) {
 
         JsonObjectBuilder newJsonObject = Json.createObjectBuilder();
 
@@ -31,7 +31,7 @@ public class AuditDataJsonTest {
 
     @Test
     public void ConvertsFromOtherSerialisingTypeCorrectly() {
-        AuditDataBean noSerial = new AuditDataBean(Instant.now(),
+        AuditData noSerial = new AuditData(Instant.now(),
                 "test", "abc123", ServiceNames.GLADOS);
 
         AuditDataJson convertedInstance = new AuditDataJson(noSerial);
@@ -66,7 +66,7 @@ public class AuditDataJsonTest {
         String userId = "test123";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        AuditDataBean referenceInstance = new AuditDataBean(now, sampleMsg, userId, serviceName);
+        AuditData referenceInstance = new AuditData(now, sampleMsg, userId, serviceName);
 
         JsonObject testJson = createFakeJson(referenceInstance);
 

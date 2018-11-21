@@ -1,15 +1,17 @@
 package persistence;
 
-import beans.AuditDataBean ;
+import entities.AuditData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.enterprise.context.Dependent;
 import javax.persistence.*;
 import java.io.IOException;
 import java.util.List;
 
+@Dependent
 public class DatabaseConnection {
-    @PersistenceContext
+    @PersistenceContext(unitName = "gladosPU")
     private EntityManager em;
 
     private static Logger log = LogManager.getLogger(DatabaseConnection.class.getName());
@@ -17,7 +19,7 @@ public class DatabaseConnection {
     public DatabaseConnection() {
     }
 
-    public void addLogData(AuditDataBean  newLogEntry) throws IOException {
+    public void addLogData(AuditData newLogEntry) throws IOException {
         try {
             em.persist(newLogEntry);
         } catch (Exception e) {
@@ -28,12 +30,12 @@ public class DatabaseConnection {
 
     }
 
-    public AuditDataBean  getLogEntry(String logId) throws NoResultException {
-        AuditDataBean  foundRecord;
-        TypedQuery<AuditDataBean > query = em.createQuery(
+    public AuditData getLogEntry(String logId) throws NoResultException {
+        AuditData foundRecord;
+        TypedQuery<AuditData> query = em.createQuery(
                 "SELECT record FROM beans.AuditDataBean   record " +
                         "WHERE record.logId = :logId",
-                AuditDataBean .class);
+                AuditData.class);
 
         query.setParameter("logId", logId);
         foundRecord = query.getSingleResult();
@@ -41,13 +43,13 @@ public class DatabaseConnection {
     }
 
 
-    public List<AuditDataBean > findLogEntry(String userId, String fromTime, String toTime) throws NoResultException {
-        TypedQuery<AuditDataBean > query = em.createQuery(
+    public List<AuditData> findLogEntry(String userId, String fromTime, String toTime) throws NoResultException {
+        TypedQuery<AuditData> query = em.createQuery(
                 "SELECT records FROM beans.AuditDataBean   record " +
                         "WHERE record.userId = :userId " +
                         "AND record.timestamp > :minTime " +
                         "AND record.timestamp < :maxTime ",
-                AuditDataBean .class);
+                AuditData.class);
         query.setParameter("userId", userId);
         query.setParameter("minTime", fromTime);
         query.setParameter("maxTime", toTime);
@@ -55,17 +57,17 @@ public class DatabaseConnection {
         return query.getResultList();
     }
 
-    public List<AuditDataBean > getAllLogEntries() throws NoResultException {
+    public List<AuditData> getAllLogEntries() throws NoResultException {
         // TODO add limits
-        TypedQuery<AuditDataBean > query = em.createQuery(
+        TypedQuery<AuditData> query = em.createQuery(
                 "SELECT records from beans.AuditDataBean  ",
-                AuditDataBean .class);
+                AuditData.class);
 
         return query.getResultList();
     }
 
     public void removeLogData(String logId) throws NoResultException {
-        AuditDataBean  foundEntry = getLogEntry(logId);
+        AuditData foundEntry = getLogEntry(logId);
         em.remove(foundEntry);
     }
 }

@@ -1,13 +1,14 @@
-package entities;
+package beans;
 
-import beans.AuditDataBean;
 import com.google.gson.JsonParseException;
+import entities.AuditData;
+import entities.AuditDataJson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import beans.helpers.AuditDataJson;
 import persistence.DatabaseConnection;
 
 import javax.ejb.Stateless;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -20,14 +21,15 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
+@Dependent
 @Stateless
-@Path("audit")
+@Path("/audit")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AuditApi {
+public class AuditApiBean {
     // Instant MIN
     private static final String DEFAULT_EMPTY_TIME = "-1000000000-01-01T00:00:00Z";
-    private static final Logger log = LogManager.getLogger(AuditApi.class.getName());
+    private static final Logger log = LogManager.getLogger(AuditApiBean.class.getName());
 
     @Inject
     DatabaseConnection dbConnection;
@@ -35,7 +37,7 @@ public class AuditApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAuditById(@QueryParam("logId") String logId) throws IOException {
-        AuditDataBean foundEntry = dbConnection.getLogEntry(logId);
+        AuditData foundEntry = dbConnection.getLogEntry(logId);
 
         if (foundEntry == null){
             log.debug("Could not find logId {}", logId);
@@ -55,7 +57,7 @@ public class AuditApi {
         // TODO limit returned entries
         log.trace("getAllEntries:\n from:{}\n to:{}\n orderBy:{}\n", from, to, orderBy);
 
-        List<AuditDataBean> foundEntries = dbConnection.getAllLogEntries();
+        List<AuditData> foundEntries = dbConnection.getAllLogEntries();
 
         // Ensure we have JSON serialisable elements
         return CreateJsonResponseFromList(foundEntries);
@@ -77,7 +79,7 @@ public class AuditApi {
             log.debug("findLogEntry: Using current time {}", toTime);
         }
 
-        List<AuditDataBean> foundEntries = dbConnection.findLogEntry(userId, fromTime, toTime);
+        List<AuditData> foundEntries = dbConnection.findLogEntry(userId, fromTime, toTime);
 
         if (foundEntries.isEmpty()){
             return Response.status(404).build();
@@ -107,7 +109,7 @@ public class AuditApi {
         return Response.noContent().build();
     }
 
-    private Response CreateJsonResponseFromList(List<AuditDataBean> foundEntries) {
+    private Response CreateJsonResponseFromList(List<AuditData> foundEntries) {
         JsonArrayBuilder jsonArray = Json.createArrayBuilder();
         foundEntries.forEach(e->jsonArray.add(new AuditDataJson(e).toJson()));
         JsonArray json = jsonArray.build();

@@ -1,9 +1,9 @@
 package UnitTest;
 
+import entities.AuditData;
 import org.junit.Assert;
 import org.junit.Test;
-import entities.ServiceNames;
-import beans.AuditDataBean;
+import beans.helpers.ServiceNames;
 
 import java.time.Instant;
 
@@ -16,7 +16,7 @@ public class AuditDataTest {
         String userId = "test123";
         ServiceNames testName = ServiceNames.GLADOS;
 
-        final AuditDataBean testInstance = new AuditDataBean(now, sampleMsg, userId, testName);
+        final AuditData testInstance = new AuditData(now, sampleMsg, userId, testName);
 
         Assert.assertEquals(testInstance.getTimestamp(), now);
         Assert.assertEquals(testInstance.getContent(), sampleMsg);
@@ -29,8 +29,8 @@ public class AuditDataTest {
         Instant now = Instant.now();
 
         // Regardless of other fields the log id should always be unique
-        final AuditDataBean testInstanceOne = new AuditDataBean(now, "test", "id1", ServiceNames.GLADOS);
-        final AuditDataBean testInstanceTwo = new AuditDataBean(now,
+        final AuditData testInstanceOne = new AuditData(now, "test", "id1", ServiceNames.GLADOS);
+        final AuditData testInstanceTwo = new AuditData(now,
                 "test", "id1", ServiceNames.GLADOS);
 
         Assert.assertNotEquals(testInstanceOne.getLogId(), testInstanceTwo.getLogId());
@@ -38,10 +38,10 @@ public class AuditDataTest {
 
     @Test
     public void LogDataCopyConstructor() {
-        final AuditDataBean testInstanceOne = new AuditDataBean(Instant.now(),
+        final AuditData testInstanceOne = new AuditData(Instant.now(),
                 "test", "id1", ServiceNames.GLADOS);
 
-        final AuditDataBean testInstanceTwo = new AuditDataBean(testInstanceOne);
+        final AuditData testInstanceTwo = new AuditData(testInstanceOne);
 
         Assert.assertEquals(testInstanceOne, testInstanceTwo);
     }

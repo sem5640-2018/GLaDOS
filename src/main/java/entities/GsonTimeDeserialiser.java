@@ -1,4 +1,4 @@
-package beans.helpers;
+package entities;
 
 import com.google.gson.*;
 

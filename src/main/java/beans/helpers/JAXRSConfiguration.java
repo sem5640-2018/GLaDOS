@@ -1,4 +1,4 @@
-package entities.api;
+package beans.helpers;
 
 import javax.ws.rs.ApplicationPath;
 

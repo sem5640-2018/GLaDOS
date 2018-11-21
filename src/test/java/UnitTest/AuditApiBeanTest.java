@@ -1,8 +1,8 @@
 package UnitTest;
 
-import beans.AuditDataBean;
-import beans.helpers.AuditDataJson;
-import entities.AuditApi;
+import entities.AuditData;
+import entities.AuditDataJson;
+import beans.AuditApiBean;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import persistence.DatabaseConnection;
-import entities.ServiceNames;
+import beans.helpers.ServiceNames;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -26,29 +26,29 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-public class AuditApiTest {
+public class AuditApiBeanTest {
     @Mock
     private DatabaseConnection dbMock;
 
     // Ensure we replace the injected concrete type with the mock db connection
     @InjectMocks
-    private AuditApi apiInstance;
+    private AuditApiBean apiInstance;
 
     private final String EMPTY_TIME = Instant.MIN.toString();
 
     @Before
     public void setUp() {
-        apiInstance = new AuditApi();
+        apiInstance = new AuditApiBean();
         MockitoAnnotations.initMocks(this);
     }
 
     /**
-     * Returns a sample AuditDataBean entry for unit testing
+     * Returns a sample AuditData entry for unit testing
      *
-     * @return A sample AuditDataBean object
+     * @return A sample AuditData object
      */
-    private AuditDataBean createExampleLogData(String userId) {
-        return new AuditDataBean(Instant.now(), "TestContent",
+    private AuditData createExampleLogData(String userId) {
+        return new AuditData(Instant.now(), "TestContent",
                 userId, ServiceNames.GLADOS);
     }
 
@@ -56,10 +56,10 @@ public class AuditApiTest {
     public void findAllCallReturnsAll() throws IOException {
         String userOne = "abc123";
         String userTwo = "bcd234";
-        AuditDataBean dummyLogOne = createExampleLogData(userOne);
-        AuditDataBean dummyLogTwo = createExampleLogData(userTwo);
+        AuditData dummyLogOne = createExampleLogData(userOne);
+        AuditData dummyLogTwo = createExampleLogData(userTwo);
 
-        List<AuditDataBean> mockedData = Arrays.asList(dummyLogOne, dummyLogTwo);
+        List<AuditData> mockedData = Arrays.asList(dummyLogOne, dummyLogTwo);
         when(dbMock.getAllLogEntries()).thenReturn(mockedData);
 
         // This should return JSON
@@ -73,7 +73,7 @@ public class AuditApiTest {
     @Test
     public void getLogById() throws IOException {
         String userId = "test1";
-        AuditDataBean newLogData = createExampleLogData(userId);
+        AuditData newLogData = createExampleLogData(userId);
         String testId = newLogData.getLogId();
 
         ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
@@ -104,8 +104,8 @@ public class AuditApiTest {
     @Test
     public void findLogByUserName() throws IOException{
         String userId = "test2";
-        AuditDataBean logData = createExampleLogData(userId);
-        List<AuditDataBean> logDataList = new ArrayList<>();
+        AuditData logData = createExampleLogData(userId);
+        List<AuditData> logDataList = new ArrayList<>();
         logDataList.add(logData);
 
         ArgumentCaptor<String> userArg = ArgumentCaptor.forClass(String.class);
@@ -123,7 +123,7 @@ public class AuditApiTest {
 
     @Test
     public void findLogHasNothing() throws IOException{
-        List<AuditDataBean> logDataList = new ArrayList<>();
+        List<AuditData> logDataList = new ArrayList<>();
 
         when(dbMock.findLogEntry(any(), any(), any())).thenReturn(logDataList);
 
@@ -136,8 +136,8 @@ public class AuditApiTest {
     public void findLogOptionalToTime() throws IOException {
         // Checks the optional to time is updated to the current time
         String userId = "abc123";
-        AuditDataBean logData = createExampleLogData(userId);
-        List<AuditDataBean> logDataList = new ArrayList<>();
+        AuditData logData = createExampleLogData(userId);
+        List<AuditData> logDataList = new ArrayList<>();
         logDataList.add(logData);
 
         ArgumentCaptor<String> fromTime = ArgumentCaptor.forClass(String.class);
@@ -154,7 +154,7 @@ public class AuditApiTest {
     @Test
     public void postNewEntry() throws IOException {
         String userId = "newId1";
-        AuditDataBean logData = createExampleLogData(userId);
+        AuditData logData = createExampleLogData(userId);
         AuditDataJson serialiser = new AuditDataJson(logData);
 
         Response response = apiInstance.postNewEntry(serialiser.toJson());
