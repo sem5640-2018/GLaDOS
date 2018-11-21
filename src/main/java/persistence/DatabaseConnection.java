@@ -1,5 +1,6 @@
-package uk.ac.aber.dcs.aberfitness.glados.db;
+package persistence;
 
+import beans.AuditDataBean ;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +17,7 @@ public class DatabaseConnection {
     public DatabaseConnection() {
     }
 
-    public void addLogData(AuditData newLogEntry) throws IOException {
+    public void addLogData(AuditDataBean  newLogEntry) throws IOException {
         try {
             em.persist(newLogEntry);
         } catch (Exception e) {
@@ -27,12 +28,12 @@ public class DatabaseConnection {
 
     }
 
-    public AuditData getLogEntry(String logId) throws NoResultException {
-        AuditData foundRecord;
-        TypedQuery<AuditData> query = em.createQuery(
-                "SELECT record FROM uk.ac.aber.dcs.aberfitness.glados.db.AuditData record " +
+    public AuditDataBean  getLogEntry(String logId) throws NoResultException {
+        AuditDataBean  foundRecord;
+        TypedQuery<AuditDataBean > query = em.createQuery(
+                "SELECT record FROM beans.AuditDataBean   record " +
                         "WHERE record.logId = :logId",
-                AuditData.class);
+                AuditDataBean .class);
 
         query.setParameter("logId", logId);
         foundRecord = query.getSingleResult();
@@ -40,13 +41,13 @@ public class DatabaseConnection {
     }
 
 
-    public List<AuditData> findLogEntry(String userId, String fromTime, String toTime) throws NoResultException {
-        TypedQuery<AuditData> query = em.createQuery(
-                "SELECT records FROM uk.ac.aber.dcs.aberfitness.glados.db.AuditData record " +
+    public List<AuditDataBean > findLogEntry(String userId, String fromTime, String toTime) throws NoResultException {
+        TypedQuery<AuditDataBean > query = em.createQuery(
+                "SELECT records FROM beans.AuditDataBean   record " +
                         "WHERE record.userId = :userId " +
                         "AND record.timestamp > :minTime " +
                         "AND record.timestamp < :maxTime ",
-                AuditData.class);
+                AuditDataBean .class);
         query.setParameter("userId", userId);
         query.setParameter("minTime", fromTime);
         query.setParameter("maxTime", toTime);
@@ -54,17 +55,17 @@ public class DatabaseConnection {
         return query.getResultList();
     }
 
-    public List<AuditData> getAllLogEntries() throws NoResultException {
+    public List<AuditDataBean > getAllLogEntries() throws NoResultException {
         // TODO add limits
-        TypedQuery<AuditData> query = em.createQuery(
-                "SELECT records from uk.ac.aber.dcs.aberfitness.glados.db.AuditData",
-                AuditData.class);
+        TypedQuery<AuditDataBean > query = em.createQuery(
+                "SELECT records from beans.AuditDataBean  ",
+                AuditDataBean .class);
 
         return query.getResultList();
     }
 
     public void removeLogData(String logId) throws NoResultException {
-        AuditData foundEntry = getLogEntry(logId);
+        AuditDataBean  foundEntry = getLogEntry(logId);
         em.remove(foundEntry);
     }
 }

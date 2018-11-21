@@ -1,4 +1,6 @@
-package uk.ac.aber.dcs.aberfitness.glados.db;
+package beans;
+
+import entities.ServiceNames;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,8 +13,8 @@ import java.util.stream.Stream;
 /**
  * A class representing a log or audit entry.
  */
-@Entity(name = "AuditData")
-public class AuditData implements Serializable {
+@Entity(name = "AuditDataBean ")
+public class AuditDataBean implements Serializable {
     @Id
     @Column(name = "logId", unique = true, nullable = false)
     private String logId;
@@ -30,17 +32,17 @@ public class AuditData implements Serializable {
     @Column(name = "userId", nullable = false)
     private String userId;
 
-    public AuditData(){}
+    public AuditDataBean (){}
 
     /**
-     * Constructs a new AuditData instance which represents a log or audit message
+     * Constructs a new AuditDataBean Beaninstance which represents a log or audit message
      *
      * @param timestamp   The time of the log message
      * @param content     The message content of this log entry
      * @param userId      The user associated with this log entry
      * @param serviceName The service associated with this log entry
      */
-    public AuditData(final Instant timestamp,
+    public AuditDataBean (final Instant timestamp,
                      final String content, final String userId, final ServiceNames serviceName) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
@@ -53,9 +55,9 @@ public class AuditData implements Serializable {
      * Implements a copy constructor which is invoked when switching
      * the outer serialisation methods by the extending class
      *
-     * @param other The existing AuditData to copy
+     * @param other The existing AuditDataBean Beanto copy
      */
-    public AuditData(AuditData other) {
+    public AuditDataBean (AuditDataBean other) {
         this.logId = other.logId;
         this.timestamp = other.timestamp;
         this.content = other.content;
@@ -110,7 +112,7 @@ public class AuditData implements Serializable {
     }
 
     /**
-     * Overrides and implements the equality operator for AuditData objects.
+     * Overrides and implements the equality operator for AuditDataBean Beanobjects.
      * This is marked final as deriving classes should only serialise
      * not implement operators and is agnostic of the serialising method.
      *
@@ -123,11 +125,11 @@ public class AuditData implements Serializable {
             return false;
         }
 
-        if (!AuditData.class.isAssignableFrom(obj.getClass())) {
+        if (!AuditDataBean .class.isAssignableFrom(obj.getClass())) {
             return false;
         }
 
-        final AuditData other = (AuditData) obj;
+        final AuditDataBean other = (AuditDataBean) obj;
         return this.logId.equals(other.logId) && this.timestamp.equals(other.timestamp)
                 && this.content.equals(other.content) &&
                 this.userId.equals(other.userId) && this.serviceName == other.serviceName;
@@ -145,20 +147,20 @@ public class AuditData implements Serializable {
      * to set a new UUID which would normally be done in the constructor.
      * This call is package-private.
      */
-    void generateLogId() {
+    public void generateLogId() {
         this.logId = UUID.randomUUID().toString();
     }
 
 
     /**
-     * Returns if all the data fields within AuditData are populated
+     * Returns if all the data fields within AuditDataBean Beanare populated
      * and not null. If any fields are null a false is returned
      *
      * @return True if all fields are populated, else false
      */
     public final boolean isValid() {
         // GSON can return a log with all fields set to null
-        Field[] logDataFields = AuditData.class.getDeclaredFields();
+        Field[] logDataFields = AuditDataBean.class.getDeclaredFields();
 
         // We use reflection to check all fields of this class are not null
         return Stream.of(logDataFields).allMatch(it -> {

@@ -1,4 +1,4 @@
-package uk.ac.aber.dcs.aberfitness.glados.db;
+package entities;
 
 /**
  * Holds the names of all micro-services

@@ -1,8 +1,8 @@
-package uk.ac.aber.dcs.aberfitness.glados.api;
+package entities.api;
 
 import javax.ws.rs.ApplicationPath;
 
 // Defines the base endpoint path
-@ApplicationPath("api")
+@ApplicationPath("entities")
 public class JAXRSConfiguration {
 }

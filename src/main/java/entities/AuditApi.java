@@ -1,11 +1,11 @@
-package uk.ac.aber.dcs.aberfitness.glados.api;
+package entities;
 
+import beans.AuditDataBean;
 import com.google.gson.JsonParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.ac.aber.dcs.aberfitness.glados.db.AuditData;
-import uk.ac.aber.dcs.aberfitness.glados.db.AuditDataJson;
-import uk.ac.aber.dcs.aberfitness.glados.db.DatabaseConnection;
+import beans.helpers.AuditDataJson;
+import persistence.DatabaseConnection;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ public class AuditApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAuditById(@QueryParam("logId") String logId) throws IOException {
-        AuditData foundEntry = dbConnection.getLogEntry(logId);
+        AuditDataBean foundEntry = dbConnection.getLogEntry(logId);
 
         if (foundEntry == null){
             log.debug("Could not find logId {}", logId);
@@ -55,7 +55,7 @@ public class AuditApi {
         // TODO limit returned entries
         log.trace("getAllEntries:\n from:{}\n to:{}\n orderBy:{}\n", from, to, orderBy);
 
-        List<AuditData> foundEntries = dbConnection.getAllLogEntries();
+        List<AuditDataBean> foundEntries = dbConnection.getAllLogEntries();
 
         // Ensure we have JSON serialisable elements
         return CreateJsonResponseFromList(foundEntries);
@@ -77,7 +77,7 @@ public class AuditApi {
             log.debug("findLogEntry: Using current time {}", toTime);
         }
 
-        List<AuditData> foundEntries = dbConnection.findLogEntry(userId, fromTime, toTime);
+        List<AuditDataBean> foundEntries = dbConnection.findLogEntry(userId, fromTime, toTime);
 
         if (foundEntries.isEmpty()){
             return Response.status(404).build();
@@ -91,7 +91,7 @@ public class AuditApi {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postNewEntry(JsonObject httpBody) throws IOException {
         boolean failedToParse = false;
-        AuditData newEntity = null;
+        AuditDataJson newEntity = null;
         try {
             newEntity = AuditDataJson.fromJson(httpBody);
         } catch (JsonParseException e) {
@@ -107,7 +107,7 @@ public class AuditApi {
         return Response.noContent().build();
     }
 
-    private Response CreateJsonResponseFromList(List<AuditData> foundEntries) {
+    private Response CreateJsonResponseFromList(List<AuditDataBean> foundEntries) {
         JsonArrayBuilder jsonArray = Json.createArrayBuilder();
         foundEntries.forEach(e->jsonArray.add(new AuditDataJson(e).toJson()));
         JsonArray json = jsonArray.build();

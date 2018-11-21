@@ -1,4 +1,4 @@
-package uk.ac.aber.dcs.aberfitness.glados.api;
+package exceptions;
 
 import com.google.gson.JsonParseException;
 

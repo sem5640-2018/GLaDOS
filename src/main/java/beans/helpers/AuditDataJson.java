@@ -1,9 +1,10 @@
-package uk.ac.aber.dcs.aberfitness.glados.db;
+package beans.helpers;
 
+import beans.AuditDataBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import uk.ac.aber.dcs.aberfitness.glados.api.GsonTimeDeserialiser;
+import entities.ServiceNames;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class AuditDataJson extends AuditData {
+public class AuditDataJson extends AuditDataBean {
 
     /**
      * Constructs a new AuditDataJson instance which implements a
@@ -34,7 +35,7 @@ public class AuditDataJson extends AuditData {
      * to a JSON serialiser
      * @param existingAuditData An existing differing type of serialising JSON
      */
-    public AuditDataJson(AuditData existingAuditData){
+    public AuditDataJson(AuditDataBean existingAuditData){
         super(existingAuditData);
     }
 
@@ -80,8 +81,8 @@ public class AuditDataJson extends AuditData {
      * Serialises from multiple JSON Objects into a list of AuditDataJson
      * objects, all of which implement AuditData
      * @param jsonArray The array containing JSON arrays
-     * @return List of AuditData objects
-     * @throws JsonParseException If any AuditData objects are invalid or there are none present
+     * @return List of AuditDataBean objects
+     * @throws JsonParseException If any AuditDataBean objects are invalid or there are none present
      */
     public static List<AuditDataJson> fromJson(JsonArray jsonArray) throws JsonParseException{
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -90,9 +91,9 @@ public class AuditDataJson extends AuditData {
 
         Gson gson = gsonBuilder.create();
         AuditDataJson[] converted = gson.fromJson(jsonArray.toString(), AuditDataJson[].class);
-        Stream.of(converted).forEach(AuditData::generateLogId);
+        Stream.of(converted).forEach(AuditDataBean::generateLogId);
 
-        boolean allValid = Stream.of(converted).allMatch(AuditData::isValid);
+        boolean allValid = Stream.of(converted).allMatch(AuditDataBean::isValid);
 
         if (converted.length == 0 || !allValid){
             throw new JsonParseException("Partial, invalid or empty JSON array was received");
