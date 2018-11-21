@@ -25,7 +25,6 @@ RUN ${RUN_TESTS} && echo "Running tests...." && mvn test -B
 RUN echo "Exporting project..." && mvn war:exploded
 
 # Creates the resulting image
-FROM payara/micro
-ADD https://downloads.mariadb.com/Connectors/java/connector-java-2.3.0/mariadb-java-client-2.3.0.jar /opt/payara/glassfish/lib/mariadb-java-client-2.3.0.jar
+FROM payara/server-full:prerelease
+
 COPY --from=builder /app/target/glados-exploded /opt/payara/deployments/glados
-CMD [ java -jar payara-micro.jar --deploy /opt/payara/deployments/glados ]

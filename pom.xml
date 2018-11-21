@@ -123,12 +123,6 @@
             <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
 
         <!-- Log4j -->
         <dependency>
@@ -149,8 +143,16 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
             <version>3.2.2</version>
+            <scope>build</scope>
         </dependency>
 
+        <!-- MariaDb JDBC-->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>1.5.9</version>
+            <scope>runtime</scope>
+        </dependency>
 
     </dependencies>
 

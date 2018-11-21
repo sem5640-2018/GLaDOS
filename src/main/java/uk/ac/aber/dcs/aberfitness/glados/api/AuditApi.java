@@ -33,6 +33,7 @@ public class AuditApi {
     DatabaseConnection dbConnection;
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAuditById(@QueryParam("logId") String logId) throws IOException {
         AuditData foundEntry = dbConnection.getLogEntry(logId);
 
@@ -47,6 +48,7 @@ public class AuditApi {
 
     @GET
     @Path("/all")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllEntries(@QueryParam("from") int from,
                                   @QueryParam("to") int to,
                                   @QueryParam("orderBy") String orderBy) throws IOException {
@@ -61,6 +63,7 @@ public class AuditApi {
 
     @GET
     @Path("/find")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response findLogEntry(
             @QueryParam("userId") String userId,
             @DefaultValue(DEFAULT_EMPTY_TIME) @QueryParam("fromTime") String fromTime,
