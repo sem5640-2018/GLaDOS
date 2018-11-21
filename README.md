@@ -18,6 +18,6 @@ AberFitness Logging & System Status Microservice (aka GLaDOS)
 
 # To test locally
 - Start MariaDb locally without a password, take note of the container id
-`docker run --hostname mariadb -e MYSQL_ALLOW_EMPTY_ROOT_PASSWORD mariadb:latest`
+`docker run --hostname mariadb -e MYSQL_ROOT_PASSWORD=test mariadb:latest`
 - Start container with a link between
 `docker run --link=*MariaDbContainerId* *imageName*`
