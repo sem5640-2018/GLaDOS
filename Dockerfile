@@ -22,9 +22,9 @@ RUN mvn dependency:go-offline
 RUN ${RUN_TESTS} && echo "Running tests...." && mvn test -B
 
 # Prepare exploded war for packaging step
-RUN echo "Exporting project..." && mvn war:exploded
+RUN echo "Exporting project..." && mvn war:war
 
 # Creates the resulting image
-FROM payara/server-full:prerelease
+FROM payara/micro:prerelease
 
-COPY --from=builder /app/target/glados-exploded /opt/payara/deployments/glados
+COPY --from=builder /app/target/glados*.war /opt/payara/deployments/
