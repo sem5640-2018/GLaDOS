@@ -27,4 +27,8 @@ RUN echo "Exporting project..." && mvn clean && mvn war:war
 # Creates the resulting image
 FROM payara/micro:prerelease
 
+ENV DB_HOSTNAME mariadb
+ENV DB_USERNAME root
+ENV DB_PASSWORD test
+
 COPY --from=builder /app/target/glados*.war /opt/payara/deployments/glados.war
