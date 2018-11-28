@@ -2,7 +2,7 @@ package UnitTest;
 
 import entities.AuditData;
 import entities.AuditDataJson;
-import beans.AuditApiBean;
+import rest.AuditApi;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import persistence.DatabaseConnection;
-import beans.helpers.ServiceNames;
+import rest.helpers.ServiceNames;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -26,19 +26,19 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-public class AuditApiBeanTest {
+public class AuditApiTest {
     @Mock
     private DatabaseConnection dbMock;
 
     // Ensure we replace the injected concrete type with the mock db connection
     @InjectMocks
-    private AuditApiBean apiInstance;
+    private AuditApi apiInstance;
 
     private final String EMPTY_TIME = Instant.MIN.toString();
 
     @Before
     public void setUp() {
-        apiInstance = new AuditApiBean();
+        apiInstance = new AuditApi();
         MockitoAnnotations.initMocks(this);
     }
 

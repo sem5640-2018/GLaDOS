@@ -1,6 +1,6 @@
 package entities;
 
-import beans.helpers.ServiceNames;
+import rest.helpers.ServiceNames;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;

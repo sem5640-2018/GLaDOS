@@ -1,4 +1,4 @@
-package beans.helpers;
+package rest.helpers;
 
 /**
  * Holds the names of all micro-services

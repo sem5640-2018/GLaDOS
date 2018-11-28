@@ -18,11 +18,11 @@ COPY pom.xml .
 
 # Maven Stages
 RUN export SYSLOG_HOST=127.0.0.1
-RUN mvn dependency:go-offline
+#RUN mvn dependency:go-offline
 RUN ${RUN_TESTS} && echo "Running tests...." && mvn test -B
 
 # Prepare exploded war for packaging step
-RUN echo "Exporting project..." && mvn clean && mvn war:war
+RUN echo "Exporting project..." && mvn clean && mvn compile war:war
 
 # Creates the resulting image
 FROM payara/micro:prerelease
@@ -31,4 +31,8 @@ ENV DB_HOSTNAME mariadb
 ENV DB_USERNAME root
 ENV DB_PASSWORD test
 
-COPY --from=builder /app/target/glados*.war /opt/payara/deployments/glados.war
+RUN wget -nv -O /opt/payara/mariadb-jdbc.jar https://downloads.mariadb.com/Connectors/java/connector-java-2.3.0/mariadb-java-client-2.3.0.jar 
+
+COPY --from=builder /app/target/glados*.war /opt/payara/glados.war
+
+ENTRYPOINT ["java", "-jar", "payara-micro.jar", "--addJars" ,"/opt/payara/mariadb-jdbc.jar" , "--deploy", "/opt/payara/glados.war" ]

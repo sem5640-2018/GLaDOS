@@ -6,7 +6,7 @@ import com.google.gson.JsonParseException;
 import helpers.AuditDataHelpers;
 import org.junit.Assert;
 import org.junit.Test;
-import beans.helpers.ServiceNames;
+import rest.helpers.ServiceNames;
 
 import javax.json.*;
 import javax.json.stream.JsonParser;

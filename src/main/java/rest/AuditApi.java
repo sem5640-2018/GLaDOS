@@ -1,4 +1,4 @@
-package beans;
+package rest;
 
 import com.google.gson.JsonParseException;
 import entities.AuditData;
@@ -6,9 +6,6 @@ import entities.AuditDataJson;
 
 import persistence.DatabaseConnection;
 
-import javax.ejb.Stateless;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -20,17 +17,12 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
-@Dependent
-@Stateless
 @Path("/audit")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class AuditApiBean {
+public class AuditApi {
     // Instant MIN
     private static final String DEFAULT_EMPTY_TIME = "-1000000000-01-01T00:00:00Z";
 
-    @Inject
-    DatabaseConnection dbConnection;
+    private DatabaseConnection dbConnection = new DatabaseConnection();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

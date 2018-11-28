@@ -12,11 +12,7 @@
     <data-source>
         <name>java:global/MariadbDataSource</name>
         <class-name>org.mariadb.jdbc.MariaDbDataSource</class-name>
-        <server-name>${ENV=DB_HOSTNAME}</server-name>
-        <port-number>3306</port-number>
-        <url>jdbc:mariadb://${ENV=DB_HOSTNAME}:3306/glados</url>
-        <user>${ENV=DB_USERNAME}</user>
-        <password>${ENV=DB_PASSWORD}</password>
+
     </data-source>
 
 
@@ -30,4 +26,5 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
+
 </web-app>

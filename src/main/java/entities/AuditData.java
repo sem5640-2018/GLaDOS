@@ -1,6 +1,6 @@
 package entities;
 
-import beans.helpers.ServiceNames;
+import rest.helpers.ServiceNames;
 
 import javax.persistence.*;
 import java.io.Serializable;

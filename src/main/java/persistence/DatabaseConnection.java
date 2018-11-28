@@ -33,7 +33,7 @@ public class DatabaseConnection {
     public AuditData getLogEntry(String logId) throws NoResultException {
         AuditData foundRecord;
         TypedQuery<AuditData> query = em.createQuery(
-                "SELECT record FROM beans.AuditDataBean   record " +
+                "SELECT record FROM rest.AuditDataBean   record " +
                         "WHERE record.logId = :logId",
                 AuditData.class);
 
@@ -45,7 +45,7 @@ public class DatabaseConnection {
 
     public List<AuditData> findLogEntry(String userId, String fromTime, String toTime) throws NoResultException {
         TypedQuery<AuditData> query = em.createQuery(
-                "SELECT records FROM beans.AuditDataBean   record " +
+                "SELECT records FROM rest.AuditDataBean   record " +
                         "WHERE record.userId = :userId " +
                         "AND record.timestamp > :minTime " +
                         "AND record.timestamp < :maxTime ",
@@ -60,7 +60,7 @@ public class DatabaseConnection {
     public List<AuditData> getAllLogEntries() throws NoResultException {
         // TODO add limits
         TypedQuery<AuditData> query = em.createQuery(
-                "SELECT records from beans.AuditDataBean  ",
+                "SELECT records from rest.AuditDataBean  ",
                 AuditData.class);
 
         return query.getResultList();
