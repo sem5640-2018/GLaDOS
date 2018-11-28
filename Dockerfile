@@ -2,10 +2,8 @@
 FROM alpine:latest as builder
 ARG RUN_TESTS
 
-COPY bin/syslog-ng.conf /etc/syslog/syslog-ng.conf
-
 RUN apk update
-RUN apk add maven openjdk8 syslog-ng
+RUN apk add maven openjdk8
 
 # Copy build files
 RUN mkdir /app
@@ -18,10 +16,18 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 RUN ${RUN_TESTS} && echo "Running tests...." && mvn test -B
 
-# Prepare exploded war for packaging step
-RUN echo "Exporting project..." && mvn war:exploded
+# Prepare war for packaging step
+RUN echo "Exporting project..." && mvn clean && mvn compile war:war
 
 # Creates the resulting image
-FROM payara/micro
-COPY --from=builder /app/target/glados-exploded /opt/payara/deployments/glados
-CMD [ java -jar payara-micro.jar --deploy /opt/payara/deployments/glados ]
+FROM payara/micro:prerelease
+
+ENV DB_HOSTNAME mariadb
+ENV DB_USERNAME root
+ENV DB_PASSWORD test
+
+RUN wget -nv -O /opt/payara/mariadb-jdbc.jar https://downloads.mariadb.com/Connectors/java/connector-java-2.3.0/mariadb-java-client-2.3.0.jar 
+
+COPY --from=builder /app/target/glados*.war /opt/payara/glados.war
+
+ENTRYPOINT ["java", "-jar", "payara-micro.jar", "--addJars" ,"/opt/payara/mariadb-jdbc.jar" , "--deploy", "/opt/payara/glados.war" ]

@@ -1,4 +1,4 @@
-package uk.ac.aber.dcs.aberfitness.glados.api;
+package entities;
 
 import com.google.gson.*;
 

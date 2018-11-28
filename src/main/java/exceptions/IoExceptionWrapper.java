@@ -1,4 +1,4 @@
-package uk.ac.aber.dcs.aberfitness.glados.api;
+package exceptions;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;

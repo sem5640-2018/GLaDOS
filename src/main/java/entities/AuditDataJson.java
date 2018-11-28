@@ -1,9 +1,9 @@
-package uk.ac.aber.dcs.aberfitness.glados.db;
+package entities;
 
+import rest.helpers.ServiceNames;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import uk.ac.aber.dcs.aberfitness.glados.api.GsonTimeDeserialiser;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -20,14 +20,13 @@ public class AuditDataJson extends AuditData {
      * Constructs a new AuditDataJson instance which implements a
      * JSON serialiser for the underlying class
      * @param timestamp The time of the log message
-     * @param logLevel The level associated with this log message
      * @param content The message content of this log entry
      * @param userId The user associated with this log entry
      * @param serviceName The micro-service associated with this log entry
      */
-    public AuditDataJson(final Instant timestamp, final LoggingLevels logLevel,
+    public AuditDataJson(final Instant timestamp,
                          final String content, final String userId, final ServiceNames serviceName){
-        super(timestamp, logLevel, content, userId, serviceName);
+        super(timestamp, content, userId, serviceName);
     }
 
     /**
@@ -49,7 +48,6 @@ public class AuditDataJson extends AuditData {
         newJson.add("logId", getLogId())
                 .add("timestamp", getTimestamp().toString())
                 .add("userId", getUserId())
-                .add("logLevel", getLogLevel().toString())
                 .add("content", getContent())
                 .add("serviceName", getServiceName().toString());
         return newJson.build();

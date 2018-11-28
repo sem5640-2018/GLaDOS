@@ -15,3 +15,9 @@ AberFitness Logging & System Status Microservice (aka GLaDOS)
 * UI for administrators to view audit trails as well as logging and debug data
 * API for log / audit data ingesting
 * Polls all microservices on a schedule to fetch their current status and availability
+
+# To test locally
+- Start MariaDb locally without a password, take note of the container id
+`docker run --hostname mariadb -e MYSQL_ROOT_PASSWORD=test mariadb:latest`
+- Start container with a link between
+`docker run --link=*MariaDbContainerId* *imageName*`

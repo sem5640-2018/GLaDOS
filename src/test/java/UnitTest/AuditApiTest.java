@@ -1,5 +1,8 @@
 package UnitTest;
 
+import entities.AuditData;
+import entities.AuditDataJson;
+import rest.AuditApi;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,8 +11,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import uk.ac.aber.dcs.aberfitness.glados.api.AuditApi;
-import uk.ac.aber.dcs.aberfitness.glados.db.*;
+import persistence.DatabaseConnection;
+import rest.helpers.ServiceNames;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -41,10 +44,11 @@ public class AuditApiTest {
 
     /**
      * Returns a sample AuditData entry for unit testing
+     *
      * @return A sample AuditData object
      */
     private AuditData createExampleLogData(String userId) {
-        return new AuditDataNoSerial(Instant.now(), LoggingLevels.DEBUG, "TestContent",
+        return new AuditData(Instant.now(), "TestContent",
                 userId, ServiceNames.GLADOS);
     }
 
@@ -168,8 +172,6 @@ public class AuditApiTest {
 
         Assert.assertEquals(400, response.getStatus());
     }
-
-
 
 
 }

@@ -6,6 +6,7 @@
 
     <groupId>AberFitness</groupId>
     <artifactId>glados</artifactId>
+    <packaging>war</packaging>
     <version>0.1</version>
 
     <properties>
@@ -15,17 +16,26 @@
     </properties>
 
     <dependencies>
-            <!-- Java EE API-->
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>2.0.1</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- Java EE API-->
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>8.0</version>
+            <version>7.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -39,14 +49,6 @@
             <version>2.2.18</version>
         </dependency>
 
-        <!-- Jersey -->
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-common</artifactId>
-            <version>2.26</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- ORM -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -58,6 +60,15 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <version>5.3.7.Final</version>
         </dependency>
+
+        <!-- Jersey -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>2.26</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- Scribe -->
         <dependency>
@@ -123,12 +134,6 @@
             <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
 
         <!-- Log4j -->
         <dependency>
@@ -149,8 +154,16 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
             <version>3.2.2</version>
+            <scope>compile</scope>
         </dependency>
 
+        <!-- MariaDb JDBC-->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>1.5.9</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 

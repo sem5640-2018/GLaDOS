@@ -1,10 +1,12 @@
 package UnitTest;
 
+import entities.AuditData;
+import entities.AuditDataJson;
 import com.google.gson.JsonParseException;
 import helpers.AuditDataHelpers;
 import org.junit.Assert;
 import org.junit.Test;
-import uk.ac.aber.dcs.aberfitness.glados.db.*;
+import rest.helpers.ServiceNames;
 
 import javax.json.*;
 import javax.json.stream.JsonParser;
@@ -22,7 +24,6 @@ public class AuditDataJsonTest {
 
         newJsonObject.add("timestamp", auditData.getTimestamp().toString())
                 .add("userId", auditData.getUserId())
-                .add("logLevel", auditData.getLogLevel().toString())
                 .add("content", auditData.getContent())
                 .add("serviceName", auditData.getServiceName().toString());
         return newJsonObject.build();
@@ -30,7 +31,7 @@ public class AuditDataJsonTest {
 
     @Test
     public void ConvertsFromOtherSerialisingTypeCorrectly() {
-        AuditDataNoSerial noSerial = new AuditDataNoSerial(Instant.now(), LoggingLevels.DEBUG,
+        AuditData noSerial = new AuditData(Instant.now(),
                 "test", "abc123", ServiceNames.GLADOS);
 
         AuditDataJson convertedInstance = new AuditDataJson(noSerial);
@@ -44,16 +45,15 @@ public class AuditDataJsonTest {
     public void SerialisesToJsonCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevels logLevel = LoggingLevels.DEBUG;
         String userId = "test123";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        final AuditDataJson testInstance = new AuditDataJson(now, logLevel, sampleMsg, userId, serviceName);
+        final AuditDataJson testInstance = new AuditDataJson(now, sampleMsg, userId, serviceName);
         JsonObject returnedJson = testInstance.toJson();
 
         Assert.assertEquals(returnedJson.getString("timestamp"), now.toString());
         Assert.assertEquals(returnedJson.getString("userId"), userId);
-        Assert.assertEquals(returnedJson.getString("logLevel"), logLevel.toString());
+
         Assert.assertEquals(returnedJson.getString("content"), sampleMsg);
         Assert.assertEquals(returnedJson.getString("serviceName"), serviceName.toString());
     }
@@ -62,12 +62,11 @@ public class AuditDataJsonTest {
     public void SerialisesFromJsonCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevels logLevel = LoggingLevels.DEBUG;
+
         String userId = "test123";
-        String fakeId = "12345";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        AuditData referenceInstance = new AuditDataNoSerial(now, logLevel, sampleMsg, userId, serviceName);
+        AuditData referenceInstance = new AuditData(now, sampleMsg, userId, serviceName);
 
         JsonObject testJson = createFakeJson(referenceInstance);
 
@@ -79,13 +78,11 @@ public class AuditDataJsonTest {
     public void SerialisesFromListCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevels logLevel = LoggingLevels.DEBUG;
-        String userId = "test123";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        final AuditDataJson testObjOne = new AuditDataJson(now, logLevel, sampleMsg, "101", serviceName);
-        final AuditDataJson testObjTwo = new AuditDataJson(now, logLevel, sampleMsg, "102", serviceName);
-        final AuditDataJson testObjThree = new AuditDataJson(now, logLevel, sampleMsg, "103", serviceName);
+        final AuditDataJson testObjOne = new AuditDataJson(now, sampleMsg, "101", serviceName);
+        final AuditDataJson testObjTwo = new AuditDataJson(now, sampleMsg, "102", serviceName);
+        final AuditDataJson testObjThree = new AuditDataJson(now, sampleMsg, "103", serviceName);
 
         JsonObject testJson = createFakeJson(testObjOne);
         JsonObject testJson2 = createFakeJson(testObjTwo);
@@ -108,11 +105,10 @@ public class AuditDataJsonTest {
     public void SerialisesSelfCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        LoggingLevels logLevel = LoggingLevels.DEBUG;
         String userId = "test123";
         ServiceNames serviceName = ServiceNames.GLADOS;
 
-        final AuditDataJson testInstance = new AuditDataJson(now, logLevel, sampleMsg, userId, serviceName);
+        final AuditDataJson testInstance = new AuditDataJson(now, sampleMsg, userId, serviceName);
 
         JsonObject returnedJson = testInstance.toJson();
         AuditDataJson returnedObject = AuditDataJson.fromJson(returnedJson);
@@ -151,7 +147,7 @@ public class AuditDataJsonTest {
 
     @Test
     public void JsonParseExceptionIsThrownForBadFieldName() {
-        final AuditDataJson testInstance = new AuditDataJson(Instant.now(), LoggingLevels.DEBUG,
+        final AuditDataJson testInstance = new AuditDataJson(Instant.now(),
                 "test", "abc123", ServiceNames.GLADOS);
 
         JsonObject fakeJson = createFakeJson(testInstance);
