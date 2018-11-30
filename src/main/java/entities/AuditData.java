@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 /**
  * A class representing a log or audit entry.
  */
-@Entity(name = "AuditDataBean ")
+@Entity(name = "AuditData")
 public class AuditData implements Serializable {
     @Id
     @Column(name = "logId", unique = true, nullable = false)

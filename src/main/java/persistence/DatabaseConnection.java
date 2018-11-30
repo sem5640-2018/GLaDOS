@@ -4,17 +4,17 @@ import entities.AuditData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.io.IOException;
 import java.util.List;
 
-@Dependent
+@Stateless
 public class DatabaseConnection {
     @PersistenceContext(unitName = "gladosPU")
     private EntityManager em;
 
-    private static Logger log = LogManager.getLogger(DatabaseConnection.class.getName());
+    private final static Logger log = LogManager.getLogger(DatabaseConnection.class.getName());
 
     public DatabaseConnection() {
     }
@@ -33,7 +33,7 @@ public class DatabaseConnection {
     public AuditData getLogEntry(String logId) throws NoResultException {
         AuditData foundRecord;
         TypedQuery<AuditData> query = em.createQuery(
-                "SELECT record FROM rest.AuditDataBean   record " +
+                "SELECT record FROM entities.AuditData record " +
                         "WHERE record.logId = :logId",
                 AuditData.class);
 
@@ -45,7 +45,7 @@ public class DatabaseConnection {
 
     public List<AuditData> findLogEntry(String userId, String fromTime, String toTime) throws NoResultException {
         TypedQuery<AuditData> query = em.createQuery(
-                "SELECT records FROM rest.AuditDataBean   record " +
+                "SELECT records FROM entities.AuditData   record " +
                         "WHERE record.userId = :userId " +
                         "AND record.timestamp > :minTime " +
                         "AND record.timestamp < :maxTime ",
@@ -60,7 +60,7 @@ public class DatabaseConnection {
     public List<AuditData> getAllLogEntries() throws NoResultException {
         // TODO add limits
         TypedQuery<AuditData> query = em.createQuery(
-                "SELECT records from rest.AuditDataBean  ",
+                "SELECT records from entities.AuditData  ",
                 AuditData.class);
 
         return query.getResultList();
