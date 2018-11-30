@@ -13,6 +13,18 @@ import java.util.stream.Stream;
 /**
  * A class representing a log or audit entry.
  */
+@Table(name = "AuditData")
+@NamedQueries({
+@NamedQuery(name="getLogEntry", query="SELECT record FROM AuditData record " +
+        "WHERE record.logId = :logId"),
+@NamedQuery(name="findLogEntry", query = "SELECT record FROM AuditData record" +
+        " WHERE record.userId = :userId" +
+        " AND record.timestamp > :minTime" +
+        " AND record.timestamp < :maxTime"),
+@NamedQuery(name="getAllLogEntries", query="SELECT records FROM AuditData records")
+}
+)
+
 @Entity(name = "AuditData")
 public class AuditData implements Serializable {
     @Id
