@@ -144,24 +144,4 @@ public class AuditDataJsonTest {
             AuditDataJson.fromJson(partialJson);
         });
     }
-
-    @Test
-    public void JsonParseExceptionIsThrownForBadFieldName() {
-        final AuditDataJson testInstance = new AuditDataJson(Instant.now(),
-                "test", "abc123", ServiceNames.GLADOS);
-
-        JsonObject fakeJson = createFakeJson(testInstance);
-
-        // Do a text replace
-        String replacedString = fakeJson.toString().replace("userId", "boom");
-
-        // then re-parse (to satisfy typing)
-        JsonParser parser = Json.createParser(new StringReader(replacedString));
-        parser.next();
-        JsonObject replacedJson = parser.getObject();
-
-        assertThrows(JsonParseException.class, () -> {
-            AuditDataJson.fromJson(replacedJson);
-        });
-    }
 }

@@ -5,8 +5,11 @@
 
     <!-- MariaDB-->
     <persistence-unit name="gladosPU" transaction-type="JTA">
-        <jta-data-source>java:global/MariadbDataSource</jta-data-source>
+        <jta-data-source>java:app/GladosMariaDataSource</jta-data-source>
+        <class>entities.AuditData</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
-        <properties />
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+        </properties>
     </persistence-unit>
 </persistence>

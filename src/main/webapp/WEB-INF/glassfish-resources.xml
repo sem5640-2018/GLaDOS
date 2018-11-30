@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+    <jdbc-connection-pool name="MariaDBPool"
+                          res-type="javax.sql.DataSource"
+                          datasource-classname="org.mariadb.jdbc.MariaDbDataSource"
+                          pool-resize-quantity="2"
+                          max-pool-size="32"
+                          steady-pool-size="8">
+        <property name="URL" value="jdbc:mysql://mariadb:3306/glados"/>
+        <property name="User" value="${ENV=DB_USERNAME}"/>
+        <property name="Password" value="${ENV=DB_PASSWORD}"/>
+    </jdbc-connection-pool>
+    <!-- Creates a DataSource called "jdbc/testDS" for accessing the connection pool -->
+    <jdbc-resource pool-name="MariaDBPool" jndi-name="GladosMariaDataSource" />
+</resources> 

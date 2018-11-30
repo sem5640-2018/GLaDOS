@@ -6,6 +6,8 @@ import entities.AuditDataJson;
 
 import persistence.DatabaseConnection;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -17,11 +19,13 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
+@Stateless
 @Path("/audit")
 public class AuditApi {
     // Instant MIN
     private static final String DEFAULT_EMPTY_TIME = "-1000000000-01-01T00:00:00Z";
 
+    @EJB
     private DatabaseConnection dbConnection = new DatabaseConnection();
 
     @GET
