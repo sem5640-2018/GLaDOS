@@ -1,5 +1,6 @@
 package entities;
 
+import persistence.helpers.InstantConverter;
 import rest.helpers.ServiceNames;
 
 import javax.persistence.*;
@@ -36,6 +37,7 @@ public class AuditData implements Serializable {
     private ServiceNames serviceName;
 
     @Column(name = "timestamp", nullable = false)
+    @Convert(converter = InstantConverter.class)
     private Instant timestamp;
 
     @Column(name = "content")
