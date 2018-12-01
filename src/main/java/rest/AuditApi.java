@@ -1,6 +1,5 @@
 package rest;
 
-import com.google.gson.JsonParseException;
 import entities.AuditData;
 import entities.AuditDataJson;
 
@@ -82,17 +81,16 @@ public class AuditApi {
     @POST
     @Path("/new")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response postNewEntry(JsonObject httpBody) throws IOException {
-        boolean failedToParse = false;
-        AuditDataJson newEntity = null;
-        try {
-            newEntity = AuditDataJson.fromJson(httpBody);
-        } catch (JsonParseException e) {
-            failedToParse = true;
+    public Response postNewEntry(AuditData newEntity) throws IOException {
+        if(newEntity == null){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("A null entry was generated").build();
         }
 
-        if (failedToParse || !newEntity.isValid()){
-            return Response.status(400).build();
+        newEntity.generateLogId();
+
+        if (!newEntity.isValid()){
+            return Response.status(400).entity("JSON contained null fields").build();
         }
 
         dbConnection.addLogData(newEntity);

@@ -23,7 +23,7 @@ components:
       
         serviceName:
           type: string
-          description: "The name of the service"
+          description: "The name of the service in uppercase"
     
         timestamp:
           type: string
