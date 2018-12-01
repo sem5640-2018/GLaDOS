@@ -5,11 +5,9 @@ import rest.helpers.ServiceNames;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 /**
  * A class representing a log or audit entry.
