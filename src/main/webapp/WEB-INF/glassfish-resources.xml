@@ -7,7 +7,7 @@
                           pool-resize-quantity="2"
                           max-pool-size="32"
                           steady-pool-size="8">
-        <property name="URL" value="jdbc:mysql://mariadb:3306/glados"/>
+        <property name="URL" value="jdbc:mysql://${ENV=DB_HOSTNAME}:3306/glados"/>
         <property name="User" value="${ENV=DB_USERNAME}"/>
         <property name="Password" value="${ENV=DB_PASSWORD}"/>
     </jdbc-connection-pool>

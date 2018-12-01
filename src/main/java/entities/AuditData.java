@@ -1,14 +1,13 @@
 package entities;
 
+import persistence.helpers.InstantConverter;
 import rest.helpers.ServiceNames;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 /**
  * A class representing a log or audit entry.
@@ -28,14 +27,15 @@ import java.util.stream.Stream;
 @Entity(name = "AuditData")
 public class AuditData implements Serializable {
     @Id
-    @Column(name = "logId", unique = true, nullable = false)
+    @Column(name = "logId", unique = true, nullable = false, length = 36)
     private String logId;
 
-    @Column(name = "serviceName", nullable = false)
+    @Column(name = "serviceName", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private ServiceNames serviceName;
 
     @Column(name = "timestamp", nullable = false)
+    @Convert(converter = InstantConverter.class)
     private Instant timestamp;
 
     @Column(name = "content")
@@ -47,7 +47,7 @@ public class AuditData implements Serializable {
     public AuditData(){}
 
     /**
-     * Constructs a new AuditData Beaninstance which represents a log or audit message
+     * Constructs a new AuditData instance which represents a log or audit message
      *
      * @param timestamp   The time of the log message
      * @param content     The message content of this log entry
@@ -67,7 +67,7 @@ public class AuditData implements Serializable {
      * Implements a copy constructor which is invoked when switching
      * the outer serialisation methods by the extending class
      *
-     * @param other The existing AuditData Beanto copy
+     * @param other The existing AuditData to copy
      */
     public AuditData(AuditData other) {
         this.logId = other.logId;
@@ -123,6 +123,22 @@ public class AuditData implements Serializable {
         return serviceName;
     }
 
+    public void setServiceName(ServiceNames serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     /**
      * Overrides and implements the equality operator for AuditData Beanobjects.
      * This is marked final as deriving classes should only serialise
@@ -171,19 +187,11 @@ public class AuditData implements Serializable {
      * @return True if all fields are populated, else false
      */
     public final boolean isValid() {
-        // GSON can return a log with all fields set to null
-        Field[] logDataFields = AuditData.class.getDeclaredFields();
-
-        // We use reflection to check all fields of this class are not null
-        return Stream.of(logDataFields).allMatch(it -> {
-            try {
-                return it.get(this) != null;
-            } catch (IllegalAccessException e) {
-                // Safety net in case reflection fails
-                e.printStackTrace();
-                return false;
-            }
-        });
+        return logId != null &&
+               timestamp != null &&
+               content != null &&
+               userId != null &&
+               serviceName != null;
     }
 
 

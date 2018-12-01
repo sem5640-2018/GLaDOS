@@ -151,6 +151,7 @@ public class AuditApiTest {
 
     }
 
+/*
     @Test
     public void postNewEntry() throws IOException {
         String userId = "newId1";
@@ -173,5 +174,6 @@ public class AuditApiTest {
         Assert.assertEquals(400, response.getStatus());
     }
 
+*/
 
 }

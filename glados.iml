@@ -28,9 +28,10 @@
           <factory-entry name="Entities" />
           <factory-entry name="GLaDOSPU" />
           <factory-entry name="GladosPU" />
+          <factory-entry name="gladosPU" />
         </datasource-mapping>
         <naming-strategy-map />
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/persistence.xml" />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
       </configuration>
     </facet>
     <facet type="javaeeApplication" name="JavaEE">
