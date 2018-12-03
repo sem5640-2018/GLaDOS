@@ -5,7 +5,18 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-   <f:view>
-      <h:outputLabel value="Hello, world - GLaDOS"/>
-   </f:view>
+
+    <h:head>
+        <title>Hello</title>
+    </h:head>
+
+    <h:body>
+        <p>
+            JSF says:
+        </p>
+        <p>
+            <b>#{helloBacking.hello}</b>
+        </p>
+    </h:body>
+
 </html>
