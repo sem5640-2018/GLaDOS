@@ -19,6 +19,10 @@ public class UserDataLookupBacking {
     private List<AuditData> results;
     private boolean hasRequestedResults = false;
 
+    // TODO
+    private String userId = "TODO";
+    private boolean currentUserIsAdmin = false;
+
     @EJB
     private DatabaseConnection db;
 
@@ -29,12 +33,31 @@ public class UserDataLookupBacking {
         results = db.getAllLogEntries();
     }
 
+    // ---- Getters only -----
+
     public boolean getHasRequestedResults(){
         return hasRequestedResults;
     }
 
+    public boolean getCurrentUserIsAdmin(){
+        return currentUserIsAdmin;
+    }
+
     public List<AuditData> getResults(){
         return results;
+    }
+
+    // ----- Setters and Getters ------
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        if (currentUserIsAdmin){
+            // Only Admins can lookup other users
+            this.userId = userId;
+        }
     }
 
     public Date getStartingTime() {
