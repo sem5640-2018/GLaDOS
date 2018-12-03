@@ -25,7 +25,7 @@ public class AuditApi {
     private static final String DEFAULT_EMPTY_TIME = "-1000000000-01-01T00:00:00Z";
 
     @EJB
-    private DatabaseConnection dbConnection = new DatabaseConnection();
+    private DatabaseConnection dbConnection;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

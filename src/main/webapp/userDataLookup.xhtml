@@ -1,0 +1,68 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:value="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+    <title>Audit Data Retrival</title>
+</h:head>
+
+<h:body>
+    <h:outputStylesheet name="styles/table.css"/>
+
+    <div>
+    <h:form id="dateTimeForm">
+        <h:panelGrid columns="2">
+        <p:outputLabel for="startDateTime" value="From (date and time): " />
+        <p:calendar id="startDateTime" value="#{userDataLookupBacking.startingTime}" pattern="MM/dd/yyyy HH:mm:ss" />
+        </h:panelGrid>
+
+        <h:panelGrid columns="3">
+        <p:outputLabel for="endDateTime" value="To (date and time): " />
+        <p:calendar id="endDateTime" value="#{userDataLookupBacking.endingTime}"  pattern="MM/dd/yyyy HH:mm:ss"/>
+            <h:commandButton value="Submit" action="#{userDataLookupBacking.lookupResults}" />
+        </h:panelGrid>
+
+
+    </h:form>
+
+    </div>
+
+    <div>
+    <p:dataTable rendered="#{userDataLookupBacking.hasRequestedResults}"
+                 value="#{userDataLookupBacking.results}" var="logEntry"
+                 columnClasses="userIdColumn,logIdColumn,timestampColumn,serviceNameColumn,contentColumn">
+    
+        <p:column>
+            <f:facet name="header">User ID</f:facet>
+            #{logEntry.userId}
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">Log ID</f:facet>
+            #{logEntry.logId}
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">Timestamp</f:facet>
+            #{logEntry.timestamp.toString()}
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">Service</f:facet>
+            #{logEntry.serviceName.toString()}
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">Content</f:facet>
+            #{logEntry.content}
+        </p:column>
+    </p:dataTable>
+    </div>
+
+</h:body>
+
+
+</html>

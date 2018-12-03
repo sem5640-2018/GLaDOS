@@ -68,12 +68,14 @@
         </dependency>
 
 
-        <!-- Scribe -->
+        <!-- Prime Faces -->
         <dependency>
-            <groupId>com.github.scribejava</groupId>
-            <artifactId>scribejava-apis</artifactId>
-            <version>6.0.0</version>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>6.2</version>
         </dependency>
+
+
 
         <!-- JSON Parsing -->
         <dependency>
