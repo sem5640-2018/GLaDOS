@@ -9,8 +9,11 @@ RUN apk add maven openjdk8
 RUN mkdir /app
 WORKDIR /app
 RUN mkdir src
-COPY src src
+
 COPY pom.xml .
+RUN mvn dependency:go-offline
+
+COPY src src
 
 # Maven Stages
 RUN ${RUN_TESTS} && echo "Running tests...." && mvn test -B

@@ -38,15 +38,13 @@
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- JSF -->
         <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-api</artifactId>
-            <version>2.2.18</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-impl</artifactId>
-            <version>2.2.18</version>
+            <groupId>javax.faces</groupId>
+            <artifactId>javax.faces-api</artifactId>
+            <version>2.3</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- ORM -->
@@ -70,12 +68,14 @@
         </dependency>
 
 
-        <!-- Scribe -->
+        <!-- Prime Faces -->
         <dependency>
-            <groupId>com.github.scribejava</groupId>
-            <artifactId>scribejava-apis</artifactId>
-            <version>6.0.0</version>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>6.2</version>
         </dependency>
+
+
 
         <!-- JSON Parsing -->
         <dependency>
