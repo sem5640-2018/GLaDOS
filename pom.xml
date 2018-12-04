@@ -67,7 +67,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <!-- Prime Faces -->
         <dependency>
             <groupId>org.primefaces</groupId>
@@ -75,7 +74,19 @@
             <version>6.2</version>
         </dependency>
 
+        <!-- Scribe -->
+        <dependency>
+            <groupId>com.github.scribejava</groupId>
+            <artifactId>scribejava-apis</artifactId>
+            <version>6.1.0</version>
+        </dependency>
 
+        <!-- JOSE -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>6.4.2</version>
+        </dependency>
 
         <!-- JSON Parsing -->
         <dependency>

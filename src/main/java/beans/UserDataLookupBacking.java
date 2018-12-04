@@ -1,17 +1,19 @@
 package beans;
 
+import beans.helpers.LoginSession;
 import entities.AuditData;
 import persistence.DatabaseConnection;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 @Stateless
 @Named
-public class UserDataLookupBacking {
+public class UserDataLookupBacking extends LoginSession {
 
     private Date startingTime;
     private Date endingTime;
@@ -19,15 +21,20 @@ public class UserDataLookupBacking {
     private List<AuditData> results;
     private boolean hasRequestedResults = false;
 
-    // TODO
-    private String userId = "TODO";
+    private String userToLookup;
     private boolean currentUserIsAdmin = false;
 
     @EJB
     private DatabaseConnection db;
 
+
     // Invoked methods
-    public void lookupResults(){
+    public void onLoad() throws IOException {
+        checkUserLogin();
+        userToLookup = super.getUserId();
+    }
+
+    public void lookupResults() {
         // TODO make this specific for the current user
         hasRequestedResults = true;
         results = db.getAllLogEntries();
@@ -35,28 +42,28 @@ public class UserDataLookupBacking {
 
     // ---- Getters only -----
 
-    public boolean getHasRequestedResults(){
+    public boolean getHasRequestedResults() {
         return hasRequestedResults;
     }
 
-    public boolean getCurrentUserIsAdmin(){
+    public boolean getCurrentUserIsAdmin() {
         return currentUserIsAdmin;
     }
 
-    public List<AuditData> getResults(){
+    public List<AuditData> getResults() {
         return results;
     }
 
     // ----- Setters and Getters ------
 
-    public String getUserId() {
-        return userId;
+    public String getUserToLookup() {
+        return userToLookup;
     }
 
-    public void setUserId(String userId) {
-        if (currentUserIsAdmin){
+    public void setUserToLookup(String userToLookup) {
+        if (currentUserIsAdmin) {
             // Only Admins can lookup other users
-            this.userId = userId;
+            this.userToLookup = userToLookup;
         }
     }
 
