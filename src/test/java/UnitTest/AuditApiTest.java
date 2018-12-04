@@ -140,14 +140,14 @@ public class AuditApiTest {
         List<AuditData> logDataList = new ArrayList<>();
         logDataList.add(logData);
 
-        ArgumentCaptor<String> fromTime = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> toTime = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Instant> fromTime = ArgumentCaptor.forClass(Instant.class);
+        ArgumentCaptor<Instant> toTime = ArgumentCaptor.forClass(Instant.class);
 
         when(dbMock.findLogEntry(any(), fromTime.capture(), toTime.capture())).thenReturn(logDataList);
 
         apiInstance.findLogEntry(userId, EMPTY_TIME, EMPTY_TIME);
-        Assert.assertEquals(fromTime.getValue(), EMPTY_TIME);
-        Assert.assertNotEquals(toTime.getValue(), EMPTY_TIME);
+        Assert.assertEquals(fromTime.getValue().toString(), EMPTY_TIME);
+        Assert.assertNotEquals(toTime.getValue().toString(), EMPTY_TIME);
 
     }
 

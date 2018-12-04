@@ -2,12 +2,15 @@ package beans;
 
 import beans.helpers.LoginSession;
 import entities.AuditData;
+import oauth.gatekeeper.GatekeeperInfo;
+import oauth.gatekeeper.UserType;
 import persistence.DatabaseConnection;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -30,14 +33,21 @@ public class UserDataLookupBacking extends LoginSession {
 
     // Invoked methods
     public void onLoad() throws IOException {
+        // Ensure we have their access token validated for this page
         checkUserLogin();
-        userToLookup = super.getUserId();
+
+        GatekeeperInfo userInfo = getUserInfo();
+
+        currentUserIsAdmin = userInfo.getUserType() == UserType.administrator;
+
+        if (userToLookup.isEmpty()) {
+            userToLookup = userInfo.getUserId();
+        }
     }
 
     public void lookupResults() {
-        // TODO make this specific for the current user
         hasRequestedResults = true;
-        results = db.getAllLogEntries();
+        results = db.findLogEntry(userToLookup, startingTime.toInstant(), endingTime.toInstant());
     }
 
     // ---- Getters only -----

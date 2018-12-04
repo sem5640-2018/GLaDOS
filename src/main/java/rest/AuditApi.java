@@ -69,7 +69,10 @@ public class AuditApi {
             toTime = Instant.now().toString();
         }
 
-        List<AuditData> foundEntries = dbConnection.findLogEntry(userId, fromTime, toTime);
+        Instant startingTime = Instant.parse(fromTime);
+        Instant endingTime = Instant.parse(toTime);
+
+        List<AuditData> foundEntries = dbConnection.findLogEntry(userId, startingTime, endingTime);
 
         if (foundEntries.isEmpty()){
             return Response.status(404).build();

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 @Stateless
@@ -39,11 +40,11 @@ public class DatabaseConnection {
     }
 
 
-    public List<AuditData> findLogEntry(String userId, String fromTime, String toTime) throws NoResultException {
+    public List<AuditData> findLogEntry(String userId, Instant fromTime, Instant toTime) throws NoResultException {
         TypedQuery<AuditData> query = em.createNamedQuery("findLogEntry", AuditData.class);
         query.setParameter("userId", userId);
-        query.setParameter("minTime", fromTime);
-        query.setParameter("maxTime", toTime);
+        query.setParameter("minTime", fromTime.toString());
+        query.setParameter("maxTime", toTime.toString());
 
         return query.getResultList();
     }

@@ -51,7 +51,6 @@ public class GatekeeperJsonTokenExtractor extends OAuth2AccessTokenJsonExtractor
             String subject = claimsSet.getSubject();
             Date startTime = claimsSet.getNotBeforeTime(), expiryTime = claimsSet.getExpirationTime();
 
-
             return new GatekeeperOAuth2AccessToken(accessToken, tokenType, expiresIn, refreshToken, scope,
                     subject, response, startTime, expiryTime);
         } catch (Exception e) {

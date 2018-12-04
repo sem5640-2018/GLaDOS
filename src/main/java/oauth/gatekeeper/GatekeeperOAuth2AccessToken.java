@@ -10,10 +10,6 @@ public class GatekeeperOAuth2AccessToken extends OAuth2AccessToken {
     private final Date start;
     private final Date expiry;
 
-    public GatekeeperOAuth2AccessToken(String accessToken, String openIdToken, String rawResponse) {
-        this(accessToken, null, null, null, null, openIdToken, rawResponse, null, null);
-    }
-
     public GatekeeperOAuth2AccessToken(String accessToken, String tokenType, Integer expiresIn, String refreshToken,
                                        String scope, String userId, String rawResponse, Date start, Date expiry) {
         super(accessToken, tokenType, expiresIn, refreshToken, scope, rawResponse);
