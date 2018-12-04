@@ -116,7 +116,7 @@ public class GatekeeperLogin implements Serializable {
     }
 
     private Response getUserData(String accessToken) throws InterruptedException, ExecutionException, IOException {
-        OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, EnvironmentVariables.getGatekeeperIntrospectUrl());
+        OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, EnvironmentVariables.getGatekeeperUserInfoUrl());
         OAuth20Service service = oAuthBean.getAberfitnessService();
         service.signRequest(accessToken, oAuthRequest);
         return service.execute(oAuthRequest);
