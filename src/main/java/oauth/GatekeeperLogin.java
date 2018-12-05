@@ -35,38 +35,29 @@ public class GatekeeperLogin implements Serializable {
     public GatekeeperLogin() {
     }
 
+    public void setupOauthCall(String callback, String nextState){
+        oAuthBean.initGatekeeperService(callback, nextState, "openid profile offline_access");
+    }
+
     public void redirectToGatekeeper(String callback, String state) throws IOException {
-        oAuthBean.initGatekeeperService(callback, state, "openid profile offline_access");
+        setupOauthCall(callback, state);
         String url = oAuthBean.getAberfitnessService().getAuthorizationUrl();
 
         FacesContext.getCurrentInstance()
                 .getExternalContext().redirect(url);
     }
 
-    public String getGatekeeperGetAccessToken(HttpServletRequest request) {
-        String str = request.getParameter("code");
-        if (str == null) {
-            System.out.println("Code was null");
-            return null;
-        }
+    public void getGatekeeperGetAccessToken(String code) throws InterruptedException, ExecutionException, IOException {
+         OAuth20Service aberfitnessService = oAuthBean.getAberfitnessService();
+         OAuth2AccessToken inAccessToken = aberfitnessService.getAccessToken(code);
+         userAccessToken = (GatekeeperOAuth2AccessToken) inAccessToken;
 
-        try {
-            OAuth2AccessToken inAccessToken = oAuthBean.getAberfitnessService().getAccessToken(str);
-            if (!(inAccessToken instanceof GatekeeperOAuth2AccessToken))
-                return null;
-            userAccessToken = (GatekeeperOAuth2AccessToken) inAccessToken;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("USER ID IN GATE AT: " + userAccessToken.getUserId());
-        return userAccessToken.toString();
+         System.out.println("USER ID IN GATE AT: " + userAccessToken.getUserId());
     }
 
-
-    public boolean validateAccessToken(String accessToken) {
+    public boolean validateAccessToken() {
         try {
-            JWTClaimsSet claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(accessToken);
+            JWTClaimsSet claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(userAccessToken.getAccessToken());
             System.out.println("Token Issued By: " + claimsSet.getIssuer());
 
             return true;

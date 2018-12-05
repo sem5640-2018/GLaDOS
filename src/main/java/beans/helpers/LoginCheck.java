@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-public class LoginSession {
+public class LoginCheck {
 
     @EJB
     private GatekeeperLogin loginBean;
@@ -21,7 +21,7 @@ public class LoginSession {
 
     private String userId;
 
-    public LoginSession() {
+    public LoginCheck() {
     }
 
     public LoginState checkUserLogin()
@@ -29,18 +29,8 @@ public class LoginSession {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 
-        String state = request.getParameter("state");
-        if (state == null){
-            String redirectUrl = EnvironmentVariables.getSystemBaseUrl() + "/glados" + request.getRequestURI();
-            loginBean.redirectToGatekeeper(redirectUrl, ACCESS_STATE);
-            // Return to ensure redirect fires
-            return LoginState.REDIRECT;
-        }
-
-        Map<String, String[]> paramMap = request.getParameterMap();
         String authorization = request.getHeader("Authorization");
-
-        String accessToken = loginBean.getGatekeeperGetAccessToken(request);
+        Map<String, String[]> paramMap = request.getParameterMap();
 
         if (authorization != null && authorization.startsWith("Bearer")) {
             String[] authHead = authorization.split(" ", 2);
@@ -55,7 +45,7 @@ public class LoginSession {
                 return LoginState.ERROR;
             }
 
-            if (!loginBean.validateAccessToken(accessToken)) {
+            if (!loginBean.validateAccessToken()) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Access Token!");
                 return LoginState.UNAUTHORISED;
             }
@@ -64,12 +54,14 @@ public class LoginSession {
             return LoginState.LOGGED_IN;
 
         }
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Authorization Header Not Set or Not Bearer");
+        response.sendRedirect(EnvironmentVariables.getAppBaseUrl() + "/login.xhtml");
 
-        return LoginState.ERROR;
+        return LoginState.REDIRECT;
     }
 
-    public GatekeeperInfo getUserInfo(){
+
+
+    public GatekeeperInfo getUserInfo() {
         return loginBean.getUserInfo();
     }
 

@@ -1,6 +1,6 @@
 package beans;
 
-import beans.helpers.LoginSession;
+import beans.helpers.LoginCheck;
 import beans.helpers.LoginState;
 import entities.AuditData;
 import oauth.gatekeeper.GatekeeperInfo;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Stateless
 @Named
-public class UserDataLookupBacking extends LoginSession {
+public class UserDataLookupBacking extends LoginCheck {
 
     private Date startingTime;
     private Date endingTime;
