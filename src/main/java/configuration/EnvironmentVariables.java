@@ -47,8 +47,18 @@ public final class EnvironmentVariables {
         return gatekeeperUserInfoUrl;
     }
 
-    public static boolean isAberfitnessDataPresent() {
-        return aberfitnessClientId != null && aberfitnessClientSecret != null;
+    public static String getSystemBaseUrl() {
+        return systemBaseUrl;
+    }
+
+    public EnvironmentVariables(){
+        if (aberfitnessClientId == null){
+            throw new RuntimeException("Client ID not set");
+        }
+
+        if (aberfitnessClientSecret == null){
+            throw new RuntimeException("Client secret not set");
+        }
     }
 
 }

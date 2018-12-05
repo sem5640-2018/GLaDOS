@@ -18,14 +18,12 @@ public class OAuthBean {
         if (aberfitnessService != null && aberfitnessService.getCallback().equals(callback) && aberfitnessService.getScope().equals(scope))
             return;
 
-        if (EnvironmentVariables.isAberfitnessDataPresent()) {
-            aberfitnessService = new ServiceBuilder(EnvironmentVariables.getAberfitnessClientId())
-                    .apiSecret(EnvironmentVariables.getAberfitnessClientSecret())
-                    .scope(scope)
-                    .callback(callback)
-                    .state(state)
-                    .build(GatekeeperApi.instance());
-        }
+        aberfitnessService = new ServiceBuilder(EnvironmentVariables.getAberfitnessClientId())
+                .apiSecret(EnvironmentVariables.getAberfitnessClientSecret())
+                .scope(scope)
+                .callback(callback)
+                .state(state)
+                .build(GatekeeperApi.instance());
     }
 
     public OAuth20Service getAberfitnessService() {

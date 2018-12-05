@@ -18,8 +18,8 @@ import oauth.gatekeeper.UserType;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
@@ -35,10 +35,12 @@ public class GatekeeperLogin implements Serializable {
     public GatekeeperLogin() {
     }
 
-    public void redirectToGatekeeper(HttpServletResponse response, String callback, String state) throws IOException {
+    public void redirectToGatekeeper(String callback, String state) throws IOException {
         oAuthBean.initGatekeeperService(callback, state, "openid profile offline_access");
         String url = oAuthBean.getAberfitnessService().getAuthorizationUrl();
-        response.sendRedirect(url);
+
+        FacesContext.getCurrentInstance()
+                .getExternalContext().redirect(url);
     }
 
     public String getGatekeeperGetAccessToken(HttpServletRequest request) {
