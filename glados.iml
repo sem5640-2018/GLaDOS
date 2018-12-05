@@ -72,6 +72,15 @@
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.183.0 - JSON Binding" level="application_server_libraries" />
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.183.0 - RESTful Web Service" level="application_server_libraries" />
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.183.0 - EJB" level="application_server_libraries" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.faces:javax.faces-api:2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.primefaces:primefaces:6.2" level="project" />
+    <orderEntry type="library" name="Maven: com.github.scribejava:scribejava-apis:6.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.scribejava:scribejava-core:6.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.nimbusds:nimbus-jose-jwt:6.4.2" level="project" />
+    <orderEntry type="library" name="Maven: com.github.stephenc.jcip:jcip-annotations:1.0-1" level="project" />
+    <orderEntry type="library" name="Maven: net.minidev:json-smart:2.3" level="project" />
+    <orderEntry type="library" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.0.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.enterprise:cdi-api:2.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.el:javax.el-api:3.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.interceptor:javax.interceptor-api:1.2" level="project" />
