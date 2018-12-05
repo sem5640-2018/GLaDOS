@@ -1,6 +1,7 @@
 package beans;
 
 import beans.helpers.LoginSession;
+import beans.helpers.LoginState;
 import entities.AuditData;
 import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
@@ -33,7 +34,11 @@ public class UserDataLookupBacking extends LoginSession {
     // Invoked methods
     public void onLoad() throws IOException {
         // Ensure we have their access token validated for this page
-        checkUserLogin();
+        LoginState result = checkUserLogin();
+
+        if (result != LoginState.LOGGED_IN) {
+            return;
+        }
 
         GatekeeperInfo userInfo = getUserInfo();
 

@@ -1,5 +1,6 @@
 package beans.helpers;
 
+import configuration.EnvironmentVariables;
 import oauth.GatekeeperLogin;
 import oauth.gatekeeper.GatekeeperInfo;
 
@@ -23,14 +24,17 @@ public class LoginSession {
     public LoginSession() {
     }
 
-    public void checkUserLogin()
+    public LoginState checkUserLogin()
             throws IOException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 
         String state = request.getParameter("state");
         if (state == null){
-            loginBean.redirectToGatekeeper(response, request.getRequestURI(), ACCESS_STATE);
+            String redirectUrl = EnvironmentVariables.getSystemBaseUrl() + "/glados" + request.getRequestURI();
+            loginBean.redirectToGatekeeper(redirectUrl, ACCESS_STATE);
+            // Return to ensure redirect fires
+            return LoginState.REDIRECT;
         }
 
         Map<String, String[]> paramMap = request.getParameterMap();
@@ -43,24 +47,26 @@ public class LoginSession {
 
             if (authHead[1] == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No Access Token Parameter!");
-                return;
+                return LoginState.ERROR;
             }
 
             if (!paramMap.containsKey(userParam)) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No User ID Parameter!");
-                return;
+                return LoginState.ERROR;
             }
 
             if (!loginBean.validateAccessToken(accessToken)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Access Token!");
-                return;
+                return LoginState.UNAUTHORISED;
             }
             // Logged in
             userId = loginBean.getUser_id();
+            return LoginState.LOGGED_IN;
 
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Authorization Header Not Set or Not Bearer");
         }
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Authorization Header Not Set or Not Bearer");
+
+        return LoginState.ERROR;
     }
 
     public GatekeeperInfo getUserInfo(){
