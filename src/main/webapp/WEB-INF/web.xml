@@ -21,6 +21,6 @@
     </session-config>
 
     <welcome-file-list>
-        <welcome-file>Facelets/hello.xhtml</welcome-file>
+        <welcome-file>hello.xhtml</welcome-file>
     </welcome-file-list>
 </web-app>
