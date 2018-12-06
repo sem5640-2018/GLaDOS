@@ -1,6 +1,7 @@
 package beans;
 
 import beans.helpers.LoginCheck;
+import configuration.EnvironmentVariables;
 
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
@@ -12,6 +13,8 @@ import java.io.IOException;
 @Stateless
 public class IndexBacking extends LoginCheck {
 
+    private String loginPageUrl = EnvironmentVariables.getAppBaseUrl() + "/login.xhtml";
+
     public IndexBacking(){
         super();
     }
@@ -21,11 +24,15 @@ public class IndexBacking extends LoginCheck {
         if (isLoggedIn){
             HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
             try {
-                response.sendRedirect("/userDataLookup.xhtml");
+                response.sendRedirect(EnvironmentVariables.getAppBaseUrl() + "/userDataLookup.xhtml");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public String getLoginPageUrl() {
+        return loginPageUrl;
+    }
 }
+

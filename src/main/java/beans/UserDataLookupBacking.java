@@ -1,6 +1,7 @@
 package beans;
 
 import beans.helpers.LoginCheck;
+import configuration.EnvironmentVariables;
 import entities.AuditData;
 import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
@@ -58,7 +59,7 @@ public class UserDataLookupBacking extends LoginCheck {
         if (!loggedIn) {
             HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
             try {
-                response.sendRedirect("/login.xhtml");
+                response.sendRedirect(EnvironmentVariables.getAppBaseUrl() + "/login.xhtml");
             } catch (IOException e) {
                 e.printStackTrace();
             }
