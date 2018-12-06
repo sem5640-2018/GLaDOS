@@ -1,6 +1,5 @@
 package beans.helpers;
 
-import beans.OAuthBean;
 import configuration.EnvironmentVariables;
 import oauth.GatekeeperLogin;
 
@@ -28,6 +27,8 @@ public class LoginBacking {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 
+
+
         Map<String, String[]> paramMap = request.getParameterMap();
         String state = request.getParameter("state");
 
@@ -43,13 +44,8 @@ public class LoginBacking {
     }
 
     private void redirectToLoginPage() throws IOException {
-        String redirectUrl = getLoginPageUrl();
+        String redirectUrl = getCallbackUrl();
         loginBean.redirectToGatekeeper(redirectUrl, ACCESS_STATE);
-    }
-
-    private String getLoginPageUrl() {
-        // We can't use getURI as it will return a double slash if the context root is /
-        return EnvironmentVariables.getAppBaseUrl() + "/login.xhtml";
     }
 
     private void postToken(HttpServletResponse response, Map<String, String[]> paramMap) throws IOException, InterruptedException, ExecutionException {
@@ -62,9 +58,20 @@ public class LoginBacking {
         }
 
         // URL to redirect back to
-        String callbackUrl = EnvironmentVariables.getAppBaseUrl() + "/login.xhtml";
-        loginBean.setupOauthCall(callbackUrl, TOKEN_STATE);
-        loginBean.getGatekeeperGetAccessToken(paramMap.get("code")[0]);
+
+        loginBean.setupOauthCall(getCallbackUrl(), TOKEN_STATE);
+        if (!loginBean.getGatekeeperAccessToken(paramMap.get("code")[0])){
+            // Failed to login
+            response.sendError(401);
+            return;
+        }
+
+        // Logged in
+        response.sendRedirect(EnvironmentVariables.getAppBaseUrl());
+    }
+
+    private String getCallbackUrl(){
+        return EnvironmentVariables.getAppBaseUrl() + "/login.xhtml";
     }
 
 

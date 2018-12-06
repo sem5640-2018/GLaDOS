@@ -1,7 +1,6 @@
 package beans;
 
 import beans.helpers.LoginCheck;
-import beans.helpers.LoginState;
 import entities.AuditData;
 import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
@@ -34,9 +33,10 @@ public class UserDataLookupBacking extends LoginCheck {
     // Invoked methods
     public void onLoad() throws IOException {
         // Ensure we have their access token validated for this page
-        LoginState result = checkUserLogin();
+        boolean loggedIn = checkUserLogin();
 
-        if (result != LoginState.LOGGED_IN) {
+        if (!loggedIn) {
+            // Ensure the redirect fires
             return;
         }
 

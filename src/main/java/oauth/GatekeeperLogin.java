@@ -2,10 +2,7 @@ package oauth;
 
 
 import beans.OAuthBean;
-import com.github.scribejava.core.model.OAuth2AccessToken;
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
-import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -35,6 +32,8 @@ public class GatekeeperLogin implements Serializable {
     public GatekeeperLogin() {
     }
 
+
+
     public void setupOauthCall(String callback, String nextState){
         oAuthBean.initGatekeeperService(callback, nextState, "openid profile offline_access");
     }
@@ -47,12 +46,14 @@ public class GatekeeperLogin implements Serializable {
                 .getExternalContext().redirect(url);
     }
 
-    public void getGatekeeperGetAccessToken(String code) throws InterruptedException, ExecutionException, IOException {
+    public boolean getGatekeeperAccessToken(String code) throws InterruptedException, ExecutionException, IOException {
          OAuth20Service aberfitnessService = oAuthBean.getAberfitnessService();
-         OAuth2AccessToken inAccessToken = aberfitnessService.getAccessToken(code);
+         OAuth2AccessToken inAccessToken = null;
+         inAccessToken = aberfitnessService.getAccessToken(code);
          userAccessToken = (GatekeeperOAuth2AccessToken) inAccessToken;
 
          System.out.println("USER ID IN GATE AT: " + userAccessToken.getUserId());
+         return true;
     }
 
     public boolean validateAccessToken() {
