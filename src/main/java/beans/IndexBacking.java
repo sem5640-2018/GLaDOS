@@ -2,9 +2,7 @@ package beans;
 
 import beans.helpers.LoginCheck;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
