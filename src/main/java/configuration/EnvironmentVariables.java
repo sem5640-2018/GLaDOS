@@ -1,6 +1,7 @@
 package configuration;
 
 public final class EnvironmentVariables {
+    private static final String appBaseUrl = System.getenv("APP_BASE_URL");
     private static final String systemBaseUrl = System.getenv("SYS_BASE_URL");
 
     //Gatekeeper URL Defs
@@ -14,6 +15,8 @@ public final class EnvironmentVariables {
     //Aberfitness Info
     private static final String aberfitnessClientId = System.getenv("ABERFITNESS_CLI_ID");
     private static final String aberfitnessClientSecret = System.getenv("ABERFITNESS_CLI_SECRET");
+
+    public static String getAppBaseUrl() { return appBaseUrl; }
 
     public static String getAberfitnessClientId() {
         return aberfitnessClientId;

@@ -2,10 +2,7 @@ package oauth;
 
 
 import beans.OAuthBean;
-import com.github.scribejava.core.model.OAuth2AccessToken;
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
-import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -19,7 +16,7 @@ import oauth.gatekeeper.UserType;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
@@ -30,43 +27,72 @@ public class GatekeeperLogin implements Serializable {
     @EJB
     OAuthBean oAuthBean;
 
+    /// The name used to store a token in a session
+    private static final String TOKEN_STORAGE = "ACCESS_TOKEN";
+
     private GatekeeperOAuth2AccessToken userAccessToken;
 
     public GatekeeperLogin() {
     }
 
+    /**
+     * Attempts to get the access token for the current session,
+     * if one exists
+     * @param session The session to get the token from
+     * @return True if it was obtained, else false
+     */
+    public boolean getSessionToken(HttpSession session){
+        Object storedToken = session.getAttribute(TOKEN_STORAGE);
+        if (storedToken == null){
+            return false;
+        }
+
+        userAccessToken = (GatekeeperOAuth2AccessToken) storedToken;
+        return true;
+    }
+
+    /**
+     * Stores the current access token in the session given
+     * @param session The session to store the token into
+     */
+    public void storeCurrentSessionToken(HttpSession session){
+        session.setAttribute(TOKEN_STORAGE, userAccessToken);
+    }
+
+    /**
+     * Invalidates the token in the given session
+     */
+    public void invalidateSessionToken(HttpSession session){
+        if (session != null) {
+            session.setAttribute(TOKEN_STORAGE, null);
+        }
+    }
+
+    public void setupOauthCall(String callback, String nextState){
+        oAuthBean.initGatekeeperService(callback, nextState, "openid profile offline_access");
+    }
+
     public void redirectToGatekeeper(String callback, String state) throws IOException {
-        oAuthBean.initGatekeeperService(callback, state, "openid profile offline_access");
+        setupOauthCall(callback, state);
         String url = oAuthBean.getAberfitnessService().getAuthorizationUrl();
 
         FacesContext.getCurrentInstance()
                 .getExternalContext().redirect(url);
     }
 
-    public String getGatekeeperGetAccessToken(HttpServletRequest request) {
-        String str = request.getParameter("code");
-        if (str == null) {
-            System.out.println("Code was null");
-            return null;
-        }
+    public boolean getGatekeeperAccessToken(String code) throws InterruptedException, ExecutionException, IOException {
+         OAuth20Service aberfitnessService = oAuthBean.getAberfitnessService();
+         OAuth2AccessToken inAccessToken = null;
+         inAccessToken = aberfitnessService.getAccessToken(code);
+         userAccessToken = (GatekeeperOAuth2AccessToken) inAccessToken;
 
-        try {
-            OAuth2AccessToken inAccessToken = oAuthBean.getAberfitnessService().getAccessToken(str);
-            if (!(inAccessToken instanceof GatekeeperOAuth2AccessToken))
-                return null;
-            userAccessToken = (GatekeeperOAuth2AccessToken) inAccessToken;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("USER ID IN GATE AT: " + userAccessToken.getUserId());
-        return userAccessToken.toString();
+         System.out.println("USER ID IN GATE AT: " + userAccessToken.getUserId());
+         return true;
     }
 
-
-    public boolean validateAccessToken(String accessToken) {
+    public boolean validateAccessToken() {
         try {
-            JWTClaimsSet claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(accessToken);
+            JWTClaimsSet claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(userAccessToken.getAccessToken());
             System.out.println("Token Issued By: " + claimsSet.getIssuer());
 
             return true;
@@ -90,7 +116,9 @@ public class GatekeeperLogin implements Serializable {
 
         if (object.has("user_type") && object.has("sub")) {
             String userId = object.get("sub").toString();
-            UserType userType = UserType.valueOf(object.get("user_type").toString().toLowerCase());
+            // Replace extra " with empty space
+            String userTypeString = object.get("user_type").toString().toLowerCase().replace("\"", "");
+            UserType userType = UserType.valueOf(userTypeString);
             return new GatekeeperInfo(userId, userType);
         }
 

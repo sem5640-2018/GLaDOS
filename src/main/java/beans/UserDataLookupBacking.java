@@ -1,7 +1,6 @@
 package beans;
 
-import beans.helpers.LoginSession;
-import beans.helpers.LoginState;
+import beans.helpers.LoginCheck;
 import entities.AuditData;
 import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @Stateless
 @Named
-public class UserDataLookupBacking extends LoginSession {
+public class UserDataLookupBacking extends LoginCheck {
 
     private Date startingTime;
     private Date endingTime;
@@ -34,9 +33,9 @@ public class UserDataLookupBacking extends LoginSession {
     // Invoked methods
     public void onLoad() throws IOException {
         // Ensure we have their access token validated for this page
-        LoginState result = checkUserLogin();
+        boolean loggedIn = checkUserLogin();
 
-        if (result != LoginState.LOGGED_IN) {
+        if (!loggedIn) {
             return;
         }
 
@@ -44,7 +43,7 @@ public class UserDataLookupBacking extends LoginSession {
 
         currentUserIsAdmin = userInfo.getUserType() == UserType.administrator;
 
-        if (userToLookup.isEmpty()) {
+        if (userToLookup == null || userToLookup.isEmpty()) {
             userToLookup = userInfo.getUserId();
         }
     }
