@@ -6,9 +6,7 @@ import oauth.gatekeeper.GatekeeperInfo;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 public class LoginCheck {
 
@@ -20,7 +18,7 @@ public class LoginCheck {
 
     public boolean checkUserLogin() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+
 
         HttpSession session = request.getSession();
 
@@ -29,13 +27,6 @@ public class LoginCheck {
                 !loginBean.validateAccessToken()){
 
             loginBean.invalidateSessionToken(session);
-
-            try {
-                response.sendRedirect("/login.xhtml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
             return false;
         }
         return true;
