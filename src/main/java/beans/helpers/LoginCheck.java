@@ -1,6 +1,5 @@
 package beans.helpers;
 
-import configuration.EnvironmentVariables;
 import oauth.GatekeeperLogin;
 import oauth.gatekeeper.GatekeeperInfo;
 
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Map;
 
 public class LoginCheck {
 
