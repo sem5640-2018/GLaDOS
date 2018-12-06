@@ -19,7 +19,9 @@
             Audit Data Retrival
         </h2>
         <p>You are not logged in</p>
-        <p:button value="Login" outcome="#{indexBacking.loginPageUrl}"/>
+        <h:form>
+            <p:commandButton value="Login" action="#{indexBacking.redirectToLogin}" />
+        </h:form>
     </h:body>
 
 </html>
