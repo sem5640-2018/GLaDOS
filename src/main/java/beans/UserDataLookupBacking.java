@@ -43,7 +43,7 @@ public class UserDataLookupBacking extends LoginCheck {
 
         currentUserIsAdmin = userInfo.getUserType() == UserType.administrator;
 
-        if (userToLookup.isEmpty()) {
+        if (userToLookup == null || userToLookup.isEmpty()) {
             userToLookup = userInfo.getUserId();
         }
     }

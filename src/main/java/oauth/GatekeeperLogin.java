@@ -116,7 +116,9 @@ public class GatekeeperLogin implements Serializable {
 
         if (object.has("user_type") && object.has("sub")) {
             String userId = object.get("sub").toString();
-            UserType userType = UserType.valueOf(object.get("user_type").toString().toLowerCase());
+            // Replace extra " with empty space
+            String userTypeString = object.get("user_type").toString().toLowerCase().replace("\"", "");
+            UserType userType = UserType.valueOf(userTypeString);
             return new GatekeeperInfo(userId, userType);
         }
 
