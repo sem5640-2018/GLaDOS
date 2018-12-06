@@ -8,7 +8,9 @@ import persistence.DatabaseConnection;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +31,9 @@ public class UserDataLookupBacking extends LoginCheck {
     @EJB
     private DatabaseConnection db;
 
+    public UserDataLookupBacking(){
+        super();
+    }
 
     // Invoked methods
     public void onLoad() throws IOException {
@@ -36,6 +41,13 @@ public class UserDataLookupBacking extends LoginCheck {
         boolean loggedIn = checkUserLogin();
 
         if (!loggedIn) {
+            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+            try {
+                response.sendRedirect("/login.xhtml");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             return;
         }
 

@@ -28,8 +28,6 @@ public class LoginBacking {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 
-
-
         Map<String, String[]> paramMap = request.getParameterMap();
         String state = request.getParameter("state");
 
