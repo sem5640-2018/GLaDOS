@@ -39,6 +39,10 @@ public class UserDataLookupBacking extends LoginCheck {
 
     @PostConstruct
     public void init(){
+        setRangeToNow();
+    }
+
+    private void setRangeToNow() {
         Calendar cal = Calendar.getInstance();
         endingTime = cal.getTime();
         // Subtract one year from now
@@ -73,6 +77,10 @@ public class UserDataLookupBacking extends LoginCheck {
 
     public void lookupResults() {
         hasRequestedResults = true;
+
+        if (startingTime == null || endingTime == null){
+            setRangeToNow();
+        }
 
         results = db.findLogEntry(userToLookup, startingTime.toInstant(), endingTime.toInstant());
     }
