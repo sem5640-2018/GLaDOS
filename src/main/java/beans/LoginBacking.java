@@ -1,4 +1,4 @@
-package beans.helpers;
+package beans;
 
 import configuration.EnvironmentVariables;
 import oauth.GatekeeperLogin;
@@ -7,8 +7,10 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -36,7 +38,7 @@ public class LoginBacking {
             redirectToLoginPage();
             return;
         } else if (state.equals(ACCESS_STATE)) {
-            postToken(response, paramMap);
+            postToken(request.getSession(), response, paramMap);
         } else if (state.equals(TOKEN_STATE)){
             response.sendRedirect(EnvironmentVariables.getAppBaseUrl());
             return;
@@ -48,7 +50,7 @@ public class LoginBacking {
         loginBean.redirectToGatekeeper(redirectUrl, ACCESS_STATE);
     }
 
-    private void postToken(HttpServletResponse response, Map<String, String[]> paramMap) throws IOException, InterruptedException, ExecutionException {
+    private void postToken(HttpSession session, HttpServletResponse response, Map<String, String[]> paramMap) throws IOException, InterruptedException, ExecutionException {
         if (!paramMap.containsKey("code") ||
                 !paramMap.containsKey("scope") ||
                 !paramMap.containsKey("state")) {
@@ -67,6 +69,7 @@ public class LoginBacking {
         }
 
         // Logged in
+        loginBean.storeCurrentSessionToken(session);
         response.sendRedirect(EnvironmentVariables.getAppBaseUrl());
     }
 

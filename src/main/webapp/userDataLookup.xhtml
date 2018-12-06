@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <f:metadata>
-    <f:viewParam name="checkLogin" value="#{userDataLookupBacking.onLoad()}"/>
+    <f:event type="preRenderView" listener="#{userDataLookupBacking.onLoad}"/>
 </f:metadata>
 
 <h:head>

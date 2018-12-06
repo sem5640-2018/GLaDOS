@@ -7,7 +7,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <f:metadata>
-    <f:viewParam name="exchangeToken" value="#{loginBacking.onLoad()}"/>
+    <f:event type="preRenderView" listener="#{loginBacking.onLoad}"/>
 </f:metadata>
 
 <h:head>

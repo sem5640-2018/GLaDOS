@@ -36,7 +36,6 @@ public class UserDataLookupBacking extends LoginCheck {
         boolean loggedIn = checkUserLogin();
 
         if (!loggedIn) {
-            // Ensure the redirect fires
             return;
         }
 
