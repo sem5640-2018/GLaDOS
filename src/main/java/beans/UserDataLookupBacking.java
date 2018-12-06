@@ -6,12 +6,14 @@ import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
 import persistence.DatabaseConnection;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +35,19 @@ public class UserDataLookupBacking extends LoginCheck {
 
     public UserDataLookupBacking(){
         super();
+    }
+
+    @PostConstruct
+    public void init(){
+        setRangeToNow();
+    }
+
+    private void setRangeToNow() {
+        Calendar cal = Calendar.getInstance();
+        endingTime = cal.getTime();
+        // Subtract one year from now
+        cal.add(Calendar.YEAR, -1);
+        startingTime = cal.getTime();
     }
 
     // Invoked methods
@@ -62,6 +77,11 @@ public class UserDataLookupBacking extends LoginCheck {
 
     public void lookupResults() {
         hasRequestedResults = true;
+
+        if (startingTime == null || endingTime == null){
+            setRangeToNow();
+        }
+
         results = db.findLogEntry(userToLookup, startingTime.toInstant(), endingTime.toInstant());
     }
 
