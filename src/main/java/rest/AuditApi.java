@@ -9,7 +9,6 @@ import persistence.DatabaseConnection;
 import rest.helpers.AuthStates;
 import rest.helpers.Authorization;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.json.Json;
