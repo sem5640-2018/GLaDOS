@@ -4,7 +4,6 @@ import beans.helpers.LoginCheck;
 import configuration.EnvironmentVariables;
 
 import javax.ejb.Stateless;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
@@ -32,13 +31,8 @@ public class IndexBacking extends LoginCheck {
         }
     }
 
-    public void redirectToLogin() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        try {
-            externalContext.redirect(loginPageUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public String getLoginPageUrl() {
+        return loginPageUrl;
     }
 }
 
