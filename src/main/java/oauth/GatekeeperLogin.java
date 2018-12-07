@@ -139,7 +139,7 @@ public class GatekeeperLogin implements Serializable {
         }
 
         if (!response.isSuccessful()) {
-            throw new RuntimeException("Response code was: " + response.getCode());
+            throw new RuntimeException("Failed to get User Information. Response code was: " + response.getCode());
         }
 
         return response;
@@ -150,12 +150,5 @@ public class GatekeeperLogin implements Serializable {
         OAuth20Service service = oAuthBean.getAberfitnessService();
         service.signRequest(accessToken, oAuthRequest);
         return service.execute(oAuthRequest);
-    }
-
-
-    public String getUser_id() {
-        if (userAccessToken != null)
-            return userAccessToken.getUserId();
-        return null;
     }
 }
