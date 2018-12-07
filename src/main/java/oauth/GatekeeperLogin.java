@@ -2,7 +2,10 @@ package oauth;
 
 
 import beans.OAuthBean;
-import com.github.scribejava.core.model.*;
+import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -24,12 +27,10 @@ import java.util.concurrent.ExecutionException;
 @Stateful
 public class GatekeeperLogin implements Serializable {
 
-    @EJB
-    OAuthBean oAuthBean;
-
     /// The name used to store a token in a session
     private static final String TOKEN_STORAGE = "ACCESS_TOKEN";
-
+    @EJB
+    OAuthBean oAuthBean;
     private GatekeeperOAuth2AccessToken userAccessToken;
 
     public GatekeeperLogin() {
@@ -38,12 +39,13 @@ public class GatekeeperLogin implements Serializable {
     /**
      * Attempts to get the access token for the current session,
      * if one exists
+     *
      * @param session The session to get the token from
      * @return True if it was obtained, else false
      */
-    public boolean getSessionToken(HttpSession session){
+    public boolean getSessionToken(HttpSession session) {
         Object storedToken = session.getAttribute(TOKEN_STORAGE);
-        if (storedToken == null){
+        if (storedToken == null) {
             return false;
         }
 
@@ -53,27 +55,28 @@ public class GatekeeperLogin implements Serializable {
 
     /**
      * Stores the current access token in the session given
+     *
      * @param session The session to store the token into
      */
-    public void storeCurrentSessionToken(HttpSession session){
+    public void storeCurrentSessionToken(HttpSession session) {
         session.setAttribute(TOKEN_STORAGE, userAccessToken);
     }
 
     /**
      * Invalidates the token in the given session
      */
-    public void invalidateSessionToken(HttpSession session){
+    public void invalidateSessionToken(HttpSession session) {
         if (session != null) {
             session.setAttribute(TOKEN_STORAGE, null);
         }
     }
 
-    public void setupOauthCall(String callback, String nextState){
-        oAuthBean.initGatekeeperService(callback, nextState, "openid profile offline_access");
+    public void setupOauthCall(String nextState) {
+        oAuthBean.initGatekeeperService(nextState, "openid profile offline_access");
     }
 
-    public void redirectToGatekeeper(String callback, String state) throws IOException {
-        setupOauthCall(callback, state);
+    public void redirectToGatekeeper(String state) throws IOException {
+        setupOauthCall(state);
         String url = oAuthBean.getAberfitnessService().getAuthorizationUrl();
 
         FacesContext.getCurrentInstance()
@@ -81,18 +84,23 @@ public class GatekeeperLogin implements Serializable {
     }
 
     public boolean getGatekeeperAccessToken(String code) throws InterruptedException, ExecutionException, IOException {
-         OAuth20Service aberfitnessService = oAuthBean.getAberfitnessService();
-         OAuth2AccessToken inAccessToken = null;
-         inAccessToken = aberfitnessService.getAccessToken(code);
-         userAccessToken = (GatekeeperOAuth2AccessToken) inAccessToken;
+        OAuth20Service aberfitnessService = oAuthBean.getAberfitnessService();
+        OAuth2AccessToken inAccessToken = null;
+        inAccessToken = aberfitnessService.getAccessToken(code);
+        userAccessToken = (GatekeeperOAuth2AccessToken) inAccessToken;
 
-         System.out.println("USER ID IN GATE AT: " + userAccessToken.getUserId());
-         return true;
+        System.out.println("USER ID IN GATE AT: " + userAccessToken.getUserId());
+        return true;
     }
 
-    public boolean validateAccessToken() {
+    /**
+     * Validates the passed access token
+     * @param accessToken Token to verify
+     * @return True if the given token is valid
+     */
+    public boolean validateAccessToken(String accessToken) {
         try {
-            JWTClaimsSet claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(userAccessToken.getAccessToken());
+            JWTClaimsSet claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(accessToken);
             System.out.println("Token Issued By: " + claimsSet.getIssuer());
 
             return true;
@@ -100,10 +108,35 @@ public class GatekeeperLogin implements Serializable {
             System.err.println("[GatekeeperLogin.validateAccessToken] Message:" + e.getMessage() + " Cause: " + e.getCause());
             return false;
         }
+
     }
 
-    public GatekeeperInfo getUserInfo() throws RuntimeException {
-        Response response = getUserInfoResponse(userAccessToken.getAccessToken());
+    /**
+     * Validates the internal access token which is stored
+     * after calling getGateKeeperAccessToken
+     * @return True if the token is valid, else false
+     */
+    public boolean validateAccessToken() {
+        return validateAccessToken(userAccessToken.getAccessToken());
+    }
+
+    /**
+     * Gets the current user's information based on the access token
+     * which was set after calling getGatekeeperAccessToken
+     * @return The current user's info
+     */
+    public GatekeeperInfo getUserInfo(){
+        return getUserInfo(userAccessToken.getAccessToken());
+    }
+
+    /**
+     * Gets the users information based on a passed access token
+     * @param accessToken The access token  belonging to the user
+     * @return The users details for the token
+     * @throws RuntimeException If the lookup failed
+     */
+    public GatekeeperInfo getUserInfo(String accessToken) throws RuntimeException {
+        Response response = getUserInfoResponse(accessToken);
         JsonParser parser = new JsonParser();
 
         JsonObject object = null;
@@ -132,6 +165,10 @@ public class GatekeeperLogin implements Serializable {
 
     private Response getUserInfoResponse(String accessToken) throws RuntimeException {
         Response response;
+        if (!oAuthBean.serviceIsInit()){
+            oAuthBean.initGatekeeperService("token", "openid profile offline_access");
+        }
+
         try {
             response = getUserData(accessToken);
         } catch (InterruptedException | ExecutionException | IOException e) {

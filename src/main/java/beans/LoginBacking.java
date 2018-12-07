@@ -43,8 +43,7 @@ public class LoginBacking {
     }
 
     private void redirectToLoginPage() throws IOException {
-        String redirectUrl = getCallbackUrl();
-        loginBean.redirectToGatekeeper(redirectUrl, ACCESS_STATE);
+        loginBean.redirectToGatekeeper(ACCESS_STATE);
     }
 
     private void postToken(HttpSession session, HttpServletResponse response, Map<String, String[]> paramMap) throws IOException, InterruptedException, ExecutionException {
@@ -58,7 +57,7 @@ public class LoginBacking {
 
         // URL to redirect back to
 
-        loginBean.setupOauthCall(getCallbackUrl(), TOKEN_STATE);
+        loginBean.setupOauthCall( TOKEN_STATE);
         if (!loginBean.getGatekeeperAccessToken(paramMap.get("code")[0])){
             // Failed to login
             response.sendError(401);
@@ -69,10 +68,5 @@ public class LoginBacking {
         loginBean.storeCurrentSessionToken(session);
         response.sendRedirect(EnvironmentVariables.getAppBaseUrl());
     }
-
-    private String getCallbackUrl(){
-        return EnvironmentVariables.getAppBaseUrl() + "/login.xhtml";
-    }
-
 
 }
