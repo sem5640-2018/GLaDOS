@@ -24,7 +24,7 @@ public class LoginCheck {
 
         if(session== null ||
                 !loginBean.getSessionToken(session) ||
-                !loginBean.validateAccessToken()){
+                !loginBean.validateInternalJwtToken()){
 
             loginBean.invalidateSessionToken(session);
             return false;

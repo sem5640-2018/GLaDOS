@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.nimbusds.jwt.JWTClaimsSet;
 import configuration.EnvironmentVariables;
+import net.minidev.json.JSONArray;
 import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.GatekeeperJsonTokenExtractor;
 import oauth.gatekeeper.GatekeeperOAuth2AccessToken;
@@ -22,6 +23,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 @Stateful
@@ -29,9 +32,12 @@ public class GatekeeperLogin implements Serializable {
 
     /// The name used to store a token in a session
     private static final String TOKEN_STORAGE = "ACCESS_TOKEN";
+
     @EJB
     OAuthBean oAuthBean;
+
     private GatekeeperOAuth2AccessToken userAccessToken;
+    private JWTClaimsSet claimsSet;
 
     public GatekeeperLogin() {
     }
@@ -72,7 +78,7 @@ public class GatekeeperLogin implements Serializable {
     }
 
     public void setupOauthCall(String nextState) {
-        oAuthBean.initGatekeeperService(nextState, "openid profile offline_access");
+        oAuthBean.initGatekeeperService(nextState);
     }
 
     public void redirectToGatekeeper(String state) throws IOException {
@@ -94,30 +100,28 @@ public class GatekeeperLogin implements Serializable {
     }
 
     /**
-     * Validates the passed access token
-     * @param accessToken Token to verify
+     * Validates the passed JWT token, such as an Access Token or Client credential
+     * @param jwtToken Token to verify
      * @return True if the given token is valid
      */
-    public boolean validateAccessToken(String accessToken) {
+    public boolean validateJwtToken(String jwtToken) {
         try {
-            JWTClaimsSet claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(accessToken);
-            System.out.println("Token Issued By: " + claimsSet.getIssuer());
-
-            return true;
+            claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(jwtToken);
+            return checkJwtValidity();
         } catch (Exception e) {
-            System.err.println("[GatekeeperLogin.validateAccessToken] Message:" + e.getMessage() + " Cause: " + e.getCause());
+            System.err.println("[GatekeeperLogin.validateJwtToken] Message:" + e.getMessage() + " Cause: " + e.getCause());
             return false;
         }
 
     }
 
     /**
-     * Validates the internal access token which is stored
+     * Validates the internal access token
      * after calling getGateKeeperAccessToken
      * @return True if the token is valid, else false
      */
-    public boolean validateAccessToken() {
-        return validateAccessToken(userAccessToken.getAccessToken());
+    public boolean validateInternalJwtToken() {
+        return validateJwtToken(userAccessToken.getAccessToken());
     }
 
     /**
@@ -147,7 +151,13 @@ public class GatekeeperLogin implements Serializable {
             throw new RuntimeException(e.getCause());
         }
 
-        if (object.has("user_type") && object.has("sub")) {
+
+        if(!object.has("sub")){
+            boolean isClientCred = true;
+            return new GatekeeperInfo(isClientCred);
+        }
+
+        if (object.has("user_type")) {
             // Replace extra " with empty space
             String userId = object.get("sub").toString().replace("\"", "");
             String userTypeString = object.get("user_type").toString().toLowerCase().replace("\"", "");
@@ -163,10 +173,41 @@ public class GatekeeperLogin implements Serializable {
         throw new RuntimeException("No user ID found");
     }
 
+    /**
+     * Ensures the current JWT token came from the correct issuer and
+     * has not expired
+     * @return True if the JWT is valid
+     */
+    private boolean checkJwtValidity(){
+        Date expiry = claimsSet.getExpirationTime();
+        String issuer = claimsSet.getIssuer();
+        JSONArray scopes;
+
+        try {
+            scopes = (JSONArray) claimsSet.getClaim("scope");
+        } catch (ClassCastException e){
+            return false;
+        }
+
+        if (expiry == null || issuer == null || scopes == null){
+            return false;
+        }
+
+        if (expiry.before(Calendar.getInstance().getTime())){
+            return false;
+        }
+
+        if (!issuer.equals(EnvironmentVariables.getGatekeeperUrl())){
+            return false;
+        }
+
+        return scopes.contains("glados");
+    }
+
     private Response getUserInfoResponse(String accessToken) throws RuntimeException {
         Response response;
         if (!oAuthBean.serviceIsInit()){
-            oAuthBean.initGatekeeperService("token", "openid profile offline_access");
+            oAuthBean.initGatekeeperService("token");
         }
 
         try {

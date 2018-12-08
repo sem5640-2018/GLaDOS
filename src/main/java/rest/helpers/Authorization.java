@@ -33,7 +33,7 @@ public class Authorization {
         }
 
         // Validate the current token
-        if (!authBean.validateAccessToken(bearerToken)){
+        if (!authBean.validateJwtToken(bearerToken)){
             return AuthStates.Unauthorized;
         }
 

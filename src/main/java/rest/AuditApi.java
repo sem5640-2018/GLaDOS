@@ -123,8 +123,9 @@ public class AuditApi {
                     .entity("A null entry was generated").build();
         }
 
-        if (!auth.getUserInfo().getUserId().equals(newEntity.getUserId())){
-            return Response.status(401, "You cannot create a log entry for a different user")
+        if (!auth.getUserInfo().getUserId().isEmpty()){
+            // The sub field is populated so this is not a client credential
+            return Response.status(401, "Users cannot POST audit logs")
                     .build();
         }
 
