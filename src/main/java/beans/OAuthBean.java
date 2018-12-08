@@ -12,18 +12,23 @@ public class OAuthBean {
 
     private OAuth20Service aberfitnessService;
 
+    /// Default scopes requested for gatekeeper
+    private static final String scopes = "openid profile offline_access glados";
 
-    //"openid profile offline_access"
-    public void initGatekeeperService(String callback, String state, String scope) {
-        if (aberfitnessService != null && aberfitnessService.getCallback().equals(callback) && aberfitnessService.getScope().equals(scope))
+    public void initGatekeeperService(String state) {
+        if (aberfitnessService != null && state.equals(aberfitnessService.getState()))
             return;
 
         aberfitnessService = new ServiceBuilder(EnvironmentVariables.getAberfitnessClientId())
                 .apiSecret(EnvironmentVariables.getAberfitnessClientSecret())
-                .scope(scope)
-                .callback(callback)
+                .scope(scopes)
+                .callback(EnvironmentVariables.getAppBaseUrl() + "/login.xhtml")
                 .state(state)
                 .build(GatekeeperApi.instance());
+    }
+
+    public boolean serviceIsInit(){
+        return aberfitnessService != null;
     }
 
     public OAuth20Service getAberfitnessService() {
