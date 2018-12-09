@@ -17,3 +17,13 @@
 .contentColumn{
     width: 300px;
 }
+
+.red{
+    background-color:orangered;
+    background-image:none;
+}
+
+.green{
+    background-color:transparent;
+    background-image:none;
+}

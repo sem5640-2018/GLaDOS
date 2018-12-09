@@ -5,16 +5,14 @@ package rest.helpers;
  * for the logging API
  */
 public enum ServiceNames {
-    BOOKING_FACILITY,
+    BOOKING_FACILITIES,
     CHALLENGES,
-    COMMUNICATIONS,
-    DEPLOYMENT,
-    FITBIT_INGEST,
+    COMMS,
+    FITBIT_INGEST_SERVICE,
     GATEKEEPER,
     GLADOS,
     HEALTH_DASHBOARD,
-    HEALTH_DATA,
+    HEALTH_DATA_REPOSITORY,
     LADDERS,
     USER_GROUPS
-
 }
