@@ -32,7 +32,7 @@ public class AuditDataJsonTest {
     @Test
     public void ConvertsFromOtherSerialisingTypeCorrectly() {
         AuditData noSerial = new AuditData(Instant.now(),
-                "test", "abc123", ServiceNames.GLADOS);
+                "test", "abc123", ServiceNames.GLADOS.toString());
 
         AuditDataJson convertedInstance = new AuditDataJson(noSerial);
         Assert.assertNotNull(convertedInstance);
@@ -46,7 +46,7 @@ public class AuditDataJsonTest {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
         String userId = "test123";
-        ServiceNames serviceName = ServiceNames.GLADOS;
+        String serviceName = ServiceNames.GLADOS.toString();
 
         final AuditDataJson testInstance = new AuditDataJson(now, sampleMsg, userId, serviceName);
         JsonObject returnedJson = testInstance.toJson();
@@ -64,7 +64,7 @@ public class AuditDataJsonTest {
         String sampleMsg = "Hello world";
 
         String userId = "test123";
-        ServiceNames serviceName = ServiceNames.GLADOS;
+        String serviceName = ServiceNames.GLADOS.toString();
 
         AuditData referenceInstance = new AuditData(now, sampleMsg, userId, serviceName);
 
@@ -78,7 +78,7 @@ public class AuditDataJsonTest {
     public void SerialisesFromListCorrectly() {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
-        ServiceNames serviceName = ServiceNames.GLADOS;
+        String serviceName = ServiceNames.GLADOS.toString();
 
         final AuditDataJson testObjOne = new AuditDataJson(now, sampleMsg, "101", serviceName);
         final AuditDataJson testObjTwo = new AuditDataJson(now, sampleMsg, "102", serviceName);
@@ -106,7 +106,7 @@ public class AuditDataJsonTest {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
         String userId = "test123";
-        ServiceNames serviceName = ServiceNames.GLADOS;
+        String serviceName = ServiceNames.GLADOS.toString();
 
         final AuditDataJson testInstance = new AuditDataJson(now, sampleMsg, userId, serviceName);
 
