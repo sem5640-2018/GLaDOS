@@ -10,16 +10,26 @@
     <f:event type="preRenderView" listener="#{indexBacking.onLoad}"/>
 </f:metadata>
 
-    <h:head>
-        <title>Audit Data Retrival</title>
-    </h:head>
+<h:head>
+    <title>Audit Data Retrival and System Status</title>
+</h:head>
 
-    <h:body>
-        <h2>
-            Audit Data Retrival
-        </h2>
+<h:body>
+    <h2>
+        Audit Data Retrival
+    </h2>
+    <br/>
+    <h:panelGrid columns="2">
         <p>You are not logged in</p>
-        <p:button value="Login" href="#{indexBacking.loginPageUrl}" />
-    </h:body>
+        <p:button value="Login" href="#{indexBacking.loginPageUrl}"/>
+    </h:panelGrid>
+
+
+    <h2>
+        Service Status
+    </h2>
+    <br/>
+    <p:button value="Status" outcome="status"/>
+</h:body>
 
 </html>
