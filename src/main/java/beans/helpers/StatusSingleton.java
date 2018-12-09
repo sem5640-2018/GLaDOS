@@ -29,7 +29,8 @@ public class StatusSingleton {
 
     public StatusSingleton() {
         for (ServiceNames name : ServiceNames.values()) {
-            serviceStatuses.put(name.toString().replace('_', '-'), false);
+            String serviceName = name.toString().replace('_', '-').toLowerCase();
+            serviceStatuses.put(serviceName, false);
         }
     }
 
@@ -44,6 +45,7 @@ public class StatusSingleton {
 
     // Query services every minute in the background
     @Schedule(hour = "*", minute = "*", second = "*/20", persistent = false)
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void checkQueriesCompleted() {
         if (asyncQuery == null){
             return;

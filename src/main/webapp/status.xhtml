@@ -11,10 +11,13 @@
 </h:head>
 
 <h:body>
+    <h:outputStylesheet name="styles/table.css"/>
+
     <h2>Service Status</h2>
     <br/>
 
-    <p:dataTable value="#{statusBacking.serviceStatus}" var="entry">
+    <p:dataTable var="entry" value="#{statusBacking.serviceStatus}"
+                 rowStyleClass="#{entry.value ? 'green' : 'red'}">
 
         <p:column>
             <f:facet name="header">Service</f:facet>
@@ -23,8 +26,8 @@
 
         <p:column>
             <f:facet name="header">Status</f:facet>
-            <p:outputLabel rendered="#{entry.value}" >Operational</p:outputLabel>
-            <p:outputLabel rendered="#{!entry.value}" >Down</p:outputLabel>
+            <p:outputLabel rendered="#{entry.value}">Operational</p:outputLabel>
+            <p:outputLabel rendered="#{!entry.value}">Down</p:outputLabel>
         </p:column>
 
     </p:dataTable>
