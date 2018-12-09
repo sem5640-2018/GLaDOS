@@ -65,7 +65,7 @@ public class AuditApiTest {
         when(authMock.getUserInfo()).thenReturn(mockedUserInfo);
 
         return new AuditData(Instant.now(), "TestContent",
-                userId, ServiceNames.GLADOS);
+                userId, ServiceNames.GLADOS.toString());
     }
 
 //    @Test

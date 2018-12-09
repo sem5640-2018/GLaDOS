@@ -14,7 +14,7 @@ public class AuditDataTest {
         Instant now = Instant.now();
         String sampleMsg = "Hello world";
         String userId = "test123";
-        ServiceNames testName = ServiceNames.GLADOS;
+        String testName = ServiceNames.GLADOS.toString();
 
         final AuditData testInstance = new AuditData(now, sampleMsg, userId, testName);
 
@@ -29,9 +29,9 @@ public class AuditDataTest {
         Instant now = Instant.now();
 
         // Regardless of other fields the log id should always be unique
-        final AuditData testInstanceOne = new AuditData(now, "test", "id1", ServiceNames.GLADOS);
+        final AuditData testInstanceOne = new AuditData(now, "test", "id1", ServiceNames.GLADOS.toString());
         final AuditData testInstanceTwo = new AuditData(now,
-                "test", "id1", ServiceNames.GLADOS);
+                "test", "id1", ServiceNames.GLADOS.toString());
 
         Assert.assertNotEquals(testInstanceOne.getLogId(), testInstanceTwo.getLogId());
     }
@@ -39,7 +39,7 @@ public class AuditDataTest {
     @Test
     public void LogDataCopyConstructor() {
         final AuditData testInstanceOne = new AuditData(Instant.now(),
-                "test", "id1", ServiceNames.GLADOS);
+                "test", "id1", ServiceNames.GLADOS.toString());
 
         final AuditData testInstanceTwo = new AuditData(testInstanceOne);
 

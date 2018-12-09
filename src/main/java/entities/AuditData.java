@@ -1,7 +1,6 @@
 package entities;
 
 import persistence.helpers.InstantConverter;
-import rest.helpers.ServiceNames;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,8 +30,7 @@ public class AuditData implements Serializable {
     private String logId;
 
     @Column(name = "serviceName", nullable = false, length = 20)
-    @Enumerated(EnumType.STRING)
-    private ServiceNames serviceName;
+    private String serviceName;
 
     @Column(name = "timestamp", nullable = false)
     @Convert(converter = InstantConverter.class)
@@ -55,7 +53,7 @@ public class AuditData implements Serializable {
      * @param serviceName The service associated with this log entry
      */
     public AuditData(final Instant timestamp,
-                     final String content, final String userId, final ServiceNames serviceName) {
+                     final String content, final String userId, final String serviceName) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
         this.content = content;
@@ -117,13 +115,13 @@ public class AuditData implements Serializable {
     /**
      * Returns the service which created this log
      *
-     * @return ServiceName enum with the micro-service name
+     * @return ServiceName string with the micro-service name
      */
-    public ServiceNames getServiceName() {
+    public String getServiceName() {
         return serviceName;
     }
 
-    public void setServiceName(ServiceNames serviceName) {
+    public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
 

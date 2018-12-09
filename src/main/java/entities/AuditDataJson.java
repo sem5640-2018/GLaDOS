@@ -1,6 +1,5 @@
 package entities;
 
-import rest.helpers.ServiceNames;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -25,7 +24,7 @@ public class AuditDataJson extends AuditData {
      * @param serviceName The micro-service associated with this log entry
      */
     public AuditDataJson(final Instant timestamp,
-                         final String content, final String userId, final ServiceNames serviceName){
+                         final String content, final String userId, final String serviceName){
         super(timestamp, content, userId, serviceName);
     }
 
@@ -49,7 +48,7 @@ public class AuditDataJson extends AuditData {
                 .add("timestamp", getTimestamp().toString())
                 .add("userId", getUserId())
                 .add("content", getContent())
-                .add("serviceName", getServiceName().toString());
+                .add("serviceName", getServiceName());
         return newJson.build();
     }
 
