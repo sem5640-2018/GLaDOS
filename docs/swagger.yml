@@ -54,7 +54,7 @@ security:
       
     
 paths: 
-  /audit/{logId} :
+  /api/audit/{logId} :
     get:
       tags: [audit]
       summary: Gets the log entry matching the given log ID
@@ -80,7 +80,7 @@ paths:
         500:
           description: "Server Error"
   
-  /audit/find/{userId} :
+  /api/audit/find/{userId} :
     get:
       tags: [audit]
       parameters: 
@@ -118,7 +118,7 @@ paths:
           description: "Server Error"
         
           
-  /audit/new :
+  /api/audit/new :
     post:
       tags: [audit]
       summary: Creates a new audit entry
@@ -136,7 +136,7 @@ paths:
         500: 
           description: "Server Error"
         
-  /audit/delete/{logId} :
+  /api/audit/delete/{logId} :
     delete:
       tags: [audit] 
       summary: Deletes the requested log entry
