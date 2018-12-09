@@ -69,7 +69,7 @@
     }
   ],
   "paths": {
-    "/audit/{logId}": {
+    "/api/audit/{logId}": {
       "get": {
         "tags": [
           "audit"
@@ -109,7 +109,7 @@
         }
       }
     },
-    "/audit/find/{userId}": {
+    "/api/audit/find/{userId}": {
       "get": {
         "tags": [
           "audit"
@@ -167,7 +167,7 @@
         }
       }
     },
-    "/audit/new": {
+    "/api/audit/new": {
       "post": {
         "tags": [
           "audit"
@@ -196,7 +196,7 @@
         }
       }
     },
-    "/audit/delete/{logId}": {
+    "/api/audit/delete/{logId}": {
       "delete": {
         "tags": [
           "audit"
