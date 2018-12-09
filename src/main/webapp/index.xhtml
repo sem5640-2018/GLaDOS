@@ -6,10 +6,6 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
 >
-<f:metadata>
-    <f:event type="preRenderView" listener="#{indexBacking.onLoad}"/>
-</f:metadata>
-
 <h:head>
     <title>Audit Data Retrival and System Status</title>
 </h:head>
@@ -19,10 +15,7 @@
         Audit Data Retrival
     </h2>
     <br/>
-    <h:panelGrid columns="2">
-        <p>You are not logged in</p>
-        <p:button value="Login" href="#{indexBacking.loginPageUrl}"/>
-    </h:panelGrid>
+    <p:button value="Audit Data" outcome="userDataLookup"/>
 
 
     <h2>
