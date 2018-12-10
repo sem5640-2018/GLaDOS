@@ -1,38 +1,143 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-<h:head>
-    <title>Service status</title>
-</h:head>
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Service Status - AberFitness</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css" />
+    <link rel="stylesheet" href="/assets/css/style.min.css" />
+    <meta name="x-stylesheet-fallback-test" content="" class="aberfitness-test-class" /><script>!function(a,b,c,d){var e,f=document,g=f.getElementsByTagName("SCRIPT"),h=g[g.length-1].previousElementSibling,i=f.defaultView&&f.defaultView.getComputedStyle?f.defaultView.getComputedStyle(h):h.currentStyle;if(i&&i[a]!==b)for(e=0;e<c.length;e++)f.write('<link href="'+c[e]+'" '+d+"/>")}("display","block",["https:\/\/docker2.aberfitness.biz\/assets\/css\/style.min.css"], "rel=\u0022stylesheet\u0022 ");</script>
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+        <aside id="left-panel" class="left-panel">
+            <nav class="navbar navbar-expand-sm navbar-default">
+                <div id="main-menu" class="main-menu collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="/dashboard">
+                                        <i class="menu-icon fa fa-home"></i>
+                                        Back to Aber Fitness
+                                    </a>
+                                </li>
 
-<h:body>
-    <h:outputStylesheet name="styles/table.css"/>
 
-    <h2>Service Status</h2>
-    <br/>
+                                <li>
+                                    <a href="/glados/userDataLookup.xhtml">
+                                        <i class="menu-icon fa fa-link"></i>
+                                        Audit Logs
+                                    </a>
+                                </li>
 
-    <p:dataTable var="entry" value="#{statusBacking.serviceStatus}"
-                 rowStyleClass="#{entry.value ? 'green' : 'red'}">
+                                <li>
+                                    <a href="/glados/status.xhtml">
+                                        <i class="menu-icon fa fa-rocket"></i>
+                                        Service Status
+                                    </a>
+                                </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
 
-        <p:column>
-            <f:facet name="header">Service</f:facet>
-            #{entry.key}
-        </p:column>
+    <div id="right-panel" class="right-panel">
+        <header id="header" class="header">
+            <div class="top-left">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/" style="color: #878787 !important;">
+                        <img src="/assets/img/aberfitness.png" alt="AberFitness" />
+                    </a>
+                        <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+                </div>
+            </div>
+            <div class="top-right">
+                <div class="header-menu">
+                        <div class="user-area dropdown float-right">
+                            <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Hi <strong>LOGGED IN USER EMAIL HERE</strong> &nbsp;&nbsp;<img class="user-avatar rounded-circle" src="/assets/img/user.png" alt="User">
+                            </a>
+                            <div class="user-menu dropdown-menu">
+                                <a class="nav-link" href="/gatekeeper"><i class="fa fa-user"></i>My Profile</a>
+                                <a class="nav-link" href="/sign-out"><i class="fa fa-power-off"></i>Logout</a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </header>
 
-        <p:column>
-            <f:facet name="header">Status</f:facet>
-            <p:outputLabel rendered="#{entry.value}">Operational</p:outputLabel>
-            <p:outputLabel rendered="#{!entry.value}">Down</p:outputLabel>
-        </p:column>
-    </p:dataTable>
+        <div class="content">
+            <div class="animated fadeIn">
 
-    <br/>
-    <p:button value="Home" outcome="index"/>
-</h:body>
+                <div class="row">
+                    <div class="col-lg-4 offset-lg-4 col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <strong class="card-title">Service Status</strong>
+                            </div>
+                            <div class="table-stats order-table ov-h">
 
+
+                                <h:dataTable var="entry" value="#{statusBacking.serviceStatus}" 
+                                    styleClass="table"
+                                    headerClass=""
+                                    rowClasses=""
+                                >
+                                  <h:column>
+                                    <f:facet name="header">Service</f:facet>
+                                    #{entry.key}
+                                  </h:column>
+
+                                  <h:column>
+                                    <f:facet name="header">Status</f:facet>
+                                    <c:choose>
+                                        <c:when test="#{entry.value}">
+                                            <span class="text-success">Online 👌</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="text-danger">OFFLINE 😡</span>
+                                        </c:otherwise>
+                                    </c:choose>                    
+                                  </h:column>
+                                </h:dataTable>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
+    <script src="/assets/js/main.min.js"></script>
+    <script>(window.isAberFitnessBizzer||document.write("\u003Cscript src=\u0022https:\/\/docker2.aberfitness.biz\/assets\/js\/main.min.js\u0022\u003E\u003C\/script\u003E"));</script>
+    <script src="/dashboard/js/site.min.js"></script>
+
+    
+</body>
 </html>
