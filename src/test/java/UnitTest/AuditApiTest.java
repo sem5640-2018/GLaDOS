@@ -1,7 +1,6 @@
 package UnitTest;
 
 import entities.AuditData;
-import entities.AuditDataJson;
 import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
 import rest.AuditApi;
@@ -16,15 +15,12 @@ import org.mockito.MockitoAnnotations;
 import persistence.DatabaseConnection;
 import rest.helpers.AuthStates;
 import rest.helpers.Authorization;
-import rest.helpers.ServiceNames;
+import beans.helpers.ServiceNames;
 
-import javax.json.Json;
-import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;

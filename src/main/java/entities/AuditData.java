@@ -1,8 +1,10 @@
 package entities;
 
 import persistence.helpers.InstantConverter;
+import rest.helpers.InstantSerialiser;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -32,6 +34,7 @@ public class AuditData implements Serializable {
     @Column(name = "serviceName", nullable = false, length = 20)
     private String serviceName;
 
+    @XmlJavaTypeAdapter(InstantSerialiser.class)
     @Column(name = "timestamp", nullable = false)
     @Convert(converter = InstantConverter.class)
     private Instant timestamp;

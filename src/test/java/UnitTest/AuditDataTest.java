@@ -3,7 +3,7 @@ package UnitTest;
 import entities.AuditData;
 import org.junit.Assert;
 import org.junit.Test;
-import rest.helpers.ServiceNames;
+import beans.helpers.ServiceNames;
 
 import java.time.Instant;
 
