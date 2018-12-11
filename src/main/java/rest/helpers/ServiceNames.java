@@ -14,6 +14,6 @@ public enum ServiceNames {
     GLADOS,
     HEALTH_DATA_REPOSITORY,
     LADDERS,
-    USER_GROUPS,
-    LAYOUT_SERVICE
+    LAYOUT_SERVICE,
+    USER_GROUPS
 }
