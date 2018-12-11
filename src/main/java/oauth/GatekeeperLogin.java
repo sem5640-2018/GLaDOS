@@ -161,8 +161,9 @@ public class GatekeeperLogin implements Serializable {
             // Replace extra " with empty space
             String userId = object.get("sub").toString().replace("\"", "");
             String userTypeString = object.get("user_type").toString().toLowerCase().replace("\"", "");
+            String userEmail = object.get("name").toString().replace("\"", "");
             UserType userType = UserType.valueOf(userTypeString);
-            return new GatekeeperInfo(userId, userType);
+            return new GatekeeperInfo(userId, userType, userEmail);
         }
 
         // See why we failed

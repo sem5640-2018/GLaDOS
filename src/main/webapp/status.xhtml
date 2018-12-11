@@ -25,8 +25,7 @@
                             <h:dataTable var="entry" value="#{statusBacking.serviceStatus}"
                                          styleClass="table"
                                          headerClass=""
-                                         rowClasses=""
-                            >
+                                         rowClasses="">
                                 <h:column>
                                     <f:facet name="header">Service</f:facet>
                                     #{entry.key}
@@ -35,8 +34,10 @@
                                 <h:column>
                                     <f:facet name="header">Status</f:facet>
 
-                                    <p:outputLabel class="text-success" rendered="#{entry.value}">Online 👌</p:outputLabel>
-                                    <p:outputLabel class="text-danger" rendered="#{!entry.value}">OFFLINE 😡</p:outputLabel>
+                                    <p:outputLabel class="text-success"
+                                                   rendered="#{entry.value}">Online 👌</p:outputLabel>
+                                    <p:outputLabel class="text-danger"
+                                                   rendered="#{!entry.value}">OFFLINE 😡</p:outputLabel>
                                 </h:column>
                             </h:dataTable>
 

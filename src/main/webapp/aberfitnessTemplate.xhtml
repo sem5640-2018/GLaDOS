@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -72,7 +72,7 @@
             <div class="top-left">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/" style="color: #878787 !important;">
-                        <img src="/assets/img/aberfitness.png" alt="AberFitness" />
+                        <img src="/assets/img/aberfitness.png" alt="AberFitness"/>
                     </a>
                     <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                 </div>
@@ -80,9 +80,20 @@
             <div class="top-right">
                 <div class="header-menu">
                     <div class="user-area dropdown float-right">
-                        <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Hi <strong>LOGGED IN USER EMAIL HERE</strong> &nbsp;&nbsp;<img class="user-avatar rounded-circle" src="/assets/img/user.png" alt="User" />
-                        </a>
+                        <c:choose>
+                            <c:when test="#{aberFitnessTemplateBacking.loggedIn}">
+                                <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
+                                   aria-expanded="false">
+                                    Hi <strong>#{aberFitnessTemplateBacking.userEmail}</strong> &nbsp;&nbsp;<img
+                                        class="user-avatar rounded-circle" src="/assets/img/user.png" alt="User"/>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <h:link outcome="login" class="btn btn-primary">Log In</h:link>
+                            </c:otherwise>
+
+                        </c:choose>
+
                         <div class="user-menu dropdown-menu">
                             <a class="nav-link" href="/gatekeeper"><i class="fa fa-user"></i>My Profile</a>
                             <a class="nav-link" href="/sign-out"><i class="fa fa-power-off"></i>Logout</a>
@@ -112,7 +123,6 @@
         </div>
 
         <div class="clearfix"></div>
-
 
 
     </div>
