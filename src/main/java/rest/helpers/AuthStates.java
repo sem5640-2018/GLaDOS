@@ -7,4 +7,5 @@ public enum AuthStates {
     Authorized,
     NoToken,
     Unauthorized,
+    ClientCred
 }

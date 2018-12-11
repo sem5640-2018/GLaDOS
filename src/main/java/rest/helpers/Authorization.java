@@ -32,12 +32,23 @@ public class Authorization {
             return tokenState;
         }
 
+        AuthStates returnedState = authBean.validateJwtToken(bearerToken);
+
         // Validate the current token
-        if (!authBean.validateJwtToken(bearerToken)){
+        if (returnedState != AuthStates.Authorized
+                && returnedState != AuthStates.ClientCred ){
             return AuthStates.Unauthorized;
         }
 
-        userInfo = authBean.getUserInfo(bearerToken);
+        if (returnedState == AuthStates.Authorized){
+            userInfo = authBean.getUserInfo(bearerToken);
+        }
+
+        if (returnedState == AuthStates.ClientCred){
+            // This is client cred - do not query endpoint
+            userInfo = new GatekeeperInfo(true);
+        }
+
         return AuthStates.Authorized;
     }
 
