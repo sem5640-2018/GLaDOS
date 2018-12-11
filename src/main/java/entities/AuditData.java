@@ -26,7 +26,7 @@ public class AuditData implements Serializable {
     @Column(name = "logId", unique = true, nullable = false, length = 36)
     private String logId;
 
-    @Column(name = "serviceName", nullable = false, length = 20)
+    @Column(name = "serviceName", nullable = false, length = 50)
     private String serviceName;
 
     @Column(name = "timestamp", nullable = false)
