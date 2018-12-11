@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: "GLaDOS Auditing API."
-  version: "1.0.0"
+  version: "2.0.0"
   title: "GLaDOS API"
   
 tags:
@@ -27,7 +27,7 @@ components:
     
         timestamp:
           type: string
-          description: "ISO8601 without local timestamp"
+          description: "Millis since Epoch"
           
         userId:
           type: string
@@ -94,12 +94,12 @@ paths:
           name: fromTime
           schema:
             type: string
-          description: "(Optional) The timestamp (ISO8061) to search from"
+          description: "(Optional) The timestamp (Millis since Epoch) to search from"
         - in: query
           name: toTime
           schema:
             type: string
-          description: "(Optional) The timestamp (ISO8061) to search up to"
+          description: "(Optional) The timestamp (Millis since Epoch) to search up to"
       
       responses:
         200:
