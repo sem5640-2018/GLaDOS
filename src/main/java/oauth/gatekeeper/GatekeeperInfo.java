@@ -2,6 +2,7 @@ package oauth.gatekeeper;
 
 public class GatekeeperInfo {
     private String userId;
+    private String userName;
     private UserType userType;
     private boolean isClientCred;
 
@@ -16,11 +17,12 @@ public class GatekeeperInfo {
         this.userId = "";
     }
 
-    public GatekeeperInfo(String userId, UserType userType){
+    public GatekeeperInfo(String userId, UserType userType, String userName){
         // If we have a user ID this has to be an access token
         this.isClientCred = false;
         this.userId = userId;
         this.userType = userType;
+        this.userName = userName;
     }
 
     public UserType getUserType() {
@@ -30,6 +32,8 @@ public class GatekeeperInfo {
     public String getUserId() {
         return userId;
     }
+
+    public String getUserName() { return userName; }
 
     public boolean isClientCred() { return isClientCred; }
 }

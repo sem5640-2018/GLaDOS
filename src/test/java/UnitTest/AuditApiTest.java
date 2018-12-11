@@ -51,7 +51,7 @@ public class AuditApiTest {
         when(authMock.verifyAccessToken(any())).thenReturn(AuthStates.Authorized);
 
         // By default return the admin mock to ensure that we don't have rejection
-        mockedUserInfo = new GatekeeperInfo("NotSet", UserType.administrator);
+        mockedUserInfo = new GatekeeperInfo("NotSet", UserType.administrator, "Not Set");
         when(authMock.getUserInfo()).thenReturn(mockedUserInfo);
     }
 
@@ -61,7 +61,8 @@ public class AuditApiTest {
      * @return A sample AuditData object
      */
     private AuditData createExampleLogData(String userId) {
-        mockedUserInfo = new GatekeeperInfo(userId, UserType.member);
+        String sampleEmail = "testing@example.com";
+        mockedUserInfo = new GatekeeperInfo(userId, UserType.member, sampleEmail);
         when(authMock.getUserInfo()).thenReturn(mockedUserInfo);
 
         return new AuditData(Instant.now(), "TestContent",
