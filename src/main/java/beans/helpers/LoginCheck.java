@@ -2,6 +2,7 @@ package beans.helpers;
 
 import oauth.GatekeeperLogin;
 import oauth.gatekeeper.GatekeeperInfo;
+import rest.helpers.AuthStates;
 
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
@@ -22,9 +23,9 @@ public class LoginCheck {
 
         HttpSession session = request.getSession();
 
-        if(session== null ||
+        if (session == null ||
                 !loginBean.getSessionToken(session) ||
-                !loginBean.validateInternalJwtToken()){
+                loginBean.validateInternalJwtToken() != AuthStates.Authorized) {
 
             loginBean.invalidateSessionToken(session);
             return false;

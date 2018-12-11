@@ -3,7 +3,6 @@ package beans;
 import beans.helpers.LoginCheck;
 import oauth.gatekeeper.GatekeeperInfo;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 
@@ -17,8 +16,7 @@ public class AberFitnessTemplateBacking extends LoginCheck {
         super();
     }
 
-    @PostConstruct
-    public void init(){
+    public void onLoad(){
         isLoggedIn = checkUserLogin();
 
         if (isLoggedIn){

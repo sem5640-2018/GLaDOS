@@ -16,6 +16,7 @@ import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.GatekeeperJsonTokenExtractor;
 import oauth.gatekeeper.GatekeeperOAuth2AccessToken;
 import oauth.gatekeeper.UserType;
+import rest.helpers.AuthStates;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
@@ -102,15 +103,24 @@ public class GatekeeperLogin implements Serializable {
     /**
      * Validates the passed JWT token, such as an Access Token or Client credential
      * @param jwtToken Token to verify
-     * @return True if the given token is valid
+     * @return Returns if the token was Authorized and its type
      */
-    public boolean validateJwtToken(String jwtToken) {
+    public AuthStates validateJwtToken(String jwtToken) {
         try {
             claimsSet = GatekeeperJsonTokenExtractor.instance().getJWTClaimSet(jwtToken);
-            return checkJwtValidity();
+
+            if(!checkJwtValidity()){
+                return AuthStates.InvalidToken;
+            }
+
+            if (claimsSet.getSubject() == null) {
+                return AuthStates.ClientCred;
+            }
+            return AuthStates.Authorized;
+
         } catch (Exception e) {
             System.err.println("[GatekeeperLogin.validateJwtToken] Message:" + e.getMessage() + " Cause: " + e.getCause());
-            return false;
+            return AuthStates.InvalidToken;
         }
 
     }
@@ -118,9 +128,9 @@ public class GatekeeperLogin implements Serializable {
     /**
      * Validates the internal access token
      * after calling getGateKeeperAccessToken
-     * @return True if the token is valid, else false
+     * @return Returns if the token was validated and its type
      */
-    public boolean validateInternalJwtToken() {
+    public AuthStates validateInternalJwtToken() {
         return validateJwtToken(userAccessToken.getAccessToken());
     }
 
