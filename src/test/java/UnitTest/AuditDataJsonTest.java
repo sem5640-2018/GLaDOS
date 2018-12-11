@@ -29,7 +29,7 @@ public class AuditDataJsonTest {
 
     @Test
     public void ConvertsFromOtherSerialisingTypeCorrectly() {
-        AuditData noSerial = new AuditData(Instant.now(),
+        AuditData noSerial = new AuditData(Instant.now().toString(),
                 "test", "abc123", ServiceNames.GLADOS.toString());
 
         AuditDataJson convertedInstance = new AuditDataJson(noSerial);
@@ -46,7 +46,7 @@ public class AuditDataJsonTest {
         String userId = "test123";
         String serviceName = ServiceNames.GLADOS.toString();
 
-        final AuditDataJson testInstance = new AuditDataJson(now, sampleMsg, userId, serviceName);
+        final AuditDataJson testInstance = new AuditDataJson(now.toString(), sampleMsg, userId, serviceName);
         JsonObject returnedJson = testInstance.toJson();
 
         Assert.assertEquals(returnedJson.getString("timestamp"), now.toString());
@@ -64,7 +64,7 @@ public class AuditDataJsonTest {
         String userId = "test123";
         String serviceName = ServiceNames.GLADOS.toString();
 
-        AuditData referenceInstance = new AuditData(now, sampleMsg, userId, serviceName);
+        AuditData referenceInstance = new AuditData(now.toString(), sampleMsg, userId, serviceName);
 
         JsonObject testJson = createFakeJson(referenceInstance);
 
@@ -78,9 +78,9 @@ public class AuditDataJsonTest {
         String sampleMsg = "Hello world";
         String serviceName = ServiceNames.GLADOS.toString();
 
-        final AuditDataJson testObjOne = new AuditDataJson(now, sampleMsg, "101", serviceName);
-        final AuditDataJson testObjTwo = new AuditDataJson(now, sampleMsg, "102", serviceName);
-        final AuditDataJson testObjThree = new AuditDataJson(now, sampleMsg, "103", serviceName);
+        final AuditDataJson testObjOne = new AuditDataJson(now.toString(), sampleMsg, "101", serviceName);
+        final AuditDataJson testObjTwo = new AuditDataJson(now.toString(), sampleMsg, "102", serviceName);
+        final AuditDataJson testObjThree = new AuditDataJson(now.toString(), sampleMsg, "103", serviceName);
 
         JsonObject testJson = createFakeJson(testObjOne);
         JsonObject testJson2 = createFakeJson(testObjTwo);
@@ -106,7 +106,7 @@ public class AuditDataJsonTest {
         String userId = "test123";
         String serviceName = ServiceNames.GLADOS.toString();
 
-        final AuditDataJson testInstance = new AuditDataJson(now, sampleMsg, userId, serviceName);
+        final AuditDataJson testInstance = new AuditDataJson(now.toString(), sampleMsg, userId, serviceName);
 
         JsonObject returnedJson = testInstance.toJson();
         AuditDataJson returnedObject = AuditDataJson.fromJson(returnedJson);

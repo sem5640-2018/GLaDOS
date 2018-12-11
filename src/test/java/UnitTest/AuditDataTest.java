@@ -16,9 +16,9 @@ public class AuditDataTest {
         String userId = "test123";
         String testName = ServiceNames.GLADOS.toString();
 
-        final AuditData testInstance = new AuditData(now, sampleMsg, userId, testName);
+        final AuditData testInstance = new AuditData(now.toString(), sampleMsg, userId, testName);
 
-        Assert.assertEquals(testInstance.getTimestamp(), now);
+        Assert.assertEquals(testInstance.getTimestamp(), now.toString());
         Assert.assertEquals(testInstance.getContent(), sampleMsg);
         Assert.assertEquals(testInstance.getUserId(), userId);
         Assert.assertEquals(testInstance.getServiceName(), testName);
@@ -29,8 +29,8 @@ public class AuditDataTest {
         Instant now = Instant.now();
 
         // Regardless of other fields the log id should always be unique
-        final AuditData testInstanceOne = new AuditData(now, "test", "id1", ServiceNames.GLADOS.toString());
-        final AuditData testInstanceTwo = new AuditData(now,
+        final AuditData testInstanceOne = new AuditData(now.toString(), "test", "id1", ServiceNames.GLADOS.toString());
+        final AuditData testInstanceTwo = new AuditData(now.toString(),
                 "test", "id1", ServiceNames.GLADOS.toString());
 
         Assert.assertNotEquals(testInstanceOne.getLogId(), testInstanceTwo.getLogId());
@@ -38,7 +38,7 @@ public class AuditDataTest {
 
     @Test
     public void LogDataCopyConstructor() {
-        final AuditData testInstanceOne = new AuditData(Instant.now(),
+        final AuditData testInstanceOne = new AuditData(Instant.now().toString(),
                 "test", "id1", ServiceNames.GLADOS.toString());
 
         final AuditData testInstanceTwo = new AuditData(testInstanceOne);

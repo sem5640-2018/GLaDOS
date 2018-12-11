@@ -23,7 +23,7 @@ public class AuditDataJson extends AuditData {
      * @param userId The user associated with this log entry
      * @param serviceName The micro-service associated with this log entry
      */
-    public AuditDataJson(final Instant timestamp,
+    public AuditDataJson(final String timestamp,
                          final String content, final String userId, final String serviceName){
         super(timestamp, content, userId, serviceName);
     }
@@ -45,7 +45,7 @@ public class AuditDataJson extends AuditData {
     public JsonObject toJson(){
         JsonObjectBuilder newJson = Json.createObjectBuilder();
         newJson.add("logId", getLogId())
-                .add("timestamp", getTimestamp().toString())
+                .add("timestamp", getTimestamp())
                 .add("userId", getUserId())
                 .add("content", getContent())
                 .add("serviceName", getServiceName());

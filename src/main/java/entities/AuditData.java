@@ -1,12 +1,7 @@
 package entities;
 
-import persistence.helpers.InstantConverter;
-import rest.helpers.InstantSerialiser;
-
 import javax.persistence.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -34,10 +29,8 @@ public class AuditData implements Serializable {
     @Column(name = "serviceName", nullable = false, length = 20)
     private String serviceName;
 
-    @XmlJavaTypeAdapter(InstantSerialiser.class)
     @Column(name = "timestamp", nullable = false)
-    @Convert(converter = InstantConverter.class)
-    private Instant timestamp;
+    private String timestamp;
 
     @Column(name = "content")
     private String content;
@@ -55,7 +48,7 @@ public class AuditData implements Serializable {
      * @param userId      The user associated with this log entry
      * @param serviceName The service associated with this log entry
      */
-    public AuditData(final Instant timestamp,
+    public AuditData(final String timestamp,
                      final String content, final String userId, final String serviceName) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
@@ -81,9 +74,9 @@ public class AuditData implements Serializable {
     /**
      * Returns the timestamp of the specified log message
      *
-     * @return Date object with the log's timestamp
+     * @return String object with the log's timestamp
      */
-    public Instant getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
@@ -128,7 +121,7 @@ public class AuditData implements Serializable {
         this.serviceName = serviceName;
     }
 
-    public void setTimestamp(Instant timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

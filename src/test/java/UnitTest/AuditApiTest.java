@@ -61,7 +61,7 @@ public class AuditApiTest {
         mockedUserInfo = new GatekeeperInfo(userId, UserType.member, sampleEmail);
         when(authMock.getUserInfo()).thenReturn(mockedUserInfo);
 
-        return new AuditData(Instant.now(), "TestContent",
+        return new AuditData(Instant.now().toString(), "TestContent",
                 userId, ServiceNames.GLADOS.toString());
     }
 
