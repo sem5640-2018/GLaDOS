@@ -1,9 +1,9 @@
-package beans.helpers;
+package beans;
 
+import beans.helpers.ServiceNames;
 import configuration.EnvironmentVariables;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import rest.helpers.ServiceNames;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Schedule;

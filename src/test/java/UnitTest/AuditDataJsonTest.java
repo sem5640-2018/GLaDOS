@@ -6,11 +6,9 @@ import com.google.gson.JsonParseException;
 import helpers.AuditDataHelpers;
 import org.junit.Assert;
 import org.junit.Test;
-import rest.helpers.ServiceNames;
+import beans.helpers.ServiceNames;
 
 import javax.json.*;
-import javax.json.stream.JsonParser;
-import java.io.StringReader;
 import java.time.Instant;
 import java.util.List;
 
