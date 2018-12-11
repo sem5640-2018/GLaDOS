@@ -18,12 +18,12 @@ public class AuditDataJson extends AuditData {
     /**
      * Constructs a new AuditDataJson instance which implements a
      * JSON serialiser for the underlying class
-     * @param timestamp The time of the log message
+     * @param timestamp The time of the log message in millis since Epoch
      * @param content The message content of this log entry
      * @param userId The user associated with this log entry
      * @param serviceName The micro-service associated with this log entry
      */
-    public AuditDataJson(final String timestamp,
+    public AuditDataJson(final long timestamp,
                          final String content, final String userId, final String serviceName){
         super(timestamp, content, userId, serviceName);
     }

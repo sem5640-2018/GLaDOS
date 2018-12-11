@@ -43,8 +43,8 @@ public class DatabaseConnection {
     public List<AuditData> findLogEntry(String userId, Instant fromTime, Instant toTime) throws NoResultException {
         TypedQuery<AuditData> query = em.createNamedQuery("findLogEntry", AuditData.class);
         query.setParameter("userId", userId);
-        query.setParameter("minTime", fromTime.toString());
-        query.setParameter("maxTime", toTime.toString());
+        query.setParameter("minTime", fromTime.toEpochMilli());
+        query.setParameter("maxTime", toTime.toEpochMilli());
 
         return query.getResultList();
     }

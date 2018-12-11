@@ -30,7 +30,7 @@ public class AuditData implements Serializable {
     private String serviceName;
 
     @Column(name = "timestamp", nullable = false)
-    private String timestamp;
+    private long timestamp;
 
     @Column(name = "content")
     private String content;
@@ -48,7 +48,7 @@ public class AuditData implements Serializable {
      * @param userId      The user associated with this log entry
      * @param serviceName The service associated with this log entry
      */
-    public AuditData(final String timestamp,
+    public AuditData(final long timestamp,
                      final String content, final String userId, final String serviceName) {
         this.logId = UUID.randomUUID().toString();
         this.timestamp = timestamp;
@@ -74,9 +74,9 @@ public class AuditData implements Serializable {
     /**
      * Returns the timestamp of the specified log message
      *
-     * @return String object with the log's timestamp
+     * @return Object with the log's timestamp in millis
      */
-    public String getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
@@ -121,7 +121,7 @@ public class AuditData implements Serializable {
         this.serviceName = serviceName;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -152,9 +152,9 @@ public class AuditData implements Serializable {
         }
 
         final AuditData other = (AuditData) obj;
-        return this.logId.equals(other.logId) && this.timestamp.equals(other.timestamp)
+        return this.logId.equals(other.logId) && this.timestamp == (other.timestamp)
                 && this.content.equals(other.content) &&
-                this.userId.equals(other.userId) && this.serviceName == other.serviceName;
+                this.userId.equals(other.userId) && this.serviceName.equals(other.serviceName);
 
     }
 
@@ -182,7 +182,7 @@ public class AuditData implements Serializable {
      */
     public final boolean isValid() {
         return logId != null &&
-               timestamp != null &&
+               timestamp != 0 &&
                content != null &&
                userId != null &&
                serviceName != null;

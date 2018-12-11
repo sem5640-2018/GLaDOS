@@ -20,16 +20,16 @@ public class AuditDataJsonTest {
         JsonObjectBuilder newJsonObject = Json.createObjectBuilder();
 
 
-        newJsonObject.add("timestamp", auditData.getTimestamp().toString())
+        newJsonObject.add("timestamp", auditData.getTimestamp())
                 .add("userId", auditData.getUserId())
                 .add("content", auditData.getContent())
-                .add("serviceName", auditData.getServiceName().toString());
+                .add("serviceName", auditData.getServiceName());
         return newJsonObject.build();
     }
 
     @Test
     public void ConvertsFromOtherSerialisingTypeCorrectly() {
-        AuditData noSerial = new AuditData(Instant.now().toString(),
+        AuditData noSerial = new AuditData(Instant.now().toEpochMilli(),
                 "test", "abc123", ServiceNames.GLADOS.toString());
 
         AuditDataJson convertedInstance = new AuditDataJson(noSerial);
@@ -46,14 +46,14 @@ public class AuditDataJsonTest {
         String userId = "test123";
         String serviceName = ServiceNames.GLADOS.toString();
 
-        final AuditDataJson testInstance = new AuditDataJson(now.toString(), sampleMsg, userId, serviceName);
+        final AuditDataJson testInstance = new AuditDataJson(now.toEpochMilli(), sampleMsg, userId, serviceName);
         JsonObject returnedJson = testInstance.toJson();
 
-        Assert.assertEquals(returnedJson.getString("timestamp"), now.toString());
+        Assert.assertEquals(returnedJson.getJsonNumber("timestamp").longValue(), now.toEpochMilli());
         Assert.assertEquals(returnedJson.getString("userId"), userId);
 
         Assert.assertEquals(returnedJson.getString("content"), sampleMsg);
-        Assert.assertEquals(returnedJson.getString("serviceName"), serviceName.toString());
+        Assert.assertEquals(returnedJson.getString("serviceName"), serviceName);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class AuditDataJsonTest {
         String userId = "test123";
         String serviceName = ServiceNames.GLADOS.toString();
 
-        AuditData referenceInstance = new AuditData(now.toString(), sampleMsg, userId, serviceName);
+        AuditData referenceInstance = new AuditData(now.toEpochMilli(), sampleMsg, userId, serviceName);
 
         JsonObject testJson = createFakeJson(referenceInstance);
 
@@ -78,9 +78,9 @@ public class AuditDataJsonTest {
         String sampleMsg = "Hello world";
         String serviceName = ServiceNames.GLADOS.toString();
 
-        final AuditDataJson testObjOne = new AuditDataJson(now.toString(), sampleMsg, "101", serviceName);
-        final AuditDataJson testObjTwo = new AuditDataJson(now.toString(), sampleMsg, "102", serviceName);
-        final AuditDataJson testObjThree = new AuditDataJson(now.toString(), sampleMsg, "103", serviceName);
+        final AuditDataJson testObjOne = new AuditDataJson(now.toEpochMilli(), sampleMsg, "101", serviceName);
+        final AuditDataJson testObjTwo = new AuditDataJson(now.toEpochMilli(), sampleMsg, "102", serviceName);
+        final AuditDataJson testObjThree = new AuditDataJson(now.toEpochMilli(), sampleMsg, "103", serviceName);
 
         JsonObject testJson = createFakeJson(testObjOne);
         JsonObject testJson2 = createFakeJson(testObjTwo);
@@ -106,7 +106,7 @@ public class AuditDataJsonTest {
         String userId = "test123";
         String serviceName = ServiceNames.GLADOS.toString();
 
-        final AuditDataJson testInstance = new AuditDataJson(now.toString(), sampleMsg, userId, serviceName);
+        final AuditDataJson testInstance = new AuditDataJson(now.toEpochMilli(), sampleMsg, userId, serviceName);
 
         JsonObject returnedJson = testInstance.toJson();
         AuditDataJson returnedObject = AuditDataJson.fromJson(returnedJson);
@@ -134,7 +134,7 @@ public class AuditDataJsonTest {
     public void JsonParseExceptionIsThrownForPartial() {
         JsonObjectBuilder partialObj = Json.createObjectBuilder();
         partialObj.add("logId", "123");
-        partialObj.add("timestamp", Instant.now().toString());
+        partialObj.add("timestamp", Instant.now().toEpochMilli());
 
         JsonObject partialJson = partialObj.build();
 
