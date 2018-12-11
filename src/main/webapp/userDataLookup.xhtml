@@ -1,79 +1,91 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:value="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en"
-      xmlns:composite="http://java.sun.com/jsf/composite"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-
-<f:metadata>
-    <f:event type="preRenderView" listener="#{userDataLookupBacking.onLoad}"/>
-</f:metadata>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
-    <title>Audit Data Retrival</title>
+    <title>Audit Data Lookup -- Aberfitness</title>
 </h:head>
-
 <h:body>
-    <h:outputStylesheet name="styles/table.css"/>
+    <ui:composition template="./aberfitnessTemplate.xhtml">
 
-    <div>
-    <h:form id="dateTimeForm">
-        <h:panelGrid columns="2">
-            <p:outputLabel for="userId" value="User ID: "/>
-            <p:inputText id="userId" value="#{userDataLookupBacking.userToLookup}"
-                         disabled="#{!userDataLookupBacking.currentUserIsAdmin}" />
-        </h:panelGrid>
+        <ui:define name="page_detail">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Audit Data Retrival</strong>
+                        </div>
+                        <div class="card-body">
+                            <h:outputStylesheet name="styles/table.css"/>
 
-        <h:panelGrid columns="2">
-            <p:outputLabel for="startDateTime" value="From: " />
-            <p:calendar id="startDateTime" value="#{userDataLookupBacking.startingTime}" pattern="MM/dd/yyyy HH:mm:ss" />
-        </h:panelGrid>
+                            <div>
+                                <h:form id="dateTimeForm">
+                                    <h:panelGrid columns="2">
+                                        <p:outputLabel for="userId" value="User ID: "/>
+                                        <p:inputText id="userId" value="#{userDataLookupBacking.userToLookup}"
+                                                     disabled="#{!userDataLookupBacking.currentUserIsAdmin}" />
+                                    </h:panelGrid>
 
-        <h:panelGrid columns="3">
-            <p:outputLabel for="endDateTime" value="To: " />
-            <p:calendar id="endDateTime" value="#{userDataLookupBacking.endingTime}"  pattern="MM/dd/yyyy HH:mm:ss"/>
-            <h:commandButton value="Submit" action="#{userDataLookupBacking.lookupResults}" />
-        </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <p:outputLabel for="startDateTime" value="From: " />
+                                        <p:calendar id="startDateTime" value="#{userDataLookupBacking.startingTime}" pattern="MM/dd/yyyy HH:mm:ss" />
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="3">
+                                        <p:outputLabel for="endDateTime" value="To: " />
+                                        <p:calendar id="endDateTime" value="#{userDataLookupBacking.endingTime}"  pattern="MM/dd/yyyy HH:mm:ss"/>
+                                        <h:commandButton value="Submit" action="#{userDataLookupBacking.lookupResults}" />
+                                    </h:panelGrid>
 
 
-    </h:form>
+                                </h:form>
 
-    </div>
+                            </div>
 
-    <div>
-    <p:dataTable rendered="#{userDataLookupBacking.hasRequestedResults}"
-                 value="#{userDataLookupBacking.results}" var="logEntry"
-                 columnClasses="userIdColumn,logIdColumn,timestampColumn,serviceNameColumn,contentColumn">
-    
-        <p:column>
-            <f:facet name="header">User ID</f:facet>
-            #{logEntry.userId}
-        </p:column>
+                            <div>
+                                <p:dataTable rendered="#{userDataLookupBacking.hasRequestedResults}"
+                                             value="#{userDataLookupBacking.results}" var="logEntry"
+                                             columnClasses="userIdColumn,logIdColumn,timestampColumn,serviceNameColumn,contentColumn">
 
-        <p:column>
-            <f:facet name="header">Log ID</f:facet>
-            #{logEntry.logId}
-        </p:column>
+                                    <p:column>
+                                        <f:facet name="header">User ID</f:facet>
+                                        #{logEntry.userId}
+                                    </p:column>
 
-        <p:column>
-            <f:facet name="header">Timestamp</f:facet>
-            #{logEntry.timestamp.toString()}
-        </p:column>
+                                    <p:column>
+                                        <f:facet name="header">Log ID</f:facet>
+                                        #{logEntry.logId}
+                                    </p:column>
 
-        <p:column>
-            <f:facet name="header">Service</f:facet>
-            #{logEntry.serviceName.toString()}
-        </p:column>
+                                    <p:column>
+                                        <f:facet name="header">Timestamp</f:facet>
+                                        #{logEntry.timestamp.toString()}
+                                    </p:column>
 
-        <p:column>
-            <f:facet name="header">Content</f:facet>
-            #{logEntry.content}
-        </p:column>
-    </p:dataTable>
-    </div>
+                                    <p:column>
+                                        <f:facet name="header">Service</f:facet>
+                                        #{logEntry.serviceName.toString()}
+                                    </p:column>
 
-    <br/>
-    <p:button value="Home" outcome="index"/>
+                                    <p:column>
+                                        <f:facet name="header">Content</f:facet>
+                                        #{logEntry.content}
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+
+                            <br/>
+                            <p:button value="Home" outcome="index"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+
+    </ui:composition>
 </h:body>
-
-
 </html>
