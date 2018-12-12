@@ -3,7 +3,9 @@
   <component name="FacetManager">
     <facet type="ejb" name="EJB">
       <configuration>
-        <ejbRoots />
+        <ejbRoots>
+          <root url="file://$MODULE_DIR$/src" />
+        </ejbRoots>
       </configuration>
     </facet>
     <facet type="web" name="Web">
@@ -19,26 +21,6 @@
           <root url="file://$MODULE_DIR$/src/main/java" />
           <root url="file://$MODULE_DIR$/src/main/resources" />
         </sourceRoots>
-      </configuration>
-    </facet>
-    <facet type="jpa" name="JPA">
-      <configuration>
-        <setting name="validation-enabled" value="true" />
-        <setting name="provider-name" value="" />
-        <datasource-mapping>
-          <factory-entry name="Entities" />
-          <factory-entry name="GLaDOSPU" />
-          <factory-entry name="GladosPU" />
-          <factory-entry name="gladosPU" />
-        </datasource-mapping>
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
-      </configuration>
-    </facet>
-    <facet type="javaeeApplication" name="JavaEE">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="application.xml" url="file://$MODULE_DIR$/target/application.xml" />
-        </descriptors>
       </configuration>
     </facet>
   </component>
@@ -58,26 +40,7 @@
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - EJB" level="application_server_libraries" />
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - JSF" level="application_server_libraries" />
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.0.0 - CDI: Contexts and Dependency Injection" level="application_server_libraries" />
-    <orderEntry type="library" scope="TEST" name="Maven: fish.payara.arquillian:arquillian-payara-server-4-embedded:1.0.Beta3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jboss.arquillian.container:arquillian-container-spi:1.1.13.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jboss.arquillian.protocol:arquillian-protocol-servlet:1.1.13.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jboss.arquillian.testenricher:arquillian-testenricher-cdi:1.1.13.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jboss.arquillian.testenricher:arquillian-testenricher-ejb:1.1.13.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jboss.arquillian.testenricher:arquillian-testenricher-resource:1.1.13.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jboss.arquillian.testenricher:arquillian-testenricher-initialcontext:1.1.13.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-ear-plugin:3.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-interpolation:1.24" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.183.0 - CDI: Contexts and Dependency Injection" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.183.0 - JSF" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.183.0 - JSON Binding" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.183.0 - RESTful Web Service" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.183.0 - EJB" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.191.0.SNAPSHOT - JSON Processing (JSR 353)" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.191.0.SNAPSHOT - CDI: Contexts and Dependency Injection" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.191.0.SNAPSHOT - JSF" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.191.0.SNAPSHOT - RESTful Web Service" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.191.0.SNAPSHOT - Transaction API (JSR 907)" level="application_server_libraries" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.191.0.SNAPSHOT - EJB" level="application_server_libraries" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.9.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.enterprise:cdi-api:2.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.el:javax.el-api:3.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.interceptor:javax.interceptor-api:1.2" level="project" />
