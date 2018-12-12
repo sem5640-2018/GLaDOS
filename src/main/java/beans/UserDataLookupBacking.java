@@ -1,7 +1,6 @@
 package beans;
 
 import beans.helpers.LoginCheck;
-import configuration.EnvironmentVariables;
 import entities.AuditData;
 import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
@@ -10,9 +9,7 @@ import persistence.DatabaseConnection;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,12 +54,7 @@ public class UserDataLookupBacking extends LoginCheck {
         boolean loggedIn = checkUserLogin();
 
         if (!loggedIn) {
-            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-            try {
-                response.sendRedirect(EnvironmentVariables.getAppBaseUrl() + "/login.xhtml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            startLoginFlow();
 
             return;
         }

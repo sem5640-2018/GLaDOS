@@ -66,7 +66,15 @@ public class LoginBacking {
 
         // Logged in
         loginBean.storeCurrentSessionToken(session);
-        response.sendRedirect(EnvironmentVariables.getAppBaseUrl());
+
+        // Redirect the user back
+        String redirectTo = (String) session.getAttribute("redirectTo");
+        if(redirectTo == null || redirectTo.isEmpty()){
+            response.sendRedirect(EnvironmentVariables.getAppBaseUrl());
+        } else {
+            response.sendRedirect(redirectTo);
+            session.removeAttribute("redirectTo");
+        }
     }
 
 }
