@@ -11,6 +11,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +67,11 @@ public class UserDataLookupBacking extends LoginCheck {
         if (userToLookup == null || userToLookup.isEmpty()) {
             userToLookup = userInfo.getUserId();
         }
+    }
+
+    public String convertToDate(String millisSinceEpoch){
+        long millis = Long.parseLong(millisSinceEpoch);
+        return Date.from(Instant.ofEpochMilli(millis)).toString();
     }
 
     public void lookupResults() {

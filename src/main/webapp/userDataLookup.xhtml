@@ -79,7 +79,7 @@
 
                                 <h:column>
                                     <f:facet name="header">Timestamp</f:facet>
-                                    #{logEntry.timestamp.toString()}
+                                    #{userDataLookupBacking.convertToDate(logEntry.timestamp)}
                                 </h:column>
 
                                 <h:column>
