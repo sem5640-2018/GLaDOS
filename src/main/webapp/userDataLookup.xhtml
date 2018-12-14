@@ -67,19 +67,16 @@
                                          value="#{userDataLookupBacking.results}" var="logEntry"
                                          columnClasses="userIdColumn,logIdColumn,timestampColumn,serviceNameColumn,contentColumn">
 
+
+				<h:column>
+                                    <f:facet name="header">Timestamp</f:facet>
+                                    #{userDataLookupBacking.convertToDate(logEntry.timestamp)}
+                                </h:column>
+
+
                                 <h:column>
                                     <f:facet name="header">User ID</f:facet>
                                     #{logEntry.userId}
-                                </h:column>
-
-                                <h:column>
-                                    <f:facet name="header">Log ID</f:facet>
-                                    #{logEntry.logId}
-                                </h:column>
-
-                                <h:column>
-                                    <f:facet name="header">Timestamp</f:facet>
-                                    #{userDataLookupBacking.convertToDate(logEntry.timestamp)}
                                 </h:column>
 
                                 <h:column>
