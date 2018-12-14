@@ -50,13 +50,7 @@ public class DatabaseConnection {
     }
 
     public List<AuditData> getAllLogEntries() throws NoResultException {
-        // TODO add limits
         TypedQuery<AuditData> query = em.createNamedQuery("getAllLogEntries", AuditData.class);
         return query.getResultList();
-    }
-
-    public void removeLogData(String logId) throws NoResultException {
-        AuditData foundEntry = getLogEntry(logId);
-        em.remove(foundEntry);
     }
 }
