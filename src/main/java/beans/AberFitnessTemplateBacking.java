@@ -3,12 +3,13 @@ package beans;
 import beans.helpers.LoginCheck;
 import oauth.gatekeeper.GatekeeperInfo;
 
-import javax.ejb.Stateless;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+import java.io.Serializable;
 
 @Named
-@Stateless
-public class AberFitnessTemplateBacking extends LoginCheck {
+@SessionScoped
+public class AberFitnessTemplateBacking extends LoginCheck implements Serializable {
     private boolean isLoggedIn;
     private String userEmail;
 

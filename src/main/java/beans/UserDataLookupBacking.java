@@ -7,17 +7,17 @@ import oauth.gatekeeper.UserType;
 import persistence.DatabaseConnection;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import java.io.IOException;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@Stateless
+@SessionScoped
 @Named
-public class UserDataLookupBacking extends LoginCheck {
+public class UserDataLookupBacking extends LoginCheck implements Serializable {
 
     private Date startingTime;
     private Date endingTime;
@@ -33,6 +33,9 @@ public class UserDataLookupBacking extends LoginCheck {
 
     public UserDataLookupBacking(){
         super();
+        results = null;
+        setRangeToNow();
+        userToLookup = null;
     }
 
     private void setRangeToNow() {
@@ -44,7 +47,7 @@ public class UserDataLookupBacking extends LoginCheck {
     }
 
     // Invoked methods
-    public void onLoad() throws IOException {
+    public void onLoad() {
         // Ensure we have their access token validated for this page
         boolean loggedIn = checkUserLogin();
 
