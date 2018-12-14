@@ -6,7 +6,6 @@ import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
 import persistence.DatabaseConnection;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -36,11 +35,6 @@ public class UserDataLookupBacking extends LoginCheck {
         super();
     }
 
-    @PostConstruct
-    public void init(){
-        setRangeToNow();
-    }
-
     private void setRangeToNow() {
         Calendar cal = Calendar.getInstance();
         endingTime = cal.getTime();
@@ -60,13 +54,12 @@ public class UserDataLookupBacking extends LoginCheck {
             return;
         }
 
+        setRangeToNow();
+
         GatekeeperInfo userInfo = getUserInfo();
 
         currentUserIsAdmin = userInfo.getUserType() == UserType.administrator;
-
-        if (userToLookup == null || userToLookup.isEmpty()) {
-            userToLookup = userInfo.getUserId();
-        }
+        userToLookup = userInfo.getUserId();
     }
 
     public String convertToDate(String millisSinceEpoch){

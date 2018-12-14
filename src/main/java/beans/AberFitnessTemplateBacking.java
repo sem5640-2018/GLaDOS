@@ -22,6 +22,8 @@ public class AberFitnessTemplateBacking extends LoginCheck {
         if (isLoggedIn){
             GatekeeperInfo userInfo = getUserInfo();
             userEmail = userInfo.getUserName();
+        } else {
+            userEmail = null;
         }
     }
 
