@@ -6,7 +6,6 @@ import oauth.gatekeeper.GatekeeperInfo;
 import oauth.gatekeeper.UserType;
 import persistence.DatabaseConnection;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
