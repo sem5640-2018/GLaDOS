@@ -78,6 +78,8 @@ public class UserDataLookupBacking extends LoginCheck implements Serializable {
         }
 
         results = db.findLogEntry(userToLookup, startingTime.toInstant(), endingTime.toInstant());
+        // Sort into date desc.
+        results.sort((o1, o2) -> Long.compare(o2.getTimestamp(), o1.getTimestamp()));
     }
 
     // ---- Getters only -----
