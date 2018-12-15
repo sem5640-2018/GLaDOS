@@ -1,0 +1,29 @@
+.userIdColumn{
+    width: 100px;
+}
+
+.logIdColumn{
+    width: 150px;
+}
+
+.timestampColumn{
+    width: 150px;
+}
+
+.serviceNameColumn{
+    width: 100px;
+}
+
+.contentColumn{
+    width: 300px;
+}
+
+.red{
+    background-color:orangered;
+    background-image:none;
+}
+
+.green{
+    background-color:transparent;
+    background-image:none;
+}
